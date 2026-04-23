@@ -5,253 +5,264 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>attridevv</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='38' cy='38' r='22' fill='none' stroke='%23c62828' stroke-width='3'/><circle cx='62' cy='38' r='22' fill='none' stroke='%23c62828' stroke-width='3'/><circle cx='38' cy='62' r='22' fill='none' stroke='%23c62828' stroke-width='3'/><circle cx='62' cy='62' r='22' fill='none' stroke='%23c62828' stroke-width='3'/></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
 
   <div id="particles"></div>
-  <div id="cursor-glow"></div>
   <div id="transition-overlay"></div>
 
-  <!-- ═══ SELECTOR ═══ -->
+  <!-- ═══ SELECTOR: TWO REALMS ═══ -->
   <div id="theme-select">
-    <div class="sel-side sel-zephyr" onclick="applyTheme('zephyr')">
-      <div class="ss-sfx sfx1">打</div><div class="ss-sfx sfx2">ゴゴ</div><div class="ss-sfx sfx3">覚醒</div>
-      <div class="ss-panel sp1"></div><div class="ss-panel sp2"></div><div class="ss-panel sp3"></div>
-      <div class="ss-line sl1"></div><div class="ss-line sl2"></div><div class="ss-line sl3"></div>
-      <div class="ss-impact"></div><div class="ss-zip sz1"></div><div class="ss-zip sz2"></div>
-      <div class="ss-label">
-        <div class="selector-logo">
-          <svg viewBox="0 0 80 80" class="logo-dev">
-            <defs>
-              <linearGradient id="devGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#e53935"/>
-                <stop offset="100%" stop-color="#b71c1c"/>
-              </linearGradient>
-            </defs>
-            <polygon points="40,8 72,72 40,56 8,72" fill="none" stroke="url(#devGrad)" stroke-width="3"/>
-            <polygon points="40,20 56,60 40,48 24,60" fill="url(#devGrad)"/>
-            <circle cx="40" cy="32" r="8" fill="#0a0a0c"/>
-            <line x1="40" y1="40" x2="40" y2="52" stroke="#0a0a0c" stroke-width="3"/>
-            <path d="M32 52 L40 44 L48 52" fill="none" stroke="#0a0a0c" stroke-width="3" stroke-linecap="round"/>
-          </svg>
+    <div class="realm realm-zephyr" onclick="applyTheme('zephyr')">
+      <div class="frost-layer"></div>
+      <div class="crystal c1"></div><div class="crystal c2"></div><div class="crystal c3"></div>
+      <div class="ice-glow"></div>
+      <div class="realm-inner">
+        <div class="realm-icon">
+          <svg viewBox="0 0 60 60"><path d="M30 5 L35 25 L55 30 L35 35 L30 55 L25 35 L5 30 L25 25 Z" fill="none" stroke="#90caf9" stroke-width="1.5" opacity=".8"/></svg>
         </div>
-        <span class="ss-name">Zephyr</span>
-        <span class="ss-tagline">work · build · ship</span>
+        <h1 class="realm-name">Zephyr</h1>
+        <p class="realm-desc">the architect</p>
+        <div class="realm-line"></div>
       </div>
     </div>
-    <div class="sel-center">
-      <div class="center-tagline">It's not who I am but what I do that defines me</div>
-      <div class="center-divider"></div>
-      <svg viewBox="0 0 60 60" class="ikigai-logo">
-        <circle cx="22" cy="22" r="16" fill="none" stroke="currentColor" stroke-width="2"/>
-        <circle cx="38" cy="22" r="16" fill="none" stroke="currentColor" stroke-width="2"/>
-        <circle cx="22" cy="38" r="16" fill="none" stroke="currentColor" stroke-width="2"/>
-        <circle cx="38" cy="38" r="16" fill="none" stroke="currentColor" stroke-width="2"/>
-        <circle cx="30" cy="30" r="8" fill="currentColor" opacity="0.15"/>
-      </svg>
+
+    <div class="realm-divider">
+      <div class="rift"></div>
+      <svg class="seal" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="none" stroke="#555" stroke-width="1" opacity=".3"/><circle cx="20" cy="20" r="8" fill="none" stroke="#555" stroke-width="1" opacity=".2"/></svg>
     </div>
-    <div class="sel-side sel-azuma" onclick="applyTheme('azuma')">
-      <div class="sakura-bloom sb1"></div>
-      <div class="sakura-bloom sb2"></div>
-      <div class="sakura-bloom sb3"></div>
-      <div class="sakura-bloom sb4"></div>
-      <div class="sa-drawing sd1"></div><div class="sa-drawing sd2"></div><div class="sa-drawing sd3"></div>
-      <div class="sa-inkline si1"></div><div class="sa-inkline si2"></div><div class="sa-inkline si3"></div>
-      <div class="sa-kanji k1">夢</div><div class="sa-kanji k2">桜</div>
-      <div class="sa-label">
-        <div class="selector-logo">
-          <svg viewBox="0 0 80 80" class="logo-attri">
-            <circle cx="40" cy="40" r="35" fill="none" stroke="#1a1a1a" stroke-width="1" opacity="0.1"/>
-            <path d="M20 20 L25 45 L40 50 L55 45 L60 20" fill="none" stroke="#1a1a1a" stroke-width="2"/>
-            <path d="M25 45 L40 50 L55 45" fill="none" stroke="#1a1a1a" stroke-width="2"/>
-            <path d="M35 25 L35 35 M45 25 L45 35" fill="none" stroke="#1a1a1a" stroke-width="2"/>
-            <path d="M30 38 Q40 42 50 38" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/>
-            <g fill="#ffb7c5" opacity="0.6">
-              <circle cx="15" cy="48" r="3"/>
-              <circle cx="65" cy="48" r="3"/>
-              <circle cx="40" cy="12" r="2"/>
-            </g>
-            <g stroke="#ffb7c5" stroke-width="1.5" fill="none">
-              <path d="M40 65 Q35 55 40 50 Q45 55 40 65"/>
-              <path d="M40 68 Q30 58 40 52"/>
-              <path d="M40 68 Q50 58 40 52"/>
-            </g>
-          </svg>
+
+    <div class="realm realm-azuma" onclick="applyTheme('azuma')">
+      <div class="ember-layer"></div>
+      <div class="ember e1"></div><div class="ember e2"></div><div class="ember e3"></div>
+      <div class="fire-glow"></div>
+      <div class="realm-inner">
+        <div class="realm-icon">
+          <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="24" fill="none" stroke="#ffb74d" stroke-width="1.5" opacity=".8"/><circle cx="30" cy="30" r="14" fill="none" stroke="#ffb74d" stroke-width="1" opacity=".5"/><circle cx="30" cy="30" r="6" fill="#ffb74d" opacity=".3"/></svg>
         </div>
-        <span class="sa-name a-name">Azuma</span>
-        <span class="sa-desc a-desc">life · think · feel</span>
+        <h1 class="realm-name">Azuma</h1>
+        <p class="realm-desc">the wanderer</p>
+        <div class="realm-line"></div>
       </div>
     </div>
   </div>
 
-  <button id="theme-float" class="theme-float hidden" onclick="resetTheme()">◈</button>
+  <button id="theme-float" class="theme-float hidden" onclick="resetTheme()">
+    <svg viewBox="0 0 24 24" width="14" height="14"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
 
-  <!-- ═══ ZEPHYR — WORK ═══ -->
+  <!-- ═══ ZEPHYR: ICE / WORK ═══ -->
   <main id="zephyr-content" class="hidden">
-    <div class="zephyr-wrapper">
-      <div class="dash-grid z-grid">
-        <div class="panel" data-role="about">
-          <h2 class="panel-title">// about</h2>
-          <p class="panel-text">Dev Attri — full-stack developer focused on clean interfaces and functional systems. I build things that work.</p>
-        </div>
-        <div class="panel" data-role="skills">
-          <h2 class="panel-title">// stack</h2>
-          <div class="z-skills">
-            <span class="z-tag">JavaScript</span><span class="z-tag">React</span><span class="z-tag">Node.js</span><span class="z-tag">Python</span><span class="z-tag">HTML/CSS</span><span class="z-tag">Git</span><span class="z-tag">SQL</span><span class="z-tag">Docker</span>
+    <div class="ice-bg"></div>
+    <div class="zephyr-wrap">
+      <nav class="z-nav">
+        <span class="z-nav-logo">◈</span>
+        <span class="z-nav-name">Zephyr</span>
+        <span class="z-nav-status">open to work</span>
+      </nav>
+
+      <div class="z-body">
+        <section class="ice-col">
+          <div class="ice-card">
+            <h3 class="ice-label">identity</h3>
+            <p class="ice-text">Dev Attri — I build interfaces and systems that work. No fluff, no noise. Function is the only aesthetic that matters.</p>
           </div>
-        </div>
-        <div class="panel" data-role="learning">
-          <h2 class="panel-title">// learning</h2>
-          <div class="z-learning">
-            <div class="z-learn-item"><span class="z-learn-status active">⟟</span> TypeScript</div>
-            <div class="z-learn-item"><span class="z-learn-status active">⟟</span> Next.js</div>
-            <div class="z-learn-item"><span class="z-learn-status">○</span> Rust</div>
-            <div class="z-learn-item"><span class="z-learn-status">○</span> System Design</div>
+          <div class="ice-card">
+            <h3 class="ice-label">arsenal</h3>
+            <div class="ice-tags">
+              <span>JavaScript</span><span>React</span><span>Node.js</span><span>Python</span>
+              <span>SQL</span><span>Docker</span><span>Git</span><span>TypeScript</span>
+            </div>
           </div>
-        </div>
-        <div class="panel panel-wide" data-role="projects">
-          <h2 class="panel-title">// projects</h2>
-          <div class="z-projects">
-            <a href="https://weather-app-5vd.pages.dev" class="z-proj" target="_blank" rel="noopener"><span class="z-proj-name">Weather App</span><span class="z-proj-tag">HTML · CSS · JS</span><span class="z-proj-arrow">→</span></a>
-            <a href="https://macro-tracker-6kx.pages.dev" class="z-proj" target="_blank" rel="noopener"><span class="z-proj-name">Macro Tracker</span><span class="z-proj-tag">HTML · CSS · JS</span><span class="z-proj-arrow">→</span></a>
-            <a href="https://max-workspace.pages.dev" class="z-proj" target="_blank" rel="noopener"><span class="z-proj-name">Max Workspace</span><span class="z-proj-tag">HTML · CSS · JS</span><span class="z-proj-arrow">→</span></a>
+          <div class="ice-card">
+            <h3 class="ice-label">operations</h3>
+            <div class="ice-ops">
+              <div class="op-row"><span class="op-dot live"></span><span class="op-name">Weather App</span><span class="op-tag">Deployed</span></div>
+              <div class="op-row"><span class="op-dot live"></span><span class="op-name">Macro Tracker</span><span class="op-tag">Deployed</span></div>
+              <div class="op-row"><span class="op-dot live"></span><span class="op-name">Max Workspace</span><span class="op-tag">Deployed</span></div>
+            </div>
           </div>
-        </div>
-        <div class="panel" data-role="connect">
-          <h2 class="panel-title">// connect</h2>
-          <div class="z-socials">
-            <a href="https://github.com/attridevv" target="_blank" rel="noopener">GitHub</a>
-            <a href="https://www.linkedin.com/in/dev-attri-723a733b6" target="_blank" rel="noopener">LinkedIn</a>
-            <a href="https://twitter.com/attridevv" target="_blank" rel="noopener">X</a>
-            <a href="mailto:hello@attridevv.com">Email</a>
+        </section>
+
+        <section class="ice-col">
+          <div class="ice-card wide">
+            <h3 class="ice-label">signal</h3>
+            <div class="ice-contact">
+              <a href="https://github.com/attridevv" target="_blank">GitHub</a>
+              <a href="https://linkedin.com/in/dev-attri-723a733b6" target="_blank">LinkedIn</a>
+              <a href="https://twitter.com/attridevv" target="_blank">X</a>
+              <a href="mailto:hello@attridevv.com">Mail</a>
+            </div>
           </div>
-        </div>
-        <div class="panel" data-role="status">
-          <h2 class="panel-title">// status</h2>
-          <div class="z-status-box">
-            <span class="z-status-dot"></span> Available for work · Open to collaborate
+          <div class="ice-card wide">
+            <h3 class="ice-label">ledger</h3>
+            <div class="ice-learning">
+              <div class="l-row"><span class="l-check">&#10003;</span>TypeScript</div>
+              <div class="l-row"><span class="l-check">&#10003;</span>Next.js</div>
+              <div class="l-row"><span class="l-void">&#9675;</span>Rust</div>
+              <div class="l-row"><span class="l-void">&#9675;</span>System Design</div>
+            </div>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   </main>
 
-  <!-- ═══ AZUMA — LIFE ═══ -->
+  <!-- ═══ AZUMA: EMBER / LIFE ═══ -->
   <main id="azuma-content" class="hidden">
-    <div class="azuma-wrapper">
-      <div class="dash-grid a-grid">
-        <div class="panel" data-role="questions">
-          <h2 class="panel-title a-pt">? questions i live with</h2>
-          <div class="question-item" onclick="toggleAnswer(this)">
-            <div class="q-header"><p class="question-text">What is the meaning of life?</p><span class="q-toggle">+</span></div>
-            <div class="q-answer"><div class="q-my-answer"><span class="a-label">my take</span><p>To be human — before anything else. To create something that outlasts you, to leave a legacy that speaks when you can't. But being human isn't a given — it's a practice. It's having emotions and expressing them. It's understanding and being understood. It's loving something enough to let it change you. To live is not the same as to be human — one can survive without ever truly living. The meaning, then, is this: don't just live. Be human. Create. Feel. Leave something behind.</p></div><a href="mailto:hello@attridevv.com?subject=What is the meaning of life?&body=Hey Attri,%0D%0A%0D%0AYour question made me think. Here's my take:%0D%0A%0D%0A" class="q-counter"><span class="a-label counter">your turn</span><p>Share your answer</p></a></div>
-          </div>
-          <div class="question-item" onclick="toggleAnswer(this)">
-            <div class="q-header"><p class="question-text">When did we stop asking questions?</p><span class="q-toggle">+</span></div>
-            <div class="q-answer"><div class="q-my-answer"><span class="a-label">my take</span><p>Every kid asks a hundred questions before the world teaches them to stop. We traded curiosity for compliance — accepting statements without a counter-thought. The environment shaped us, and I don't blame anyone for that. But I refuse to stay there. The point isn't who took our questions — it's whether we're willing to take them back. To ask again, to seek understanding with curiosity instead of accepting answers with a closed mind.</p></div><a href="mailto:hello@attridevv.com?subject=When did we stop asking questions?&body=Hey Attri,%0D%0A%0D%0AYour question made me think. Here's my take:%0D%0A%0D%0A" class="q-counter"><span class="a-label counter">your turn</span><p>Share your answer</p></a></div>
-          </div>
-          <div class="question-item" onclick="toggleAnswer(this)">
-            <div class="q-header"><p class="question-text">Why does being drunk make us happy?</p><span class="q-toggle">+</span></div>
-            <div class="q-answer"><div class="q-my-answer"><span class="a-label">my take</span><p>Because it strips away what we've been conditioned to carry. No judgment. No outcomes. No weight of "what if." Just the moment — felt with true, unguarded emotion. Being drunk lifts you to a version of yourself that already exists underneath all the conditioning. But it's borrowed freedom. The real question is: what if we could live like that without the alcohol? What if we could be that free, that honest, that alive — on our own?</p></div><a href="mailto:hello@attridevv.com?subject=Why does being drunk make us happy?&body=Hey Attri,%0D%0A%0D%0AYour question made me think. Here's my take:%0D%0A%0D%0A" class="q-counter"><span class="a-label counter">your turn</span><p>Share your answer</p></a></div>
-          </div>
-        </div>
-        <div class="panel" data-role="mind">
-          <h2 class="panel-title a-pt">💡 on my mind</h2>
-          <div class="mind-grid">
-            <div class="mind-item"><span class="mind-label">learning</span><span class="mind-value">GTM Strategy · Narrative Writing · Spanish · Japanese</span></div>
-            <div class="mind-item"><span class="mind-label">reading</span><span class="mind-value">Vagabond</span></div>
-            <div class="mind-item"><span class="mind-label">watching</span><span class="mind-value">86 · Hell's Paradise</span></div>
-            <div class="mind-item"><span class="mind-label">listening</span><span class="mind-value"><a href="https://open.spotify.com/user/31dsi66fslluej6jjleutofhulyu?si=3cf3b44f16e64b58" target="_blank">Spotify</a></span></div>
-          </div>
-        </div>
+    <div class="ember-bg"></div>
+    <div class="azuma-wrap">
+      <nav class="a-nav">
+        <span class="a-nav-logo">&#9788;</span>
+        <span class="a-nav-name">Azuma</span>
+      </nav>
 
-        <div class="panel" data-role="quote">
-          <div class="a-card-header">" quote</div>
-          <p class="quote-text">Above all, don't lie to yourself. The man who lies to himself and listens to his own lie comes to a point that he cannot distinguish the truth within him, or around him, and so loses all respect for himself and for others.</p>
-          <span class="quote-credit">— Fyodor Dostoevsky</span>
-        </div>
-
-        <div class="panel" data-role="persp">
-          <div class="a-card-header">creating perspective for</div>
-          <div class="persp-list">
-            <span>Trying to figure out the difference between attraction and love</span>
-          </div>
-        </div>
-
-        <div class="panel" data-role="inspiration">
-          <div class="a-card-header">inspiration</div>
-          <div class="insp-list">
-            <div class="insp-item">
-              <span class="insp-name">David Goggins</span>
-              <span class="insp-quote">"Stay hard."</span>
+      <div class="a-body">
+        <section class="ember-col">
+          <div class="ember-card">
+            <h3 class="ember-label">questions i live with</h3>
+            <div class="ember-q">
+              <div class="q-row" onclick="toggleA(this)">
+                <p>What is the meaning of life?</p>
+                <span class="q-plus">+</span>
+              </div>
+              <div class="q-ans">
+                <p>To be human — before anything else. To create something that outlasts you, to leave a legacy that speaks when you can't. But being human isn't a given — it's a practice.</p>
+                <a class="q-reply" href="mailto:hello@attridevv.com?subject=What is the meaning of life?">share your take</a>
+              </div>
             </div>
-            <div class="insp-item">
-              <span class="insp-name">Alexander the Great</span>
-              <span class="insp-quote">"I am not afraid of an army of lions led by a sheep."</span>
+            <div class="ember-q">
+              <div class="q-row" onclick="toggleA(this)">
+                <p>When did we stop asking questions?</p>
+                <span class="q-plus">+</span>
+              </div>
+              <div class="q-ans">
+                <p>Every kid asks a hundred questions before the world teaches them to stop. We traded curiosity for compliance. The point isn't who took our questions — it's whether we're willing to take them back.</p>
+                <a class="q-reply" href="mailto:hello@attridevv.com?subject=When did we stop asking questions?">share your take</a>
+              </div>
             </div>
-            <div class="insp-item">
-              <span class="insp-name">Monkey D. Luffy</span>
-              <span class="insp-quote">"I don't want to conquer anything. I just want to be the freest man."</span>
+            <div class="ember-q">
+              <div class="q-row" onclick="toggleA(this)">
+                <p>Why does being drunk make us happy?</p>
+                <span class="q-plus">+</span>
+              </div>
+              <div class="q-ans">
+                <p>Because it strips away what we've been conditioned to carry. No judgment. No outcomes. Just the moment — felt with true, unguarded emotion. But it's borrowed freedom.</p>
+                <a class="q-reply" href="mailto:hello@attridevv.com?subject=Why does being drunk make us happy?">share your take</a>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="panel panel-wide" data-role="poetry">
-          <h2 class="panel-title a-pt">✎ poetry</h2>
-          <div class="poem-tabs"><div class="poem-tab active" onclick="switchPoem(this,0)">Life Happened</div><div class="poem-tab" onclick="switchPoem(this,1)">Blue Eyes</div><div class="poem-tab" onclick="switchPoem(this,2)">Gray Dreams</div></div>
-          <div class="poem-panels">
-            <div class="poem-panel active" id="poem-0"><p>Life happened, me waiting. Believing it would stop, it would wait. Life happening and happening, consistent like spring water.</p><p>Oh water, don't reflect what I see. Once five, now twenty—what changed? The vessel grew wings, then they were cut, and strings were pulled.</p><p>Cut these strings before they strangle me. Was the wind too strong, or were the strings too tight? Either way, the reflection doesn't lie.</p><p>Oh water, let's start again. Take me away to the far sea, where I can sleep once again. — Dev</p></div>
-            <div class="poem-panel" id="poem-1"><p>What beautiful colour of your eyes, that a boy loses his perception of time</p><p>I have seen the endless seas but I see depth in your eyes farseen. Blessed were my eyes to have met yours.</p><p>Flower meant a thing to me, now it means things to me. Is it Rose that you like, or cherry blossom alike?</p><p>My heart and eyes are at war, but it seems to be a losing war. Delhi to Darwin seems to be my next flight.</p><p>Home is where the heart is, and my eyes are where your eyes is. — Dev</p></div>
-            <div class="poem-panel" id="poem-2"><p>Oh shades of light, show me the way, through darkness that swallows and night that turns gray.</p><p>What I seek is not freedom, as seeking confines. And what I like is not love, but a flicker that shines.</p><p>White is not always warm, and black not always stark. In the gray of our dreams, all our truths can be seen. — Dev</p></div>
+          <div class="ember-card">
+            <h3 class="ember-label">on my mind</h3>
+            <div class="ember-mind">
+              <div><span class="mind-k">learning</span>GTM · Narrative Writing · Spanish · Japanese</div>
+              <div><span class="mind-k">reading</span>Vagabond</div>
+              <div><span class="mind-k">watching</span>86 · Hell's Paradise</div>
+              <div><span class="mind-k">listening</span><a href="https://open.spotify.com/user/31dsi66fslluej6jjleutofhulyu?si=3cf3b44f16e64b58" target="_blank">Spotify</a></div>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <div class="panel" data-role="message">
-          <div class="a-card-header">✦</div>
-          <p class="msg-text">the world will tell you to slow down. <strong>don't.</strong> burn for it. this is your one shot — make it impossible to ignore. — attridevv</p>
+        <section class="ember-col">
+          <div class="ember-card">
+            <h3 class="ember-label">poetry</h3>
+            <div class="ember-poem-tabs">
+              <div class="pt active" onclick="switchP(this,0)">Life Happened</div>
+              <div class="pt" onclick="switchP(this,1)">Blue Eyes</div>
+              <div class="pt" onclick="switchP(this,2)">Gray Dreams</div>
+            </div>
+            <div class="ember-poem-body">
+              <div class="pp active">
+                <p>Life happened, me waiting. Believing it would stop, it would wait. Life happening and happening, consistent like spring water.</p>
+                <p>Oh water, don't reflect what I see. Once five, now twenty—what changed? The vessel grew wings, then they were cut, and strings were pulled.</p>
+                <p>Cut these strings before they strangle me. Was the wind too strong, or were the strings too tight? Either way, the reflection doesn't lie.</p>
+                <p>Oh water, let's start again. Take me away to the far sea, where I can sleep once again. — Dev</p>
+              </div>
+              <div class="pp">
+                <p>What beautiful colour of your eyes, that a boy loses his perception of time</p>
+                <p>I have seen the endless seas but I see depth in your eyes farseen. Blessed were my eyes to have met yours.</p>
+                <p>Flower meant a thing to me, now it means things to me. Is it Rose that you like, or cherry blossom alike?</p>
+                <p>My heart and eyes are at war, but it seems to be a losing war. Delhi to Darwin seems to be my next flight.</p>
+                <p>Home is where the heart is, and my eyes are where your eyes is. — Dev</p>
+              </div>
+              <div class="pp">
+                <p>Oh shades of light, show me the way, through darkness that swallows and night that turns gray.</p>
+                <p>What I seek is not freedom, as seeking confines. And what I like is not love, but a flicker that shines.</p>
+                <p>White is not always warm, and black not always stark. In the gray of our dreams, all our truths can be seen. — Dev</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="ember-card">
+            <h3 class="ember-label">perspective</h3>
+            <p class="ember-single">Trying to figure out the difference between attraction and love.</p>
+          </div>
+
+          <div class="ember-card">
+            <h3 class="ember-label">inspiration</h3>
+            <div class="ember-insp">
+              <div><strong>David Goggins</strong> — "Stay hard."</div>
+              <div><strong>Alexander the Great</strong> — "I am not afraid of an army of lions led by a sheep."</div>
+              <div><strong>Monkey D. Luffy</strong> — "I don't want to conquer anything. I just want to be the freest man."</div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="a-footer">
+        <p class="ember-quote">"Above all, don't lie to yourself. The man who lies to himself and listens to his own lie comes to a point that he cannot distinguish the truth within him, or around him." <span>— Fyodor Dostoevsky</span></p>
+        <div class="a-socials">
+          <a href="https://discord.gg/Ms9EgEypX" target="_blank">Discord</a>
+          <a href="mailto:hello@attridevv.com">Message</a>
+          <a href="https://twitter.com/attridevv" target="_blank">X</a>
+          <a href="https://instagram.com/attridevv" target="_blank">Instagram</a>
+          <a href="https://youtube.com/@whoiskilluaa" target="_blank">YouTube</a>
+          <a href="https://anilist.co/user/11x02/" target="_blank">AniList</a>
         </div>
       </div>
-      <footer id="a-socials">
-        <div class="a-social-grid">
-          <a href="https://discord.gg/Ms9EgEypX" target="_blank" rel="noopener">Discord</a>
-          <a href="mailto:hello@attridevv.com">Message Me</a>
-          <a href="https://twitter.com/attridevv" target="_blank" rel="noopener">X</a>
-          <a href="https://instagram.com/attridevv" target="_blank" rel="noopener">Instagram</a>
-          <a href="https://www.youtube.com/@whoiskilluaa" target="_blank" rel="noopener">YouTube</a>
-          <a href="https://anilist.co/user/11x02/" target="_blank" rel="noopener">AniList</a>
-        </div>
-      </footer>
     </div>
   </main>
 
   <script>
-    function toggleAnswer(el){el.classList.toggle('open');}
-    function switchPoem(tab,idx){tab.parentElement.querySelectorAll('.poem-tab').forEach(t=>t.classList.remove('active'));tab.classList.add('active');tab.closest('.panel').querySelectorAll('.poem-panel').forEach((p,i)=>{p.classList.toggle('active',i===idx);});}
+    function toggleA(el){
+      const parent = el.parentElement;
+      parent.classList.toggle('open');
+    }
+    function switchP(tab,idx){
+      const card = tab.closest('.ember-card');
+      card.querySelectorAll('.pt').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      card.querySelectorAll('.pp').forEach((p,i)=>p.classList.toggle('active',i===idx));
+    }
 
     function applyTheme(theme){
       const ov=document.getElementById('transition-overlay');
-      ov.className='transition-'+theme;ov.classList.add('active');
+      ov.className='trans-'+theme;ov.classList.add('active');
       setTimeout(()=>{
         document.documentElement.setAttribute('data-theme',theme);
         localStorage.setItem('attridevv-theme',theme);
         document.getElementById('theme-select').style.display='none';
         document.getElementById('theme-float').classList.remove('hidden');
-        if(theme==='zephyr'){document.getElementById('zephyr-content').classList.remove('hidden');document.getElementById('azuma-content').classList.add('hidden');}
-        else{document.getElementById('azuma-content').classList.remove('hidden');document.getElementById('zephyr-content').classList.add('hidden');}
-        initParticles(theme);
-        setTimeout(()=>{ov.classList.remove('active');setTimeout(()=>{ov.className='';},600);},400);
+        if(theme==='zephyr'){
+          document.getElementById('zephyr-content').classList.remove('hidden');
+          document.getElementById('azuma-content').classList.add('hidden');
+        }else{
+          document.getElementById('azuma-content').classList.remove('hidden');
+          document.getElementById('zephyr-content').classList.add('hidden');
+        }
+        setTimeout(()=>{ov.classList.remove('active');setTimeout(()=>ov.className='',600);},400);
       },700);
     }
 
     function resetTheme(){
       localStorage.removeItem('attridevv-theme');
       document.documentElement.setAttribute('data-theme','select');
-      const z=document.getElementById('zephyr-content');const a=document.getElementById('azuma-content');
-      if(z)z.style.opacity='0';if(a)a.style.opacity='0';
-      setTimeout(()=>{z.classList.add('hidden');z.style.opacity='';a.classList.add('hidden');a.style.opacity='';document.getElementById('theme-float').classList.add('hidden');document.getElementById('theme-select').style.display='flex';},300);
-      const p=document.getElementById('particles');while(p.firstChild)p.removeChild(p.firstChild);
-      const ms=document.getElementById('manga-style');if(ms)ms.remove();
+      document.getElementById('zephyr-content').classList.add('hidden');
+      document.getElementById('azuma-content').classList.add('hidden');
+      document.getElementById('theme-float').classList.add('hidden');
+      document.getElementById('theme-select').style.display='flex';
     }
 
     const saved=localStorage.getItem('attridevv-theme');
@@ -261,21 +272,8 @@
       document.getElementById('theme-float').classList.remove('hidden');
       if(saved==='zephyr'){document.getElementById('zephyr-content').classList.remove('hidden');}
       else{document.getElementById('azuma-content').classList.remove('hidden');}
-      initParticles(saved);
     }
-
-    function initParticles(theme){
-      const c=document.getElementById('particles');c.innerHTML='';
-      const ms=document.getElementById('manga-style');if(ms)ms.remove();
-      if(theme==='zephyr'){
-        const s=document.createElement('style');s.id='manga-style';
-        s.textContent=`body::before{content:'';position:fixed;inset:0;background:repeating-conic-gradient(rgba(255,255,255,.012) 0% 25%,transparent 0% 50%) 0 0/4px 4px;pointer-events:none;z-index:9999;}`;
-        document.head.appendChild(s);
-      }
-    }
-
-    const glow=document.getElementById('cursor-glow');
-    document.addEventListener('mousemove',e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px';});
   </script>
+
 </body>
 </html>
