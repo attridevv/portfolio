@@ -103,7 +103,7 @@ html,body{height:100vh;overflow:hidden;font-family:'Space Mono',monospace;}
 .op-tag{font-size:.5rem;color:#90caf9;opacity:.5;margin-left:auto;}
 
 .ice-contact{display:flex;flex-wrap:wrap;gap:.5rem;}
-.ice-contact a{font-size:.6rem;text-decoration:none;color:#90caf9;border:1px solid rgba(144,202,249,.15);padding:.25rem .5rem;border-radius:3px;transition:all .2s;}
+.ice-contact a{font-size:.6rem;text-decoration:none;color:#90caf9;border:1px solid rgba(144,202,249,.15);padding:.35rem .6rem;border-radius:3px;transition:all .2s;min-height:32px;display:flex;align-items:center;}
 .ice-contact a:hover{background:rgba(144,202,249,.1);border-color:rgba(144,202,249,.4);}
 
 .ice-learning{display:flex;flex-direction:column;gap:.4rem;}
@@ -176,7 +176,7 @@ html,body{height:100vh;overflow:hidden;font-family:'Space Mono',monospace;}
 .ember-quote span{display:block;margin-top:.4rem;font-size:.6rem;color:#ffb74d;opacity:.5;font-family:'Space Mono',monospace;font-style:normal;}
 
 .a-socials{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;}
-.a-socials a{font-size:.55rem;text-decoration:none;color:#ffb74d;border:1px solid rgba(255,183,77,.15);padding:.2rem .4rem;border-radius:3px;transition:all .2s;}
+.a-socials a{font-size:.55rem;text-decoration:none;color:#ffb74d;border:1px solid rgba(255,183,77,.15);padding:.35rem .5rem;border-radius:3px;transition:all .2s;min-height:32px;display:flex;align-items:center;}
 .a-socials a:hover{background:rgba(255,183,77,.08);border-color:rgba(255,183,77,.4);}
 
 /* ═══ SCROLLBARS ═══ */
@@ -190,12 +190,23 @@ html,body{height:100vh;overflow:hidden;font-family:'Space Mono',monospace;}
   .a-body{grid-template-columns:1fr 1fr;}
 }
 @media(max-width:900px){
-  .z-body,.a-body{grid-template-columns:1fr;}
+  html,body{height:auto;overflow:auto;}
+  .z-body,.a-body{grid-template-columns:1fr;height:auto;overflow:visible;padding:1rem 0;}
+  .ice-col,.ember-col{overflow-y:visible;height:auto;}
+  .zephyr-wrap,.azuma-wrap{height:auto;min-height:100vh;}
   .realm-name{font-size:1.4rem;}
 }
 @media(max-width:600px){
-  .realm-divider{width:30px;min-width:30px;}
+  .realm-divider{width:20px;min-width:20px;}
   .zephyr-wrap,.azuma-wrap{padding:0 1rem;}
   .realm-name{font-size:1.1rem;}
   .realm-desc{display:none;}
+  .realm-inner{padding:1rem;}
+  .realm-icon{width:36px;height:36px;}
+  .q-row{padding:.5rem 0;}
+  .pt{padding:.4rem .5rem;font-size:.55rem;}
+  .ice-card,.ember-card{padding:1rem;}
+  .z-nav,.a-nav{padding:1rem 0;}
+  .a-footer{padding:.8rem 0 1rem;}
+  .ember-quote{font-size:.75rem;}
 }
