@@ -127,7 +127,7 @@ html,body{height:100vh;overflow:hidden;font-family:'Space Mono',monospace;}
 .a-nav-logo{font-size:1.2rem;color:#ffb74d;}
 .a-nav-name{font-size:.85rem;font-weight:700;letter-spacing:.2em;color:#ffb74d;text-transform:uppercase;font-family:'Cormorant Garamond',serif;}
 
-.a-body{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;padding:1.5rem 0;overflow:hidden;}
+.a-body{flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem;padding:1.5rem 0;overflow:hidden;}
 
 .ember-col{display:flex;flex-direction:column;gap:1rem;overflow-y:auto;}
 .ember-card{background:rgba(95,58,30,.08);border:1px solid rgba(255,183,77,.12);border-radius:4px;padding:1.2rem;backdrop-filter:blur(10px);}
@@ -160,6 +160,12 @@ html,body{height:100vh;overflow:hidden;font-family:'Space Mono',monospace;}
 .pp p{margin-bottom:.5rem;}
 
 .ember-single{font-family:'Cormorant Garamond',serif;font-size:.78rem;font-style:italic;color:#ffe0b2;opacity:.8;line-height:1.6;}
+.coming-soon{opacity:.4;font-style:italic;}
+.ember-text{font-family:'Cormorant Garamond',serif;font-size:.78rem;line-height:1.8;color:#ffe0b2;opacity:.85;}
+.ember-beliefs{display:flex;flex-direction:column;gap:.6rem;}
+.ember-beliefs p{font-family:'Cormorant Garamond',serif;font-size:.75rem;line-height:1.6;color:#ffe0b2;opacity:.8;padding-left:.6rem;border-left:2px solid rgba(255,183,77,.2);}
+.ember-wins{display:flex;flex-direction:column;gap:.4rem;}
+.ember-wins div{font-family:'Cormorant Garamond',serif;font-size:.72rem;color:#ffe0b2;opacity:.75;padding-left:.5rem;border-left:2px solid rgba(255,183,77,.15);line-height:1.5;}
 
 .ember-insp{display:flex;flex-direction:column;gap:.5rem;}
 .ember-insp div{font-size:.65rem;color:#ffe0b2;opacity:.8;line-height:1.5;}
@@ -180,6 +186,9 @@ html,body{height:100vh;overflow:hidden;font-family:'Space Mono',monospace;}
 [data-theme="azuma"] ::-webkit-scrollbar-thumb{background:rgba(255,183,77,.2);}
 
 /* ═══ RESPONSIVE ═══ */
+@media(max-width:1100px){
+  .a-body{grid-template-columns:1fr 1fr;}
+}
 @media(max-width:900px){
   .z-body,.a-body{grid-template-columns:1fr;}
   .realm-name{font-size:1.4rem;}
