@@ -2,571 +2,106 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>attridevv</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Dev Attri</title>
 <style>
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root{--bg:#050508;--surface:#0a0a14;--border:#1a1a28;--text:#e4e4e7;--dim:#71717a;--faint:#3f3f46;--green:#34d399}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+  .container{max-width:680px;width:100%;padding:3rem 1.5rem}
+  header{text-align:center;padding:4rem 0 3rem}
+  .avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#34d39920,#064e3b40);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:1.8rem}
+  h1{font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:.35rem}
+  .tagline{font-size:.82rem;color:var(--dim);line-height:1.6;max-width:440px;margin:0 auto}
+  .links{display:flex;gap:1.25rem;justify-content:center;margin-top:1.25rem;flex-wrap:wrap}
+  .links a{color:var(--faint);text-decoration:none;font-size:.72rem;letter-spacing:.04em;transition:color .2s}
+  .links a:hover{color:var(--text)}
 
-:root {
-  --bg: #060608;
-  --surface: #0c0c12;
-  --border: #1c1c28;
-  --text: #e4e4e7;
-  --dim: #71717a;
-  --faint: #3f3f46;
-  --zephyr: #60a5fa;
-  --azuma: #c084fc;
-  --grit: #34d399;
-  --green: #34d399;
-  --red: #f87171;
-  --amber: #fbbf24;
-}
+  .section{margin-bottom:3rem}
+  .section-title{font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;color:var(--faint);margin-bottom:1rem}
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  height: 100vh; overflow: hidden;
-  display: flex; flex-direction: column;
-}
+  .tools{display:grid;gap:.75rem}
+  .tool-card{display:flex;gap:1rem;padding:1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;text-decoration:none;color:inherit;transition:all .25s;align-items:center}
+  .tool-card:hover{border-color:#34d39930;background:#0d0d1a;transform:translateY(-1px)}
+  .tool-icon{font-size:1.8rem;width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .tool-icon.grit{background:rgba(52,211,153,.08)}
+  .tool-icon.soon{background:rgba(113,113,122,.06)}
+  .tool-info h3{font-size:.95rem;font-weight:600;margin-bottom:.15rem}
+  .tool-info p{font-size:.75rem;color:var(--dim);line-height:1.5}
+  .tool-arrow{color:var(--faint);font-size:1.2rem;flex-shrink:0;transition:transform .2s}
+  .tool-card:hover .tool-arrow{transform:translateX(3px);color:var(--green)}
+  .tool-status{font-size:.6rem;padding:.2rem .55rem;border-radius:100px;letter-spacing:.06em;margin-top:.35rem;display:inline-block}
+  .status-live{background:rgba(52,211,153,.1);color:var(--green);border:1px solid rgba(52,211,153,.15)}
+  .status-soon{background:rgba(113,113,122,.06);color:var(--faint);border:1px solid var(--border)}
 
-/* ===== HEADER ===== */
-header {
-  position: fixed; top:0; left:0; right:0; z-index:50;
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 1.25rem 2rem;
-  pointer-events: none;
-}
-.header-logo {
-  font-size: 0.8rem; font-weight: 600; letter-spacing: 0.22em;
-  color: var(--dim); text-transform: uppercase;
-}
-.header-time {
-  font-size: 0.7rem; color: var(--faint); letter-spacing: 0.1em;
-}
+  .about p{font-size:.82rem;color:var(--dim);line-height:1.75;margin-bottom:.75rem}
 
-/* ===== TRIPTYCH ===== */
-.triptych {
-  display: flex; flex:1; height: 100vh;
-}
+  footer{text-align:center;padding:2rem 0;color:var(--faint);font-size:.65rem;letter-spacing:.06em}
+  footer a{color:var(--dim);text-decoration:none}
 
-.pane {
-  flex:1; position:relative;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  cursor: pointer;
-  transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
-  overflow: hidden;
-  text-decoration: none; color: inherit;
-  user-select: none;
-}
-.pane:last-child { border-right:none; }
-
-.pane-glow {
-  position: absolute; inset:0; opacity:0; transition: opacity 0.6s;
-  pointer-events: none;
-}
-.pane:hover .pane-glow { opacity:0.5; }
-.pane.zephyr .pane-glow { background: radial-gradient(ellipse at 50% 50%, rgba(96,165,250,0.06) 0%, transparent 70%); }
-.pane.azuma  .pane-glow { background: radial-gradient(ellipse at 50% 50%, rgba(192,132,252,0.06) 0%, transparent 70%); }
-.pane.grit   .pane-glow { background: radial-gradient(ellipse at 50% 50%, rgba(52,211,153,0.08) 0%, transparent 70%); }
-
-.pane:hover { flex: 1.15; }
-
-.pane-inner {
-  position:relative; z-index:2; text-align:center;
-  transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
-  padding: 2rem;
-}
-.pane:hover .pane-inner { transform: translateY(-6px); }
-
-.pane-emblem {
-  font-size: 2.8rem; margin-bottom: 1rem;
-  transition: transform 0.4s;
-  display: block;
-  filter: grayscale(0.3);
-}
-.pane:hover .pane-emblem { transform: scale(1.08); filter: grayscale(0); }
-
-.pane-tag {
-  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.18em;
-  margin-bottom: 0.5rem; font-weight: 600;
-}
-.pane.zephyr .pane-tag { color: var(--zephyr); }
-.pane.azuma  .pane-tag { color: var(--azuma); }
-.pane.grit   .pane-tag { color: var(--grit); }
-
-.pane-title {
-  font-size: 2rem; font-weight: 800; letter-spacing: 0.06em;
-  text-transform: uppercase; margin-bottom: 0.35rem;
-}
-.pane.zephyr .pane-title { color: var(--text); }
-.pane.azuma  .pane-title { color: var(--text); }
-.pane.grit   .pane-title { color: var(--text); }
-
-.pane-desc {
-  font-size: 0.75rem; color: var(--faint); line-height: 1.5;
-  max-width: 200px; transition: color 0.3s;
-}
-.pane:hover .pane-desc { color: #a1a1aa; }
-
-.pane-hint {
-  position: absolute; bottom: 2.5rem; left:0; right:0; text-align:center;
-  font-size: 0.6rem; letter-spacing: 0.12em; color: var(--faint);
-  opacity:0; transform:translateY(6px);
-  transition: all 0.35s;
-  text-transform: uppercase;
-}
-.pane:hover .pane-hint { opacity:1; transform:translateY(0); }
-
-/* ===== MODAL ===== */
-.modal-bg {
-  position: fixed; inset:0; z-index:100;
-  background: rgba(3,3,7,0.9); backdrop-filter: blur(8px);
-  display: flex; align-items: center; justify-content: center;
-  padding: 1rem;
-  opacity:0; visibility:hidden;
-  transition: opacity 0.3s, visibility 0.3s;
-}
-.modal-bg.open { opacity:1; visibility:visible; }
-
-.modal {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  width: 100%;
-  max-height: 85vh; overflow-y: auto;
-  position: relative;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.6);
-  transform: scale(0.96) translateY(12px);
-  transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
-}
-.modal-bg.open .modal { transform: scale(1) translateY(0); }
-
-.modal-z { max-width: 460px; }
-.modal-a { max-width: 520px; }
-.modal-g { max-width: 620px; }
-
-.modal-x {
-  position: sticky; top:1rem; float:right; z-index:5;
-  width: 36px; height: 36px; border-radius: 50%;
-  background: var(--border); border: none; color: var(--dim);
-  font-size: 1.2rem; cursor: pointer; display:flex; align-items:center; justify-content:center;
-  transition: all 0.2s;
-}
-.modal-x:hover { background: #2a2a3a; color: var(--text); }
-
-.modal-body { padding: 2.25rem; }
-
-.modal-body h2 { font-size: 1.5rem; margin-bottom: 0.15rem; font-weight: 700; }
-.modal-body .tagline { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 1.75rem; }
-.z-c { color: var(--zephyr); } .a-c { color: var(--azuma); } .g-c { color: var(--grit); }
-.tagline.z-t { color: var(--zephyr); } .tagline.a-t { color: var(--azuma); } .tagline.g-t { color: var(--grit); }
-
-.sec { margin-bottom: 1.5rem; }
-.sec h3 { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--faint); margin-bottom: 0.65rem; }
-.sec p, .sec li { font-size: 0.82rem; color: #a1a1aa; line-height: 1.7; }
-.sec ul { list-style: none; }
-.sec li { padding: 0.15rem 0; }
-.sec a { color: #a1a1aa; text-decoration: none; border-bottom: 1px solid #3f3f46; transition: all 0.2s; }
-.sec a:hover { color: var(--text); border-bottom-color: var(--text); }
-
-.hr { height: 1px; background: var(--border); margin: 1.25rem 0; }
-
-.poem { font-style: italic; color: #a1a1aa; font-size: 0.82rem; line-height: 2; }
-.quote { font-style: italic; color: var(--dim); font-size: 0.75rem; border-left: 2px solid var(--border); padding-left: 1rem; margin-top: 1.25rem; line-height: 1.7; }
-
-.badge {
-  display: inline-flex; align-items: center; gap: 0.4rem;
-  padding: 0.55rem 1.1rem; border-radius: 100px;
-  font-size: 0.78rem; font-weight: 600; text-decoration: none;
-  margin-top: 0.5rem; transition: all 0.2s;
-}
-.badge-grit { background: rgba(52,211,153,0.1); color: var(--grit); border: 1px solid rgba(52,211,153,0.18); }
-.badge-grit:hover { background: rgba(52,211,153,0.18); }
-
-/* ===== HYBRID ATHLETE INLINE DASHBOARD ===== */
-.ha-statgrid { display: grid; grid-template-columns: repeat(2,1fr); gap: 0.75rem; margin-bottom: 1rem; }
-.ha-statcard {
-  background: #0a0a14; border: 1px solid var(--border); border-radius: 10px;
-  padding: 1rem; text-align: center;
-}
-.ha-statcard .val { font-size: 1.6rem; font-weight: 700; }
-.ha-statcard .lbl { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--faint); margin-top: 0.15rem; }
-.ha-statcard .sub { font-size: 0.6rem; color: var(--dim); margin-top: 0.1rem; }
-
-.ha-form { display: grid; grid-template-columns: repeat(2,1fr); gap: 0.6rem; }
-.ha-form label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--faint); display: block; margin-bottom: 0.2rem; }
-.ha-form input, .ha-form select {
-  width: 100%; padding: 0.45rem 0.6rem;
-  background: #0a0a14; border: 1px solid var(--border); border-radius: 7px;
-  color: var(--text); font-size: 0.78rem; outline: none;
-  transition: border-color 0.2s;
-}
-.ha-form input:focus, .ha-form select:focus { border-color: var(--grit); }
-.ha-form select { -webkit-appearance: none; }
-
-.ha-btn {
-  display: block; width: 100%; padding: 0.6rem; margin-top: 0.75rem;
-  background: var(--grit); color: #000; border: none; border-radius: 8px;
-  font-size: 0.8rem; font-weight: 700; cursor: pointer;
-  letter-spacing: 0.04em; text-transform: uppercase;
-  transition: all 0.2s;
-}
-.ha-btn:hover { filter: brightness(1.1); }
-
-.ha-result { margin-top: 1rem; padding: 1rem; border-radius: 10px; border: 1px solid var(--border); }
-.ha-result.green { background: rgba(52,211,153,0.06); border-color: rgba(52,211,153,0.15); }
-.ha-result.yellow { background: rgba(251,191,36,0.06); border-color: rgba(251,191,36,0.15); }
-.ha-result.red { background: rgba(248,113,113,0.06); border-color: rgba(248,113,113,0.15); }
-.ha-result h4 { font-size: 0.75rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.08em; }
-.ha-result .big { font-size: 2.5rem; font-weight: 800; text-align: center; margin: 0.5rem 0; }
-.ha-result ul { list-style: none; font-size: 0.72rem; color: #a1a1aa; }
-.ha-result ul li { padding: 0.18rem 0; }
-
-.ha-history { font-size: 0.65rem; color: var(--dim); margin-top: 1rem; }
-.ha-history table { width: 100%; border-collapse: collapse; }
-.ha-history th, .ha-history td { text-align: left; padding: 0.35rem 0.5rem; border-bottom: 1px solid var(--border); font-size: 0.62rem; }
-.ha-history th { color: var(--faint); text-transform: uppercase; letter-spacing: 0.06em; }
-
-@media (max-width: 768px) {
-  .triptych { flex-direction: column; }
-  .pane { flex-direction: row; padding: 1.25rem; justify-content: flex-start; gap: 1rem; height: 33.33vh; border-right: none; border-bottom: 1px solid var(--border); flex: none; }
-  .pane:last-child { border-bottom: none; }
-  .pane-inner { text-align: left; }
-  .pane-emblem { font-size: 1.8rem; margin-bottom: 0; }
-  .pane-title { font-size: 1.3rem; }
-  .pane:hover { flex: none; }
-  .ha-statgrid { grid-template-columns: 1fr; }
-  .ha-form { grid-template-columns: 1fr; }
-}
+  @media(max-width:480px){.container{padding:2rem 1rem}header{padding:2rem 0 1.5rem}h1{font-size:1.35rem}}
 </style>
 </head>
 <body>
+<div class="container">
 
 <header>
-  <span class="header-logo">attridevv</span>
-  <span class="header-time" id="clock"></span>
+  <div class="avatar">&#x2694;</div>
+  <h1>Dev Attri</h1>
+  <p class="tagline">Building tools for the obsessed. Runner, lifter, builder of things that feel rare.</p>
+  <div class="links">
+    <a href="https://github.com/attridevv" target="_blank">GitHub</a>
+    <a href="https://x.com/attridevv" target="_blank">X</a>
+    <a href="https://instagram.com/attridevv" target="_blank">Instagram</a>
+    <a href="https://anilist.co/user/Attridevv/" target="_blank">AniList</a>
+  </div>
 </header>
 
-<main class="triptych">
-  <!-- ===== ZEPHYR ===== -->
-  <div class="pane zephyr" onclick="openPane('zephyr')" role="button" tabindex="0">
-    <div class="pane-glow"></div>
-    <div class="pane-inner">
-      <span class="pane-emblem">&#x2601;</span>
-      <span class="pane-tag">the builder</span>
-      <span class="pane-title">Zephyr</span>
-      <span class="pane-desc">figuring it out. one build at a time.</span>
-    </div>
-    <span class="pane-hint">view work &rarr;</span>
-  </div>
+<div class="section">
+  <div class="section-title">Tools</div>
+  <div class="tools">
 
-  <!-- ===== AZUMA ===== -->
-  <div class="pane azuma" onclick="openPane('azuma')" role="button" tabindex="0">
-    <div class="pane-glow"></div>
-    <div class="pane-inner">
-      <span class="pane-emblem">&#x25CE;</span>
-      <span class="pane-tag">the mind</span>
-      <span class="pane-title">Azuma</span>
-      <span class="pane-desc">things i think about. things i believe.</span>
-    </div>
-    <span class="pane-hint">explore &rarr;</span>
-  </div>
+    <a href="/grit" class="tool-card">
+      <div class="tool-icon grit">&#x2694;</div>
+      <div class="tool-info" style="flex:1">
+        <h3>Gritier</h3>
+        <p>Hybrid Athlete Command Center &mdash; track runs, lifts, recovery, injuries. Built for athletes who train like their life depends on it.</p>
+        <span class="tool-status status-live">LIVE</span>
+      </div>
+      <span class="tool-arrow">&rarr;</span>
+    </a>
 
-  <!-- ===== GRITIER ===== -->
-  <div class="pane grit" onclick="openPane('grit')" role="button" tabindex="0">
-    <div class="pane-glow"></div>
-    <div class="pane-inner">
-      <span class="pane-emblem">&#x2694;</span>
-      <span class="pane-tag">the athlete</span>
-      <span class="pane-title">Gritier</span>
-      <span class="pane-desc">hybrid athlete command center.</span>
-    </div>
-    <span class="pane-hint">launch &rarr;</span>
-  </div>
-</main>
-
-<!-- ========== MODALS ========== -->
-
-<!-- ZEPHYR MODAL -->
-<div class="modal-bg" id="modal-zephyr" onclick="maybeClose(event,'zephyr')">
-  <div class="modal modal-z">
-    <button class="modal-x" onclick="closePane('zephyr')" aria-label="Close">&times;</button>
-    <div class="modal-body">
-      <h2 class="z-c">Zephyr</h2>
-      <p class="tagline z-t">the builder</p>
-      <div class="sec">
-        <h3>who i am</h3>
-        <p>I'm figuring it out. Building things, breaking them, learning. Not a "full-stack developer" &mdash; just someone who gets obsessed with making things work.</p>
-      </div>
-      <div class="sec">
-        <h3>what i know</h3>
-        <p>Python, JavaScript, React, Next.js, HTML/CSS, Git, APIs, databases. Always learning. Deep in TypeScript and full-stack architecture.</p>
-      </div>
-      <div class="sec">
-        <h3>what i'm chasing</h3>
-        <p>Building tools that actually help people. Creating things that feel rare. Getting faster, smarter, more dangerous.</p>
-      </div>
-      <div class="sec">
-        <h3>things built</h3>
-        <ul>
-          <li>&rarr; Weather App</li>
-          <li>&rarr; Macro Tracker</li>
-          <li>&rarr; Max Workspace</li>
-          <li>&rarr; Hybrid Athlete Command Center</li>
-        </ul>
-      </div>
-      <div class="sec">
-        <h3>honest ledger</h3>
-        <p>I've shipped things that broke. I've abandoned repos. I chase shiny ideas. But I keep showing up.</p>
-      </div>
-      <div class="sec">
-        <h3>signal</h3>
-        <p><a href="https://github.com/attridevv" target="_blank">GitHub</a> &middot; <a href="https://linkedin.com/in/attridevv" target="_blank">LinkedIn</a></p>
+    <div class="tool-card" style="opacity:.5;cursor:default">
+      <div class="tool-icon soon">&#x25CB;</div>
+      <div class="tool-info" style="flex:1">
+        <h3>Something else</h3>
+        <p>More tools coming. What do you want to build next?</p>
+        <span class="tool-status status-soon">COMING</span>
       </div>
     </div>
+
+    <div class="tool-card" style="opacity:.4;cursor:default">
+      <div class="tool-icon soon">&#x25CB;</div>
+      <div class="tool-info" style="flex:1">
+        <h3>And another</h3>
+        <p>Third slot. Open to ideas.</p>
+        <span class="tool-status status-soon">COMING</span>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<!-- AZUMA MODAL -->
-<div class="modal-bg" id="modal-azuma" onclick="maybeClose(event,'azuma')">
-  <div class="modal modal-a">
-    <button class="modal-x" onclick="closePane('azuma')" aria-label="Close">&times;</button>
-    <div class="modal-body">
-      <h2 class="a-c">Azuma</h2>
-      <p class="tagline a-t">the mind</p>
-      <div class="sec">
-        <h3>questions i sit with</h3>
-        <p><strong>What is the meaning of life?</strong><br>The meaning is emotion. The highest highs, the lowest lows &mdash; that's why we're here. To feel everything. Joy, grief, love, heartbreak, adrenaline, stillness. If you die having felt it all, you lived right.</p>
-        <div class="hr"></div>
-        <p><strong>When did we stop asking questions?</strong><br>When asking stopped being rewarded. School teaches answers, not curiosity. Society likes boxes.</p>
-        <div class="hr"></div>
-        <p><strong>Why does being drunk make us happy?</strong><br>Because it quiets the voice. The one that worries about tomorrow, judges every move, keeps us small. The real question: why do we need relief from ourselves?</p>
-      </div>
-      <div class="sec">
-        <h3>favorites</h3>
-        <ul>
-          <li><strong>Books:</strong> The Old Man of the Moon</li>
-          <li><strong>Anime:</strong> One Piece, Your Lie in April</li>
-          <li><strong>Music:</strong> Radiohead &mdash; OK Computer</li>
-          <li><strong>Artist:</strong> <a href="https://open.spotify.com/artist/6LBCQo20ri3tsvbsWWLmr6?si=DxaGtzIURJWRnFObUzNajw" target="_blank">Tolka Nepal</a></li>
-        </ul>
-      </div>
-      <div class="sec">
-        <h3>poetry</h3>
-        <p class="poem">my eyes are where your eyes is &mdash;<br>you blinked and i rewired.</p>
-        <div class="hr"></div>
-        <p class="poem">i want to be consumed by you completely<br>to the point where i forget<br>that i ever existed without you.</p>
-        <div class="hr"></div>
-        <p class="poem">i don't believe in god<br>but i prayed when you held me.</p>
-      </div>
-      <div class="sec">
-        <h3>things i believe</h3>
-        <ul>
-          <li>&rarr; Hard work beats talent when talent doesn't work hard.</li>
-          <li>&rarr; Everything worth doing is on the other side of discomfort.</li>
-          <li>&rarr; People remember how you made them feel, not what you said.</li>
-          <li>&rarr; The best stories are the ones you're scared to tell.</li>
-        </ul>
-      </div>
-      <div class="sec">
-        <h3>small wins</h3>
-        <ul>
-          <li>&rarr; Ran a half marathon</li>
-          <li>&rarr; Hit 1000 ELO in chess</li>
-          <li>&rarr; Visited Nepal</li>
-        </ul>
-      </div>
-      <div class="sec">
-        <h3>on my mind</h3>
-        <p>Running. Football. Chess. Getting stronger. What to build next. Who I want to become.</p>
-      </div>
-      <div class="sec">
-        <h3>socials</h3>
-        <p>
-          <a href="https://x.com/attridevv" target="_blank">X</a> &middot;
-          <a href="https://instagram.com/attridevv" target="_blank">Instagram</a> &middot;
-          <a href="https://youtube.com/@attridevv" target="_blank">YouTube</a> &middot;
-          <a href="https://anilist.co/user/Attridevv/" target="_blank">AniList</a>
-        </p>
-      </div>
-      <p class="quote">"The mystery of human existence lies not in just staying alive, but in finding something to live for."<br>&mdash; Dostoevsky</p>
-    </div>
-  </div>
+<div class="section about">
+  <div class="section-title">About</div>
+  <p>I build things. Sometimes they break. I fix them. Currently deep in TypeScript, full-stack architecture, and hybrid athletic performance. Based somewhere between a text editor and a running trail.</p>
+  <p>This site is my workshop. The tools here are real &mdash; use them, break them, tell me what sucks. Everything gets better with honest feedback.</p>
 </div>
 
-<!-- GRITIER MODAL - Hybrid Athlete Live Demo -->
-<div class="modal-bg" id="modal-grit" onclick="maybeClose(event,'grit')">
-  <div class="modal modal-g">
-    <button class="modal-x" onclick="closePane('grit')" aria-label="Close">&times;</button>
-    <div class="modal-body">
-      <h2 class="g-c">Gritier</h2>
-      <p class="tagline g-t">Hybrid Athlete Command Center</p>
+<footer>
+  <a href="https://github.com/attridevv/portfolio" target="_blank">source</a>
+</footer>
 
-      <!-- Live Dashboard Stats -->
-      <div class="sec">
-        <h3>live readiness</h3>
-        <div class="ha-statgrid" id="ha-stats"></div>
-      </div>
-
-      <!-- Quick Check-In -->
-      <div class="sec">
-        <h3>quick check-in</h3>
-        <div class="ha-form" id="ha-checkin-form">
-          <div><label>Sleep (hrs)</label><input type="number" id="ha-sleep" value="7.5" step="0.5" min="0" max="24"></div>
-          <div><label>Sleep Quality 1-10</label><input type="number" id="ha-sleepq" value="7" min="1" max="10"></div>
-          <div><label>Energy 1-10</label><input type="number" id="ha-energy" value="7" min="1" max="10"></div>
-          <div><label>Soreness 1-10</label><input type="number" id="ha-soreness" value="4" min="1" max="10"></div>
-          <div><label>Stress 1-10</label><input type="number" id="ha-stress" value="3" min="1" max="10"></div>
-          <div><label>Mood</label><select id="ha-mood"><option value="good">Good</option><option value="neutral">Neutral</option><option value="bad">Bad</option></select></div>
-          <div><label>Run Dist (km)</label><input type="number" id="ha-rundist" value="8" step="0.1" min="0"></div>
-          <div><label>Run RPE 1-10</label><input type="number" id="ha-runrpe" value="6" min="1" max="10"></div>
-        </div>
-        <button class="ha-btn" onclick="haSubmit()">Submit Check-In</button>
-      </div>
-
-      <div class="ha-result green" id="ha-result" style="display:none"></div>
-
-      <div class="sec" style="margin-top:1rem">
-        <h3>recent history</h3>
-        <div class="ha-history" id="ha-history"><p style="color:var(--dim);font-size:0.7rem">No entries yet &mdash; submit your first check-in above.</p></div>
-      </div>
-
-      <div class="sec" style="margin-top:1rem">
-        <h3>what this is</h3>
-        <p>An AI-assisted tactical performance dashboard for hybrid athletes. Combines endurance running, strength training, mobility, recovery, and injury management. Built with sports science logic &mdash; readiness scoring, ACWR monitoring, injury risk detection.</p>
-        <p style="margin-top:0.5rem">This is the lightweight demo. The full app runs on Next.js + Prisma + PostgreSQL with AI coach insights powered by OpenAI.</p>
-      </div>
-
-      <a href="https://github.com/attridevv/hybrid-athlete" target="_blank" class="badge badge-grit">&#x2694; View on GitHub &rarr;</a>
-    </div>
-  </div>
 </div>
-
-<script>
-// Clock
-(function t(){ document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false}); setTimeout(t,1000); })();
-
-// Modal open/close
-function openPane(name) {
-  document.getElementById('modal-'+name).classList.add('open');
-  document.body.style.overflow = 'hidden';
-  if (name === 'grit') haRender();
-}
-function closePane(name) {
-  document.getElementById('modal-'+name).classList.remove('open');
-  document.body.style.overflow = '';
-}
-function maybeClose(e, name) {
-  if (e.target === e.currentTarget) closePane(name);
-}
-
-// Keyboard support
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    document.querySelectorAll('.modal-bg.open').forEach(function(m) {
-      m.classList.remove('open');
-    });
-    document.body.style.overflow = '';
-  }
-});
-
-// ===== HYBRID ATHLETE LOCALSTORAGE ENGINE =====
-
-function haGet(key) { try { var v = localStorage.getItem('ha_'+key); return v ? JSON.parse(v) : null; } catch(e) { return null; } }
-function haSet(key, val) { try { localStorage.setItem('ha_'+key, JSON.stringify(val)); } catch(e) {} }
-
-function haCalcReadiness(sleepH, sleepQ, energy, soreness, stress, mood) {
-  var sleepScore = ((sleepH/8)*50 + sleepQ*5);
-  var energyScore = energy * 10;
-  var sorenessScore = 100 - soreness * 10;
-  var stressPenalty = 100 - stress * 10;
-  var moodBonus = mood === 'good' ? 5 : mood === 'bad' ? -5 : 0;
-  var overall = Math.round(sleepScore*0.25 + energyScore*0.25 + sorenessScore*0.2 + stressPenalty*0.2 + 10 + moodBonus);
-  overall = Math.min(100, Math.max(0, overall));
-  var zone = overall >= 80 ? 'green' : overall >= 60 ? 'yellow' : 'red';
-  return { overall: overall, sleepScore: Math.round(sleepScore), energyScore: Math.round(energyScore), zone: zone };
-}
-
-function haRender() {
-  var stats = document.getElementById('ha-stats');
-  var entries = haGet('entries') || [];
-  var last = entries[0] || null;
-
-  var readiness = last && last.readiness ? last.readiness : { overall: '--', zone: 'green', sleepScore: 0, energyScore: 0 };
-  var weeklyKm = entries.filter(function(e) { return e.date && (Date.now() - new Date(e.date).getTime()) < 7*86400000 && e.rundist; })
-    .reduce(function(s, e) { return s + e.rundist; }, 0);
-
-  var zoneLabel = readiness.zone === 'green' ? 'GREEN' : readiness.zone === 'yellow' ? 'YELLOW' : 'RED';
-  var zoneClass = readiness.zone === 'green' ? 'val' : readiness.zone === 'yellow' ? 'val' : 'val';
-  var zoneColor = readiness.zone === 'green' ? 'color:var(--green)' : readiness.zone === 'yellow' ? 'color:var(--amber)' : 'color:var(--red)';
-
-  stats.innerHTML =
-    '<div class="ha-statcard"><div class="val" style="'+zoneColor+'">'+readiness.overall+'</div><div class="lbl">Readiness</div><div class="sub">'+zoneLabel+' zone</div></div>'+
-    '<div class="ha-statcard"><div class="val">'+Math.round(weeklyKm*10)/10+'</div><div class="lbl">Weekly km</div><div class="sub">running</div></div>'+
-    '<div class="ha-statcard"><div class="val">'+(last ? last.sleeph+'h' : '--')+'</div><div class="lbl">Sleep</div><div class="sub">'+(last ? 'quality '+last.sleepq+'/10' : 'no data')+'</div></div>'+
-    '<div class="ha-statcard"><div class="val">'+entries.length+'</div><div class="lbl">Entries</div><div class="sub">total check-ins</div></div>';
-
-  // Render history
-  var historyDiv = document.getElementById('ha-history');
-  if (entries.length === 0) {
-    historyDiv.innerHTML = '<p style="color:var(--dim);font-size:0.7rem">No entries yet &mdash; submit your first check-in above.</p>';
-  } else {
-    var rows = '<table><tr><th>Date</th><th>Readiness</th><th>Sleep</th><th>Run</th><th>Mood</th></tr>';
-    entries.slice(0,10).forEach(function(e) {
-      var d = new Date(e.date);
-      rows += '<tr><td>'+d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+'</td>'+
-        '<td>'+e.readiness.overall+'/'+e.readiness.zone[0].toUpperCase()+'</td>'+
-        '<td>'+e.sleeph+'h</td>'+
-        '<td>'+e.rundist+'km</td>'+
-        '<td>'+e.mood+'</td></tr>';
-    });
-    rows += '</table>';
-    historyDiv.innerHTML = rows;
-  }
-}
-
-function haSubmit() {
-  var sleeph = parseFloat(document.getElementById('ha-sleep').value) || 7;
-  var sleepq = parseInt(document.getElementById('ha-sleepq').value) || 5;
-  var energy = parseInt(document.getElementById('ha-energy').value) || 5;
-  var soreness = parseInt(document.getElementById('ha-soreness').value) || 5;
-  var stress = parseInt(document.getElementById('ha-stress').value) || 5;
-  var mood = document.getElementById('ha-mood').value;
-  var rundist = parseFloat(document.getElementById('ha-rundist').value) || 0;
-  var runrpe = parseInt(document.getElementById('ha-runrpe').value) || 0;
-
-  var readiness = haCalcReadiness(sleeph, sleepq, energy, soreness, stress, mood);
-  var entry = {
-    date: new Date().toISOString(),
-    sleeph: sleeph, sleepq: sleepq, energy: energy,
-    soreness: soreness, stress: stress, mood: mood,
-    rundist: rundist, runrpe: runrpe,
-    readiness: readiness
-  };
-
-  var entries = haGet('entries') || [];
-  entries.unshift(entry);
-  if (entries.length > 100) entries = entries.slice(0, 100);
-  haSet('entries', entries);
-
-  // Show result
-  var resultDiv = document.getElementById('ha-result');
-  resultDiv.style.display = 'block';
-  resultDiv.className = 'ha-result ' + readiness.zone;
-  var recs = readiness.zone === 'green' ? '<li>Ready to train &mdash; push the pace today</li><li>All systems green</li>' :
-    readiness.zone === 'yellow' ? '<li>Moderate readiness &mdash; proceed with caution</li><li>Prioritize sleep tonight</li>' :
-    '<li>Low readiness &mdash; consider active recovery</li><li>Check HR before training</li>';
-  resultDiv.innerHTML = '<h4>Readiness Score</h4><div class="big">'+readiness.overall+'</div>'+
-    '<ul><li>Sleep: '+readiness.sleepScore+'/100</li><li>Energy: '+readiness.energyScore+'/100</li></ul>'+
-    '<p style="font-size:0.68rem;color:var(--dim);margin-top:0.5rem">Zone: <strong>'+readiness.zone.toUpperCase()+'</strong></p>'+
-    '<ul style="margin-top:0.5rem">'+recs+'</ul>';
-
-  haRender();
-}
-</script>
-
 </body>
 </html>
