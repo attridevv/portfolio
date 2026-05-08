@@ -1,315 +1,433 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="select">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>attridevv</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #070709;
+      --surface: #0d0d12;
+      --border: #1a1a24;
+      --text: #e4e4e7;
+      --dim: #71717a;
+      --zephyr: #64b5f6;
+      --azuma: #ba68c8;
+      --grit: #4ade80;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, sans-serif;
+      overflow-x: hidden;
+      height: 100vh;
+      display: flex;
+    }
+
+    .triptych {
+      display: flex;
+      width: 100%;
+      height: 100vh;
+    }
+
+    .pane {
+      flex: 1;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border-right: 1px solid var(--border);
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+    }
+    .pane:last-child { border-right: none; }
+
+    .pane::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    .pane:hover::before { opacity: 1; }
+    .pane.zephyr::before { background: radial-gradient(ellipse at center, rgba(100,181,246,0.08) 0%, transparent 70%); }
+    .pane.azuma::before  { background: radial-gradient(ellipse at center, rgba(186,104,200,0.08) 0%, transparent 70%); }
+    .pane.grit::before   { background: radial-gradient(ellipse at center, rgba(74,222,128,0.08) 0%, transparent 70%); }
+
+    .pane-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .pane:hover .pane-content { transform: translateY(-4px); }
+
+    .pane-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      opacity: 0.8;
+      transition: all 0.3s;
+    }
+    .pane:hover .pane-icon { opacity: 1; transform: scale(1.1); }
+
+    .pane-name {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      transition: color 0.3s;
+    }
+    .zephyr .pane-name { color: var(--zephyr); }
+    .azuma .pane-name  { color: var(--azuma); }
+    .grit .pane-name   { color: var(--grit); }
+
+    .pane-subtitle {
+      font-size: 0.8rem;
+      color: var(--dim);
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .pane-line {
+      font-size: 0.75rem;
+      color: #52525b;
+      line-height: 1.6;
+      max-width: 220px;
+    }
+    .pane:hover .pane-line { color: #a1a1aa; }
+
+    .pane-hover {
+      position: absolute;
+      bottom: 2rem;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--dim);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.3s;
+      letter-spacing: 0.05em;
+    }
+    .pane:hover .pane-hover { opacity: 1; transform: translateY(0); }
+
+    .brand {
+      position: fixed;
+      top: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 10;
+    }
+    .brand-name {
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--dim);
+      font-weight: 600;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.5rem;
+      max-width: 520px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+      animation: modalIn 0.25s ease;
+    }
+    @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: var(--dim);
+      cursor: pointer;
+      font-size: 1.25rem;
+      width: 2rem; height: 2rem;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+    .modal-close:hover { color: var(--text); background: var(--border); }
+
+    .modal h2 { font-size: 1.4rem; margin-bottom: 0.25rem; }
+    .modal h2.zephyr-c { color: var(--zephyr); }
+    .modal h2.azuma-c  { color: var(--azuma); }
+    .modal h2.grit-c   { color: var(--grit); }
+
+    .modal .tagline { color: var(--dim); font-size: 0.8rem; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .modal-section { margin-bottom: 1.5rem; }
+    .modal-section h3 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); margin-bottom: 0.75rem; }
+    .modal-section p, .modal-section li { font-size: 0.85rem; color: #a1a1aa; line-height: 1.7; }
+    .modal-section ul { list-style: none; padding: 0; }
+    .modal-section li { padding: 0.2rem 0; }
+    .modal-section a { color: #a1a1aa; text-decoration: underline; text-underline-offset: 3px; transition: color 0.2s; }
+    .modal-section a:hover { color: var(--text); }
+
+    .modal-badge {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.5rem 1rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: 1rem;
+      transition: all 0.2s;
+    }
+    .badge-grit { background: rgba(74,222,128,0.12); color: var(--grit); border: 1px solid rgba(74,222,128,0.2); }
+    .badge-grit:hover { background: rgba(74,222,128,0.2); }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin: 1.25rem 0;
+    }
+
+    /* poetry */
+    .poem-line { font-style: italic; color: #a1a1aa; font-size: 0.85rem; line-height: 2; }
+
+    /* quote */
+    .quote { font-style: italic; color: #71717a; font-size: 0.8rem; border-left: 2px solid var(--border); padding-left: 1rem; margin-top: 1rem; }
+
+    @media (max-width: 768px) {
+      .triptych { flex-direction: column; }
+      .pane { flex-direction: row; padding: 1.5rem; justify-content: flex-start; gap: 1rem; height: 33.33vh; border-right: none; border-bottom: 1px solid var(--border); }
+      .pane:last-child { border-bottom: none; }
+      .pane-content { text-align: left; }
+      .pane-icon { font-size: 1.8rem; margin-bottom: 0; }
+      .pane-name { font-size: 1.2rem; }
+      .brand { top: 1rem; }
+    }
+  </style>
 </head>
 <body>
+  <div class="brand"><span class="brand-name">attridevv</span></div>
 
-  <div id="particles"></div>
-  <div id="transition-overlay"></div>
-
-  <!-- ═══ SELECTOR: TWO REALMS ═══ -->
-  <div id="theme-select">
-    <div class="realm realm-zephyr" onclick="applyTheme('zephyr')">
-      <div class="frost-layer"></div>
-      <div class="crystal c1"></div><div class="crystal c2"></div><div class="crystal c3"></div>
-      <div class="ice-glow"></div>
-      <div class="realm-inner">
-        <div class="realm-icon">
-          <svg viewBox="0 0 60 60"><path d="M30 5 L35 25 L55 30 L35 35 L30 55 L25 35 L5 30 L25 25 Z" fill="none" stroke="#90caf9" stroke-width="1.5" opacity=".8"/></svg>
-        </div>
-        <h1 class="realm-name">Zephyr</h1>
-        <p class="realm-desc">the architect</p>
-        <div class="realm-line"></div>
+  <div class="triptych">
+    <!-- ZEPHYR -->
+    <a href="#" class="pane zephyr" onclick="openModal('zephyr');return false;">
+      <div class="pane-content">
+        <div class="pane-icon">&#x2601;</div>
+        <div class="pane-subtitle">the builder</div>
+        <div class="pane-name">Zephyr</div>
+        <div class="pane-line">figuring it out. one build at a time.</div>
       </div>
-    </div>
+      <span class="pane-hover">view work &rarr;</span>
+    </a>
 
-    <div class="realm-divider">
-      <div class="rift"></div>
-      <svg class="seal" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="none" stroke="#555" stroke-width="1" opacity=".3"/><circle cx="20" cy="20" r="8" fill="none" stroke="#555" stroke-width="1" opacity=".2"/></svg>
-    </div>
+    <!-- AZUMA -->
+    <a href="#" class="pane azuma" onclick="openModal('azuma');return false;">
+      <div class="pane-content">
+        <div class="pane-icon">&#x25E6;</div>
+        <div class="pane-subtitle">the mind</div>
+        <div class="pane-name">Azuma</div>
+        <div class="pane-line">things i think about, things i believe.</div>
+      </div>
+      <span class="pane-hover">explore &rarr;</span>
+    </a>
 
-    <div class="realm realm-azuma" onclick="applyTheme('azuma')">
-      <div class="ember-layer"></div>
-      <div class="ember e1"></div><div class="ember e2"></div><div class="ember e3"></div>
-      <div class="fire-glow"></div>
-      <div class="realm-inner">
-        <div class="realm-icon">
-          <svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="24" fill="none" stroke="#ffb74d" stroke-width="1.5" opacity=".8"/><circle cx="30" cy="30" r="14" fill="none" stroke="#ffb74d" stroke-width="1" opacity=".5"/><circle cx="30" cy="30" r="6" fill="#ffb74d" opacity=".3"/></svg>
-        </div>
-        <h1 class="realm-name">Azuma</h1>
-        <p class="realm-desc">the wanderer</p>
-        <div class="realm-line"></div>
+    <!-- GRITIER -->
+    <a href="#" class="pane grit" onclick="openModal('grit');return false;">
+      <div class="pane-content">
+        <div class="pane-icon">&#x2694;</div>
+        <div class="pane-subtitle">the athlete</div>
+        <div class="pane-name">Gritier</div>
+        <div class="pane-line">hybrid athlete command center. built for the obsessed.</div>
+      </div>
+      <span class="pane-hover">launch &rarr;</span>
+    </a>
+  </div>
+
+  <!-- MODALS -->
+  <div class="modal-overlay" id="modal-zephyr" onclick="closeModal(event, 'zephyr')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModalDirect('zephyr')">&times;</button>
+      <h2 class="zephyr-c">Zephyr</h2>
+      <p class="tagline">the builder</p>
+
+      <div class="modal-section">
+        <h3>who i am</h3>
+        <p>I'm figuring it out. Building things, breaking them, learning. Not a "full-stack developer" &mdash; just someone who gets obsessed with making things work.</p>
+      </div>
+      <div class="modal-section">
+        <h3>what i know</h3>
+        <p>Python, JavaScript, React, Next.js, HTML/CSS, Git, APIs, databases. Always learning. Currently deep in TypeScript and full-stack architecture.</p>
+      </div>
+      <div class="modal-section">
+        <h3>what i'm chasing</h3>
+        <p>Building tools that actually help people. Creating things that feel rare &mdash; not another generic app. Getting faster, smarter, more dangerous.</p>
+      </div>
+      <div class="modal-section">
+        <h3>things built</h3>
+        <ul>
+          <li>&rarr; Weather App</li>
+          <li>&rarr; Macro Tracker</li>
+          <li>&rarr; Max Workspace</li>
+          <li>&rarr; Hybrid Athlete Command Center</li>
+        </ul>
+      </div>
+      <div class="modal-section">
+        <h3>honest ledger</h3>
+        <p>I've shipped things that broke. I've abandoned repos. I chase shiny ideas. But I keep showing up.</p>
+      </div>
+      <div class="modal-section">
+        <h3>signal</h3>
+        <p><a href="https://github.com/attridevv" target="_blank">GitHub</a> &middot; <a href="https://linkedin.com/in/attridevv" target="_blank">LinkedIn</a></p>
       </div>
     </div>
   </div>
 
-  <button id="theme-float" class="theme-float hidden" onclick="resetTheme()">
-    <svg viewBox="0 0 24 24" width="14" height="14"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </button>
+  <div class="modal-overlay" id="modal-azuma" onclick="closeModal(event, 'azuma')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModalDirect('azuma')">&times;</button>
+      <h2 class="azuma-c">Azuma</h2>
+      <p class="tagline">the mind</p>
 
-  <!-- ═══ ZEPHYR: ICE / WORK ═══ -->
-  <main id="zephyr-content" class="hidden">
-    <div class="ice-bg"></div>
-    <div class="zephyr-wrap">
-      <nav class="z-nav">
-        <span class="z-nav-logo">◈</span>
-        <span class="z-nav-name">Zephyr</span>
-        <span class="z-nav-status">open to work</span>
-      </nav>
-
-      <div class="z-body">
-        <section class="ice-col">
-          <div class="ice-card">
-            <h3 class="ice-label">identity</h3>
-            <p class="ice-text">Dev Attri — I'm figuring it out. I write code, break it, fix it, and sometimes it works. Not a master of anything yet, but I'm obsessed with the craft. The goal isn't to know everything. It's to keep building until I do.</p>
-          </div>
-          <div class="ice-card">
-            <h3 class="ice-label">what i know</h3>
-            <div class="ice-tags">
-              <span>HTML/CSS</span><span>JavaScript</span><span>React</span><span>Node.js</span>
-              <span>Python</span><span>SQL</span><span>Git</span>
-            </div>
-          </div>
-          <div class="ice-card">
-            <h3 class="ice-label">what i'm chasing</h3>
-            <div class="ice-ops">
-              <div class="op-row"><span class="op-dot live"></span><span class="op-name">TypeScript</span><span class="op-tag">learning</span></div>
-              <div class="op-row"><span class="op-dot live"></span><span class="op-name">Next.js</span><span class="op-tag">learning</span></div>
-              <div class="op-row"><span class="op-dot live"></span><span class="op-name">Rust</span><span class="op-tag">curious</span></div>
-              <div class="op-row"><span class="op-dot live"></span><span class="op-name">System Design</span><span class="op-tag">curious</span></div>
-            </div>
-          </div>
-          <div class="ice-card">
-            <h3 class="ice-label">things i've built</h3>
-            <div class="ice-ops">
-              <div class="op-row"><span class="op-dot live"></span><span class="op-name">Weather App</span><span class="op-tag">HTML · CSS · JS</span></div>
-              <div class="op-row"><span class="op-dot live"></span><span class="op-name">Macro Tracker</span><span class="op-tag">HTML · CSS · JS</span></div>
-              <div class="op-row"><span class="op-dot live"></span><span class="op-name">Max Workspace</span><span class="op-tag">HTML · CSS · JS</span></div>
-            </div>
-          </div>
-        </section>
-
-        <section class="ice-col">
-          <div class="ice-card wide">
-            <h3 class="ice-label">signal</h3>
-            <div class="ice-contact">
-              <a href="https://github.com/attridevv" target="_blank">GitHub</a>
-              <a href="https://linkedin.com/in/dev-attri-723a733b6" target="_blank">LinkedIn</a>
-              <a href="https://twitter.com/attridevv" target="_blank">X</a>
-              <a href="mailto:hello@attridevv.com">Mail</a>
-            </div>
-          </div>
-          <div class="ice-card wide">
-            <h3 class="ice-label">honest ledger</h3>
-            <div class="ice-learning">
-              <div class="l-row"><span class="l-check">&#10003;</span>Built 3 projects from scratch</div>
-              <div class="l-row"><span class="l-check">&#10003;</span>Learned by breaking things</div>
-              <div class="l-row"><span class="l-void">&#9675;</span>Confident in my code</div>
-              <div class="l-row"><span class="l-void">&#9675;</span>Stopped googling basic syntax</div>
-            </div>
-          </div>
-        </section>
+      <div class="modal-section">
+        <h3>questions i sit with</h3>
+        <p><strong>What is the meaning of life?</strong><br>The meaning is emotion. The highest highs, the lowest lows &mdash; that's why we're here. To feel everything. Joy, grief, love, heartbreak, adrenaline, stillness. The full spectrum. If you die having felt it all, you lived right.</p>
+        <div class="divider"></div>
+        <p><strong>When did we stop asking questions?</strong><br>When asking stopped being rewarded. School teaches answers, not curiosity. Society likes boxes. But the best things come from people who never stopped asking why.</p>
+        <div class="divider"></div>
+        <p><strong>Why does being drunk make us happy?</strong><br>Because it quiets the voice. The one that worries about tomorrow, judges every move, keeps us small. Being drunk isn't happiness &mdash; it's relief from self-awareness. The real question is: why do we need relief from ourselves?</p>
       </div>
+      <div class="modal-section">
+        <h3>favorites</h3>
+        <ul>
+          <li><strong>Books:</strong> The Old Man of the Moon</li>
+          <li><strong>Anime:</strong> One Piece, Your Lie in April</li>
+          <li><strong>Music:</strong> Radiohead &mdash; OK Computer</li>
+          <li><strong>Artist:</strong> <a href="https://open.spotify.com/artist/6LBCQo20ri3tsvbsWWLmr6?si=DxaGtzIURJWRnFObUzNajw" target="_blank">Tolka Nepal</a></li>
+        </ul>
+      </div>
+      <div class="modal-section">
+        <h3>poetry</h3>
+        <p class="poem-line">my eyes are where your eyes is &mdash;<br>you blinked and i rewired.</p>
+        <div class="divider"></div>
+        <p class="poem-line">i want to be consumed by you completely<br>to the point where i forget<br>that i ever existed without you.</p>
+        <div class="divider"></div>
+        <p class="poem-line">i don't believe in god<br>but i prayed when you held me.</p>
+      </div>
+      <div class="modal-section">
+        <h3>things i believe</h3>
+        <ul>
+          <li>&rarr; Hard work beats talent when talent doesn't work hard.</li>
+          <li>&rarr; The best stories are the ones you're scared to tell.</li>
+          <li>&rarr; Everything worth doing is on the other side of discomfort.</li>
+          <li>&rarr; People remember how you made them feel, not what you said.</li>
+        </ul>
+      </div>
+      <div class="modal-section">
+        <h3>small wins</h3>
+        <ul>
+          <li>&rarr; Ran a half marathon</li>
+          <li>&rarr; Hit 1000 ELO in chess</li>
+          <li>&rarr; Visited Nepal</li>
+          <li>&rarr; Bought this domain</li>
+        </ul>
+      </div>
+      <div class="modal-section">
+        <h3>on my mind</h3>
+        <p>Running. Football. Chess. Getting stronger. Travel plans. What to build next. Who I want to become.</p>
+      </div>
+      <div class="modal-section">
+        <h3>socials</h3>
+        <p>
+          <a href="https://discord.com" target="_blank">Discord</a> &middot;
+          <a href="https://x.com/attridevv" target="_blank">X</a> &middot;
+          <a href="https://instagram.com/attridevv" target="_blank">Instagram</a> &middot;
+          <a href="https://youtube.com/@attridevv" target="_blank">YouTube</a> &middot;
+          <a href="https://anilist.co/user/Attridevv/" target="_blank">AniList</a>
+        </p>
+      </div>
+      <p class="quote">"The mystery of human existence lies not in just staying alive, but in finding something to live for."<br>&mdash; Dostoevsky</p>
     </div>
-  </main>
+  </div>
 
-  <!-- ═══ AZUMA: EMBER / LIFE ═══ -->
-  <main id="azuma-content" class="hidden">
-    <div class="ember-bg"></div>
-    <div class="azuma-wrap">
-      <nav class="a-nav">
-        <span class="a-nav-logo">&#9788;</span>
-        <span class="a-nav-name">Azuma</span>
-      </nav>
+  <div class="modal-overlay" id="modal-grit" onclick="closeModal(event, 'grit')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModalDirect('grit')">&times;</button>
+      <h2 class="grit-c">Gritier</h2>
+      <p class="tagline">hybrid athlete command center</p>
 
-      <div class="a-body">
-        <section class="ember-col">
-          <div class="ember-card">
-            <h3 class="ember-label">questions i live with</h3>
-            <div class="ember-q">
-              <div class="q-row" onclick="toggleA(this)">
-                <p>What is the meaning of life?</p>
-                <span class="q-plus">+</span>
-              </div>
-              <div class="q-ans">
-                <p>To be human is to feel — before anything else. To let yourself break, to let yourself burn, to let yourself love without knowing if it lasts. We're taught to build, to achieve, to leave something behind. But what if the point is just to be here, fully, while we are? To cry when it hurts, to laugh when it's funny, to say "I don't know" and mean it. Being human isn't a title you earn. It's a state you allow.</p>
-                <a class="q-reply" href="mailto:hello@attridevv.com?subject=What is the meaning of life?">share your take</a>
-              </div>
-            </div>
-            <div class="ember-q">
-              <div class="q-row" onclick="toggleA(this)">
-                <p>When did we stop asking questions?</p>
-                <span class="q-plus">+</span>
-              </div>
-              <div class="q-ans">
-                <p>Every kid asks a hundred questions before the world teaches them to stop. We traded curiosity for compliance. The point isn't who took our questions — it's whether we're willing to take them back.</p>
-                <a class="q-reply" href="mailto:hello@attridevv.com?subject=When did we stop asking questions?">share your take</a>
-              </div>
-            </div>
-            <div class="ember-q">
-              <div class="q-row" onclick="toggleA(this)">
-                <p>Why does being drunk make us happy?</p>
-                <span class="q-plus">+</span>
-              </div>
-              <div class="q-ans">
-                <p>Because it strips away what we've been conditioned to carry. No judgment. No outcomes. Just the moment — felt with true, unguarded emotion. But it's borrowed freedom.</p>
-                <a class="q-reply" href="mailto:hello@attridevv.com?subject=Why does being drunk make us happy?">share your take</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="ember-card">
-            <h3 class="ember-label">favorites</h3>
-            <div class="ember-mind">
-              <div><span class="mind-k">anime</span>One Piece · Your Lie in April</div>
-              <div><span class="mind-k">album</span>Radiohead — OK Computer</div>
-              <div><span class="mind-k">read</span>The Old Man of the Moon</div>
-              <div><span class="mind-k">place</span>Tolka, Nepal</div>
-            </div>
-          </div>
-
-          <div class="ember-card">
-            <h3 class="ember-label">on my mind</h3>
-            <div class="ember-mind">
-              <div><span class="mind-k">hobbies</span>Running · Football · Chess</div>
-              <div><span class="mind-k">travel</span>Edinburgh · Northern Japan · Sydney Opera House · Australian beaches · Wales · Ireland</div>
-              <div><span class="mind-k">goals</span>Create · Learn · Experience</div>
-              <div><span class="mind-k">today</span>This website. This moment. This.</div>
-            </div>
-          </div>
-
-          <div class="ember-card">
-            <h3 class="ember-label">trying</h3>
-            <div class="ember-mind">
-              <div><span class="mind-k">learning</span>Japanese · Spanish</div>
-              <div><span class="mind-k">reading</span>Vagabond · Beyond Good and Evil</div>
-              <div><span class="mind-k">watching</span>86 · Hell's Paradise</div>
-              <div><span class="mind-k">listening</span><a href="https://open.spotify.com/artist/6LBCQo20ri3tsvbsWWLmr6?si=DxaGtzIURJWRnFObUzNajw" target="_blank">Spotify</a></div>
-            </div>
-          </div>
-        </section>
-
-        <section class="ember-col">
-          <div class="ember-card">
-            <h3 class="ember-label">poetry</h3>
-            <div class="ember-poem-tabs">
-              <div class="pt active" onclick="switchP(this,0)">Life Happened</div>
-              <div class="pt" onclick="switchP(this,1)">Blue Eyes</div>
-              <div class="pt" onclick="switchP(this,2)">Gray Dreams</div>
-            </div>
-            <div class="ember-poem-body">
-              <div class="pp active">
-                <p>Life happened, me waiting. Believing it would stop, it would wait. Life happening and happening, consistent like spring water.</p>
-                <p>Oh water, don't reflect what I see. Once five, now twenty—what changed? The vessel grew wings, then they were cut, and strings were pulled.</p>
-                <p>Cut these strings before they strangle me. Was the wind too strong, or were the strings too tight? Either way, the reflection doesn't lie.</p>
-                <p>Oh water, let's start again. Take me away to the far sea, where I can sleep once again. — Dev</p>
-              </div>
-              <div class="pp">
-                <p>What beautiful colour of your eyes, that a boy loses his perception of time</p>
-                <p>I have seen the endless seas but I see depth in your eyes farseen. Blessed were my eyes to have met yours.</p>
-                <p>Flower meant a thing to me, now it means things to me. Is it Rose that you like, or cherry blossom alike?</p>
-                <p>My heart and eyes are at war, but it seems to be a losing war. Delhi to Darwin seems to be my next flight.</p>
-                <p>Home is where the heart is, and my eyes are where your eyes is. — Dev</p>
-              </div>
-              <div class="pp">
-                <p>Oh shades of light, show me the way, through darkness that swallows and night that turns gray.</p>
-                <p>What I seek is not freedom, as seeking confines. And what I like is not love, but a flicker that shines.</p>
-                <p>White is not always warm, and black not always stark. In the gray of our dreams, all our truths can be seen. — Dev</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="ember-card">
-            <h3 class="ember-label">things i believe</h3>
-            <div class="ember-beliefs">
-              <p>Being human is making irrational choices based on emotion — and owning every single one of them.</p>
-              <p>Do the thing you want to do, even if you have to do it alone. Otherwise, don't do it at all.</p>
-              <p>You have to give up things to attain other things. Nothing comes free. The only question is whether what you gain is worth the price you paid.</p>
-              <p>If you feel lost, travel. You'll still be lost — but at least you'll be lost somewhere beautiful.</p>
-            </div>
-          </div>
-
-          <div class="ember-card">
-            <h3 class="ember-label">small wins</h3>
-            <div class="ember-wins">
-              <div>Ran my first half marathon</div>
-              <div>Touched 1000 elo on chess.com</div>
-              <div>Traveled to Nepal</div>
-              <div>Bought my own domain and built this site</div>
-              <div>Benched 225 · Deadlift 400 · Squat 310</div>
-            </div>
-          </div>
-        </section>
+      <div class="modal-section">
+        <h3>what is this</h3>
+        <p>An AI-assisted tactical performance dashboard for hybrid athletes &mdash; combining endurance running, strength training, mobility, recovery, and injury management into one operating system.</p>
+        <p style="margin-top:0.75rem">Think: WHOOP &times; Garmin &times; a military-grade tactical interface. Not a bodybuilding tracker. Not a generic fitness app. Something built for the obsessed.</p>
+      </div>
+      <div class="modal-section">
+        <h3>features</h3>
+        <ul>
+          <li>&rarr; Daily readiness check-in with pain tracking</li>
+          <li>&rarr; Running tracker with pace/HR efficiency analytics</li>
+          <li>&rarr; Strength tracker with 1RM calculations</li>
+          <li>&rarr; Injury risk engine with green/yellow/red warnings</li>
+          <li>&rarr; AI coach &mdash; generates weekly insights from your data</li>
+          <li>&rarr; Training load / ACWR monitoring</li>
+          <li>&rarr; Race prediction engine</li>
+          <li>&rarr; Recovery scoring &mdash; sleep, HR, soreness, energy</li>
+        </ul>
+      </div>
+      <div class="modal-section">
+        <h3>built with</h3>
+        <p>Next.js &middot; TypeScript &middot; Tailwind CSS &middot; Prisma &middot; PostgreSQL &middot; Recharts &middot; shadcn/ui &middot; OpenAI</p>
       </div>
 
-      <div class="a-footer">
-        <p class="ember-quote">"Above all, don't lie to yourself. The man who lies to himself and listens to his own lie comes to a point that he cannot distinguish the truth within him, or around him." <span>— Fyodor Dostoevsky</span></p>
-        <div class="a-socials">
-          <a href="https://discord.gg/Ms9EgEypX" target="_blank">Discord</a>
-          <a href="mailto:hello@attridevv.com">Message</a>
-          <a href="https://twitter.com/attridevv" target="_blank">X</a>
-          <a href="https://instagram.com/attridevv" target="_blank">Instagram</a>
-          <a href="https://youtube.com/@whoiskilluaa" target="_blank">YouTube</a>
-          <a href="https://anilist.co/user/11x02/" target="_blank">AniList</a>
-        </div>
-      </div>
+      <a href="https://github.com/attridevv/hybrid-athlete" target="_blank" class="modal-badge badge-grit">
+        &#x2694; View on GitHub
+      </a>
     </div>
-  </main>
+  </div>
 
   <script>
-    function toggleA(el){
-      const parent = el.parentElement;
-      parent.classList.toggle('open');
+    function openModal(name) {
+      document.getElementById('modal-' + name).classList.add('active');
     }
-    function switchP(tab,idx){
-      const card = tab.closest('.ember-card');
-      card.querySelectorAll('.pt').forEach(t=>t.classList.remove('active'));
-      tab.classList.add('active');
-      card.querySelectorAll('.pp').forEach((p,i)=>p.classList.toggle('active',i===idx));
+    function closeModal(e, name) {
+      if (e.target === e.currentTarget) {
+        document.getElementById('modal-' + name).classList.remove('active');
+      }
     }
-
-    function applyTheme(theme){
-      const ov=document.getElementById('transition-overlay');
-      ov.className='trans-'+theme;ov.classList.add('active');
-      setTimeout(()=>{
-        document.documentElement.setAttribute('data-theme',theme);
-        localStorage.setItem('attridevv-theme',theme);
-        document.getElementById('theme-select').style.display='none';
-        document.getElementById('theme-float').classList.remove('hidden');
-        if(theme==='zephyr'){
-          document.getElementById('zephyr-content').classList.remove('hidden');
-          document.getElementById('azuma-content').classList.add('hidden');
-        }else{
-          document.getElementById('azuma-content').classList.remove('hidden');
-          document.getElementById('zephyr-content').classList.add('hidden');
-        }
-        setTimeout(()=>{ov.classList.remove('active');setTimeout(()=>ov.className='',600);},400);
-      },700);
+    function closeModalDirect(name) {
+      document.getElementById('modal-' + name).classList.remove('active');
     }
-
-    function resetTheme(){
-      localStorage.removeItem('attridevv-theme');
-      document.documentElement.setAttribute('data-theme','select');
-      document.getElementById('zephyr-content').classList.add('hidden');
-      document.getElementById('azuma-content').classList.add('hidden');
-      document.getElementById('theme-float').classList.add('hidden');
-      document.getElementById('theme-select').style.display='flex';
-    }
-
-    const saved=localStorage.getItem('attridevv-theme');
-    if(saved){
-      document.documentElement.setAttribute('data-theme',saved);
-      document.getElementById('theme-select').style.display='none';
-      document.getElementById('theme-float').classList.remove('hidden');
-      if(saved==='zephyr'){document.getElementById('zephyr-content').classList.remove('hidden');}
-      else{document.getElementById('azuma-content').classList.remove('hidden');}
-    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+      }
+    });
   </script>
-
 </body>
 </html>
