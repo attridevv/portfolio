@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Water — Tools</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background: #030b14;
+    color: #e0f2fe;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+  }
+
+  .back-link {
+    position: fixed;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 100;
+  }
+
+  .back-link a {
+    color: #38bdf8;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.3s;
+  }
+
+  .back-link a:hover { color: #e0f2fe; }
+
+  .container {
+    max-width: 720px;
+    width: 100%;
+    padding: 6rem 1.5rem 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  h1 {
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #38bdf8;
+    text-align: center;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    color: #7dd3fc;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-align: center;
+    margin-bottom: 4rem;
+    opacity: 0.85;
+  }
+
+  .cards {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .card {
+    background: #061428;
+    border: 1px solid #1e3a5f;
+    border-left: 3px solid #38bdf8;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    border-left-color: #7dd3fc;
+    box-shadow: 0 8px 32px #38bdf810;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #e0f2fe;
+  }
+
+  .card .badge {
+    display: inline-block;
+    background: #38bdf820;
+    color: #38bdf8;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+  }
+
+  .card p {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: #bae6fd;
+    opacity: 0.8;
+    margin-bottom: 1rem;
+  }
+
+  .card a {
+    display: inline-block;
+    color: #38bdf8;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: color 0.3s;
+  }
+
+  .card a:hover { color: #e0f2fe; }
+
+  .card a::after { content: " →"; }
+
+  .coming-soon {
+    text-align: center;
+    color: #7dd3fc;
+    opacity: 0.5;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-top: 1rem;
+  }
+
+  /* Water droplets */
+  .droplets {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .droplet {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #38bdf8;
+    border-radius: 50%;
+    opacity: 0;
+    animation: fall var(--dur) linear infinite;
+    animation-delay: var(--delay);
+    left: var(--x);
+    box-shadow: 0 0 8px #38bdf8, 0 0 16px #38bdf833;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(0) scale(1); opacity: 0; }
+    10% { opacity: 0.6; }
+    60% { opacity: 0.3; }
+    100% { transform: translateY(100vh) scale(0.4); opacity: 0; }
+  }
+
+  /* Heading shimmer */
+  @keyframes shimmer {
+    0%, 100% { text-shadow: 0 0 20px #38bdf844, 0 0 40px #38bdf820; }
+    50% { text-shadow: 0 0 30px #38bdf866, 0 0 60px #38bdf833; }
+  }
+
+  h1 { animation: shimmer 4s ease-in-out infinite; }
+
+  @media (max-width: 600px) {
+    .container { padding: 5rem 1rem 3rem; }
+    .card { padding: 1.25rem; }
+    .card h3 { font-size: 1.1rem; }
+    .card p { font-size: 0.875rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="droplets">
+  <div class="droplet" style="--x:8%;--delay:0s;--dur:6s;"></div>
+  <div class="droplet" style="--x:17%;--delay:3.5s;--dur:7s;"></div>
+  <div class="droplet" style="--x:28%;--delay:1.2s;--dur:5.5s;"></div>
+  <div class="droplet" style="--x:36%;--delay:4.8s;--dur:6.5s;"></div>
+  <div class="droplet" style="--x:45%;--delay:2.1s;--dur:7.2s;"></div>
+  <div class="droplet" style="--x:54%;--delay:0.6s;--dur:5.8s;"></div>
+  <div class="droplet" style="--x:63%;--delay:3s;--dur:6s;"></div>
+  <div class="droplet" style="--x:72%;--delay:5.4s;--dur:7.5s;"></div>
+  <div class="droplet" style="--x:81%;--delay:1.8s;--dur:5s;"></div>
+  <div class="droplet" style="--x:91%;--delay:4.2s;--dur:6.2s;"></div>
+  <div class="droplet" style="--x:22%;--delay:2.7s;--dur:6.8s;"></div>
+  <div class="droplet" style="--x:58%;--delay:3.9s;--dur:5.3s;"></div>
+</div>
+
+<div class="back-link">
+  <a href="/">← realms</a>
+</div>
+
+<div class="container">
+  <h1>Tools</h1>
+  <p class="subtitle">What I've shipped</p>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-header">
+        <h3>VEKTOR</h3>
+        <span class="badge">LIVE</span>
+      </div>
+      <p>Adaptive Human Performance Operating System. Track readiness, runs, strength, recovery, injuries. AI-powered coaching.</p>
+      <a href="/grit">Explore VEKTOR</a>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>Weather App</h3>
+      </div>
+      <p>API-driven weather app. Data fetching, error handling, clean UI states.</p>
+      <a href="https://github.com/devattri" target="_blank" rel="noopener">View on GitHub</a>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>Macro Tracker</h3>
+      </div>
+      <p>Nutrition tracking experiment. Forms, persistence, health tooling.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>Max Workspace</h3>
+      </div>
+      <p>Clean workspace concept. Browser experiences, layout design.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>attridevv.com</h3>
+      </div>
+      <p>This website. 5 realms, one domain.</p>
+    </div>
+  </div>
+
+  <p class="coming-soon">More coming soon.</p>
+</div>
+
+</body>
+</html>

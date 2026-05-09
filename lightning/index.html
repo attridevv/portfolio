@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Thunder — Attri</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0900;--surface:#1a1800;--border:#2a2700;
+  --accent:#facc15;--accent-glow:rgba(250,204,21,0.25);
+  --text:#fef9c3;--text-secondary:#caa92a;--text-dim:#6b6100;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  min-height:100vh;line-height:1.6;overflow-x:hidden;
+  display:flex;justify-content:center;
+}
+
+.canvas-bg{position:fixed;inset:0;pointer-events:none;z-index:0}
+.canvas-bg canvas{width:100%;height:100%}
+
+.container{position:relative;z-index:1;width:100%;max-width:680px;padding:2.5rem 1.5rem 4rem}
+
+.back-link{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  color:var(--text-dim);text-decoration:none;
+  font-size:0.78rem;font-weight:500;letter-spacing:0.06em;
+  margin-bottom:3rem;transition:color 0.3s,text-shadow 0.3s;
+  text-transform:uppercase;
+}
+.back-link:hover{color:var(--accent);text-shadow:0 0 16px var(--accent-glow)}
+
+.hero{margin-bottom:3rem}
+.hero h1{
+  font-size:clamp(2.6rem,8vw,4rem);font-weight:800;
+  letter-spacing:-0.02em;line-height:1.1;
+  color:#fff;text-shadow:0 0 40px var(--accent-glow);
+}
+.hero .subtitle{
+  font-size:0.95rem;color:var(--text-secondary);
+  margin-top:0.5rem;letter-spacing:0.04em;
+}
+.hero .accent-rule{
+  width:48px;height:2px;background:var(--accent);
+  margin-top:1.25rem;box-shadow:0 0 12px var(--accent-glow);
+}
+
+.section{margin-bottom:2.8rem}
+.section h2{
+  font-size:0.62rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.18em;color:var(--accent);
+  margin-bottom:1.25rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.section h2::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(to right,var(--accent),transparent);
+}
+
+.goals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem}
+.goal-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:1.1rem;
+  transition:border-color 0.3s,box-shadow 0.3s,transform 0.3s cubic-bezier(.16,1,.3,1);
+}
+.goal-card:hover{
+  border-color:var(--accent);
+  box-shadow:0 0 24px var(--accent-glow),inset 0 1px 0 rgba(250,204,21,0.08);
+  transform:translateY(-2px);
+}
+.goal-card .goal-icon{font-size:1.5rem;margin-bottom:0.5rem}
+.goal-card .goal-title{font-size:0.68rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-dim);margin-bottom:0.3rem}
+.goal-card .goal-value{font-size:1.15rem;font-weight:700;color:var(--text)}
+.goal-card .goal-sub{font-size:0.72rem;color:var(--text-secondary);margin-top:0.15rem}
+
+.list{list-style:none;display:flex;flex-direction:column;gap:0.65rem}
+.list li{
+  font-size:0.88rem;padding:0.6rem 0.85rem;
+  border-left:2px solid var(--border);
+  background:rgba(26,24,0,0.5);
+  transition:border-color 0.3s,background 0.3s,transform 0.2s;
+  border-radius:0 8px 8px 0;
+}
+.list li:hover{
+  border-left-color:var(--accent);
+  background:var(--surface);
+  transform:translateX(4px);
+}
+
+.learning-path{display:flex;flex-direction:column;gap:1.2rem}
+.lp-row{display:flex;flex-direction:column;gap:0.35rem}
+.lp-label{
+  font-size:0.62rem;text-transform:uppercase;letter-spacing:0.18em;
+  color:var(--accent);font-weight:700;
+}
+.lp-items{font-size:0.85rem;color:var(--text-secondary)}
+.lp-items strong{color:var(--text)}
+
+.wins-list{list-style:none;display:flex;flex-direction:column;gap:0.5rem}
+.wins-list li{
+  display:flex;align-items:center;gap:0.6rem;
+  font-size:0.84rem;color:var(--text-secondary);
+  padding:0.35rem 0;
+}
+.wins-list li::before{
+  content:'⚡';font-size:0.6rem;
+}
+
+.flash{animation:flash 2.5s ease-in-out infinite}
+@keyframes flash{
+  0%,100%{opacity:1}
+  50%{opacity:0.5}
+}
+
+.footer{margin-top:4rem;padding-top:1.5rem;border-top:1px solid var(--border);text-align:center}
+.footer p{font-size:0.7rem;color:var(--text-dim);letter-spacing:0.06em}
+
+@media(max-width:520px){
+  .container{padding:1.5rem 1rem 3rem}
+  .hero h1{font-size:2.2rem}
+  .goals-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="canvas-bg"><canvas id="bg-canvas"></canvas></div>
+
+<div class="container">
+
+  <a href="/" class="back-link">← realms</a>
+
+  <header class="hero">
+    <h1>Thunder</h1>
+    <p class="subtitle">Ambitions. Goals. What I'm chasing.</p>
+    <div class="accent-rule"></div>
+  </header>
+
+  <section class="section">
+    <h2>Race Goals</h2>
+    <div class="goals-grid">
+      <div class="goal-card">
+        <div class="goal-icon">🏃</div>
+        <div class="goal-title">Target</div>
+        <div class="goal-value">Sub-1:30 Half</div>
+        <div class="goal-sub">Marathon</div>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">📈</div>
+        <div class="goal-title">Current</div>
+        <div class="goal-value">Base Building</div>
+        <div class="goal-sub">40km / week</div>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">🗓️</div>
+        <div class="goal-title">Next Race</div>
+        <div class="goal-value">TBD</div>
+        <div class="goal-sub">Preparing</div>
+      </div>
+      <div class="goal-card">
+        <div class="goal-icon">🏅</div>
+        <div class="goal-title">PRs</div>
+        <div class="goal-value">Half Marathon</div>
+        <div class="goal-sub">Completed ✓</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Currently Working On</h2>
+    <ul class="list">
+      <li>TypeScript mastery</li>
+      <li>Full-stack architecture</li>
+      <li>VEKTOR — building the best hybrid athlete tool</li>
+      <li>Getting faster at shipping</li>
+      <li>Building my body and mind simultaneously</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>Future Projects</h2>
+    <ul class="list">
+      <li>AI training plan generator</li>
+      <li>Open-source fitness tools</li>
+      <li>Race prediction tool</li>
+      <li>More tools for obsessed athletes</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>Learning Path</h2>
+    <div class="learning-path">
+      <div class="lp-row">
+        <span class="lp-label">Now</span>
+        <span class="lp-items">TypeScript, Next.js, Prisma, System Design</span>
+      </div>
+      <div class="lp-row">
+        <span class="lp-label">Next</span>
+        <span class="lp-items">Rust, WASM, real-time apps</span>
+      </div>
+      <div class="lp-row">
+        <span class="lp-label flash">Always</span>
+        <span class="lp-items"><strong>Getting stronger, faster, sharper</strong></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Small Wins</h2>
+    <ul class="wins-list">
+      <li>Ran a half marathon</li>
+      <li>Hit 1000 ELO in chess</li>
+      <li>Built VEKTOR from scratch</li>
+      <li>Published 5+ tools</li>
+      <li>This website exists</li>
+    </ul>
+  </section>
+
+  <footer class="footer">
+    <p>more coming &nbsp;·&nbsp; stay tuned</p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var c=document.getElementById('bg-canvas');
+  var ctx=c.getContext('2d');
+  var particles=[];
+  var w,h;
+
+  function resize(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}
+  window.addEventListener('resize',resize);resize();
+
+  for(var i=0;i<60;i++){
+    particles.push({
+      x:Math.random()*w,y:Math.random()*h,
+      vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,
+      r:Math.random()*1.5+0.3,
+      alpha:Math.random()*0.5+0.2
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    for(var i=0;i<particles.length;i++){
+      var p=particles[i];
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=w;if(p.x>w)p.x=0;
+      if(p.y<0)p.y=h;if(p.y>h)p.y=0;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(250,204,21,'+p.alpha+')';ctx.fill();
+    }
+    for(var i=0;i<particles.length;i++){
+      for(var j=i+1;j<particles.length;j++){
+        var dx=particles[i].x-particles[j].x;
+        var dy=particles[i].y-particles[j].y;
+        var dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<100){
+          ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);
+          ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle='rgba(250,204,21,'+(0.06*(1-dist/100))+')';
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>

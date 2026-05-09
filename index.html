@@ -1,268 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dev Attri - attridevv</title>
-  <meta name="description" content="Dev Attri is a builder from India creating web tools, personal systems, and hybrid athlete experiments. Explore projects, Gritier, and the attridevv workshop.">
-  <meta name="author" content="Dev Attri">
-  <meta name="theme-color" content="#050712">
-  <link rel="canonical" href="https://attridevv.com/">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>attridevv</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#020208}
+body{background:var(--bg);color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
 
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://attridevv.com/">
-  <meta property="og:title" content="Dev Attri - attridevv">
-  <meta property="og:description" content="Builder, hybrid athlete, and learner creating web tools that turn obsession into systems.">
-  <meta property="og:site_name" content="attridevv">
+.cosmos{position:fixed;inset:0;pointer-events:none}
+.star{position:absolute;width:1px;height:1px;background:#fff;border-radius:50%;animation:twinkle var(--d) ease-in-out infinite;animation-delay:var(--del);opacity:var(--op)}
+@keyframes twinkle{0%,100%{opacity:var(--op)}50%{opacity:calc(var(--op)*3)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Dev Attri - attridevv">
-  <meta name="twitter:description" content="Builder, hybrid athlete, and learner creating web tools that turn obsession into systems.">
-  <meta name="twitter:creator" content="@attridevv">
+.realms{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:2rem;justify-content:center;align-items:center;padding:2rem;max-width:900px}
+.realm{display:flex;flex-direction:column;align-items:center;gap:1rem;text-decoration:none;cursor:pointer;transition:transform .4s cubic-bezier(.16,1,.3,1),filter .4s;animation:float var(--ft,6s) ease-in-out infinite;animation-delay:var(--fd,0s);filter:grayscale(0.4)}
+.realm:hover{transform:scale(1.12);filter:grayscale(0);z-index:5}
+.realm:active{transform:scale(0.97)}
 
-  <link rel="preconnect" href="https://github.com">
-  <script>document.documentElement.classList.add("js");</script>
-  <link rel="stylesheet" href="/styles.css">
+.realm-orb{width:90px;height:90px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;position:relative;transition:box-shadow .4s}
+.realm:hover .realm-orb{box-shadow:var(--glow)}
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Dev Attri",
-    "alternateName": "attridevv",
-    "url": "https://attridevv.com/",
-    "sameAs": [
-      "https://github.com/attridevv",
-      "https://x.com/attridevv",
-      "https://linkedin.com/in/attridevv",
-      "https://instagram.com/attridevv"
-    ],
-    "knowsAbout": ["TypeScript", "React", "Next.js", "JavaScript", "Python", "APIs", "Hybrid athlete training"]
-  }
-  </script>
+.fire .realm-orb{background:radial-gradient(circle at 40% 40%,#f97316,#7c2d12);--glow:0 0 60px rgba(249,115,22,.5),0 0 120px rgba(249,115,22,.2)}
+.water .realm-orb{background:radial-gradient(circle at 40% 40%,#38bdf8,#1e3a5f);--glow:0 0 60px rgba(56,189,248,.5),0 0 120px rgba(56,189,248,.2)}
+.ice .realm-orb{background:radial-gradient(circle at 40% 40%,#e0f2fe,#64748b);--glow:0 0 60px rgba(224,242,254,.5),0 0 120px rgba(224,242,254,.2)}
+.lightning .realm-orb{background:radial-gradient(circle at 40% 40%,#facc15,#854d0e);--glow:0 0 60px rgba(250,204,21,.5),0 0 120px rgba(250,204,21,.2)}
+.void .realm-orb{background:radial-gradient(circle at 40% 40%,#a78bfa,#1e1b4b);--glow:0 0 60px rgba(167,139,250,.4),0 0 120px rgba(167,139,250,.15)}
+
+.realm-orb::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1px solid transparent;transition:border-color .4s}
+.realm:hover .realm-orb::after{border-color:rgba(255,255,255,.2)}
+
+.realm-label{font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;transition:color .3s}
+.fire .realm-label{color:#fb923c}
+.water .realm-label{color:#38bdf8}
+.ice .realm-label{color:#e0f2fe}
+.lightning .realm-label{color:#facc15}
+.void .realm-label{color:#a78bfa}
+
+.realm-name{font-size:1.1rem;font-weight:700;letter-spacing:.06em;transition:color .3s,text-shadow .3s}
+.fire .realm-name{color:#ea580c}
+.water .realm-name{color:#0ea5e9}
+.ice .realm-name{color:#bae6fd}
+.lightning .realm-name{color:#eab308}
+.void .realm-name{color:#7c3aed}
+
+.realm:hover .realm-name{text-shadow:0 0 20px currentColor}
+
+.realm-sub{font-size:.6rem;color:#52525b;letter-spacing:.08em;text-align:center;max-width:110px;transition:color .3s}
+.realm:hover .realm-sub{color:#a1a1aa}
+
+.tag{position:fixed;bottom:2rem;left:0;right:0;text-align:center;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:#27272a;z-index:1}
+
+@media(max-width:600px){
+  .realms{gap:1.25rem;padding:1rem}
+  .realm-orb{width:64px;height:64px;font-size:1.4rem}
+  .realm-name{font-size:.9rem}
+  .realm-label{font-size:.6rem}
+}
+</style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <div class="site-shell" aria-hidden="true">
-    <div class="orb orb-one"></div>
-    <div class="orb orb-two"></div>
-    <div class="grid-lines"></div>
-  </div>
 
-  <header class="site-header" data-reveal>
-    <a class="brand" href="/" aria-label="attridevv home">
-      <span class="brand-mark">AD</span>
-      <span class="brand-text">attridevv</span>
-    </a>
-    <nav class="site-nav" aria-label="Primary navigation">
-      <a href="#work">Work</a>
-      <a href="#systems">Systems</a>
-      <a href="#about">About</a>
-      <a href="#signal">Signal</a>
-    </nav>
-    <a class="header-cta" href="/grit/">Launch Gritier</a>
-  </header>
+<div class="cosmos" id="stars"></div>
 
-  <main id="main">
-    <section class="hero section-pad">
-      <div class="hero-copy" data-reveal>
-        <p class="eyebrow">India // building in public // one better rep</p>
-        <h1>I turn obsession into working systems.</h1>
-        <p class="hero-lede">I am Dev Attri, a builder learning full-stack architecture while shipping personal tools, athlete dashboards, and experiments that make momentum visible.</p>
-        <div class="hero-actions" aria-label="Primary actions">
-          <a class="btn btn-primary" href="/grit/">Open Gritier</a>
-          <a class="btn btn-secondary" href="#work">View work</a>
-          <a class="btn btn-ghost" href="https://github.com/attridevv" target="_blank" rel="noopener noreferrer">GitHub</a>
-        </div>
-      </div>
+<div class="realms">
 
-      <aside class="signal-card" aria-label="Current builder signal" data-reveal>
-        <div class="signal-topline">
-          <span class="status-dot"></span>
-          <span>live signal</span>
-          <time id="local-time" datetime="">--:--</time>
-        </div>
-        <div class="terminal" aria-label="Personal status board">
-          <p><span>identity</span> builder / athlete / learner</p>
-          <p><span>current</span> TypeScript + full-stack systems</p>
-          <p><span>mission</span> ship tools that actually help</p>
-          <p><span>rule</span> keep showing up</p>
-        </div>
-        <dl class="hero-stats">
-          <div>
-            <dt>05</dt>
-            <dd>public repos</dd>
-          </div>
-          <div>
-            <dt>01</dt>
-            <dd>live domain</dd>
-          </div>
-          <div>
-            <dt>24/7</dt>
-            <dd>learning loop</dd>
-          </div>
-        </dl>
-      </aside>
-    </section>
+  <a href="/fire" class="realm fire" style="--fd:0s;--ft:5.5s">
+    <div class="realm-orb">&#x1F525;</div>
+    <span class="realm-label">Element I</span>
+    <span class="realm-name">Fire</span>
+    <span class="realm-sub">Leo · About me · Introduction</span>
+  </a>
 
-    <section class="section-pad intro-band" aria-label="Positioning" data-reveal>
-      <p>Not a polished agency site. Not a fake expert mask. This is a workshop: the projects, the reps, the thinking, and the proof that I am getting sharper every week.</p>
-    </section>
+  <a href="/water" class="realm water" style="--fd:0.8s;--ft:6s">
+    <div class="realm-orb">&#x1F4A7;</div>
+    <span class="realm-label">Element II</span>
+    <span class="realm-name">Water</span>
+    <span class="realm-sub">My tools · What I've built</span>
+  </a>
 
-    <section class="section-pad" id="work">
-      <div class="section-heading" data-reveal>
-        <p class="eyebrow">Featured work</p>
-        <h2>Things built, shipped, and still improving.</h2>
-      </div>
+  <a href="/ice" class="realm ice" style="--fd:1.6s;--ft:5.8s">
+    <div class="realm-orb">&#x2744;</div>
+    <span class="realm-label">Element III</span>
+    <span class="realm-name">Ice</span>
+    <span class="realm-sub">Creativity · Vent · Raw thoughts</span>
+  </a>
 
-      <div class="work-grid">
-        <article class="project-card project-featured" data-reveal>
-          <div class="project-meta">
-            <span>Live demo</span>
-            <span>Hybrid performance</span>
-          </div>
-          <h3>Gritier</h3>
-          <p>Hybrid Athlete Command Center for tracking readiness, runs, workouts, pain, recovery, and coaching signals. The lightweight demo runs directly in the browser.</p>
-          <div class="card-actions">
-            <a href="/grit/">Launch app</a>
-            <a href="https://github.com/attridevv/hybrid-athlete" target="_blank" rel="noopener noreferrer">View repo</a>
-          </div>
-        </article>
+  <a href="/lightning" class="realm lightning" style="--fd:2.4s;--ft:6.2s">
+    <div class="realm-orb">&#x26A1;</div>
+    <span class="realm-label">Element IV</span>
+    <span class="realm-name">Thunder</span>
+    <span class="realm-sub">Ambitions · Goals · Current</span>
+  </a>
 
-        <article class="project-card" data-reveal>
-          <div class="project-meta">
-            <span>Portfolio</span>
-            <span>HTML/CSS/JS</span>
-          </div>
-          <h3>attridevv.com</h3>
-          <p>The personal operating base: identity, links, shipped tools, and experiments hosted on GitHub Pages behind Cloudflare.</p>
-          <a class="text-link" href="https://github.com/attridevv/portfolio" target="_blank" rel="noopener noreferrer">Source code</a>
-        </article>
+  <a href="/darkness" class="realm void" style="--fd:3.2s;--ft:5.7s">
+    <div class="realm-orb">&#x1F319;</div>
+    <span class="realm-label">Element V</span>
+    <span class="realm-name">Void</span>
+    <span class="realm-sub">Admiration · Thanks · Regards</span>
+  </a>
 
-        <article class="project-card" data-reveal>
-          <div class="project-meta">
-            <span>Utility</span>
-            <span>Nutrition</span>
-          </div>
-          <h3>Macro Tracker</h3>
-          <p>A small nutrition tracker experiment for learning product flow, forms, persistence, and simple health tooling.</p>
-          <a class="text-link" href="https://github.com/attridevv/macro-tracker" target="_blank" rel="noopener noreferrer">View repo</a>
-        </article>
+</div>
 
-        <article class="project-card" data-reveal>
-          <div class="project-meta">
-            <span>Interface</span>
-            <span>Workspace</span>
-          </div>
-          <h3>Max Workspace</h3>
-          <p>A workspace concept focused on clean layout, useful surfaces, and getting comfortable shipping browser experiences.</p>
-          <a class="text-link" href="https://github.com/attridevv/max-workspace" target="_blank" rel="noopener noreferrer">View repo</a>
-        </article>
+<span class="tag">choose your element</span>
 
-        <article class="project-card" data-reveal>
-          <div class="project-meta">
-            <span>Starter build</span>
-            <span>Weather</span>
-          </div>
-          <h3>Weather App</h3>
-          <p>A classic API-driven project used to practice data fetching, error handling, and readable UI states.</p>
-          <a class="text-link" href="https://github.com/attridevv/Weather-app" target="_blank" rel="noopener noreferrer">View repo</a>
-        </article>
-      </div>
-    </section>
+<script>
+// Stars
+(function(){var s=document.getElementById('stars');var h='';for(var i=0;i<200;i++){var x=Math.random()*100;var y=Math.random()*100;var d=2+Math.random()*4;var del=Math.random()*5;var op=.2+Math.random()*.5;h+='<div class="star" style="left:'+x+'%;top:'+y+'%;--d:'+d+'s;--del:'+del+'s;--op:'+op+'"></div>'}s.innerHTML=h})();
+</script>
 
-    <section class="section-pad split-section" id="systems">
-      <div class="section-heading" data-reveal>
-        <p class="eyebrow">Operating systems</p>
-        <h2>Three modes. One direction.</h2>
-      </div>
-
-      <div class="mode-grid">
-        <article class="mode-card" data-reveal>
-          <span class="mode-index">01</span>
-          <h3>Zephyr</h3>
-          <p class="mode-label">the builder</p>
-          <p>Building things, breaking them, learning the architecture underneath, and getting faster at turning ideas into working software.</p>
-        </article>
-
-        <article class="mode-card" data-reveal>
-          <span class="mode-index">02</span>
-          <h3>Gritier</h3>
-          <p class="mode-label">the athlete</p>
-          <p>Running, lifting, recovery, and tracking the inputs that make performance repeatable instead of random.</p>
-        </article>
-
-        <article class="mode-card" data-reveal>
-          <span class="mode-index">03</span>
-          <h3>Azuma</h3>
-          <p class="mode-label">the mind</p>
-          <p>Questions, taste, books, music, anime, philosophy, and the private beliefs that shape what gets built next.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section-pad stack-section" aria-labelledby="stack-title">
-      <div class="section-heading" data-reveal>
-        <p class="eyebrow">Stack and focus</p>
-        <h2 id="stack-title">Tools I am sharpening.</h2>
-      </div>
-      <div class="stack-cloud" data-reveal>
-        <span>TypeScript</span>
-        <span>JavaScript</span>
-        <span>React</span>
-        <span>Next.js</span>
-        <span>Python</span>
-        <span>HTML/CSS</span>
-        <span>Git</span>
-        <span>APIs</span>
-        <span>Databases</span>
-        <span>UI systems</span>
-        <span>Cloudflare</span>
-        <span>GitHub Pages</span>
-      </div>
-    </section>
-
-    <section class="section-pad about-section" id="about">
-      <div class="about-copy" data-reveal>
-        <p class="eyebrow">About</p>
-        <h2>Learning in public, with receipts.</h2>
-        <p>I am not trying to look finished. I am trying to become undeniable. I ship small projects, study the gaps, rebuild what is weak, and keep a public trail of progress.</p>
-        <p>Right now I am focused on TypeScript, full-stack architecture, stronger product taste, and tools that connect discipline with data.</p>
-      </div>
-      <div class="ledger" data-reveal>
-        <h3>Honest ledger</h3>
-        <ul>
-          <li>I have shipped things that broke.</li>
-          <li>I have abandoned repos and restarted better.</li>
-          <li>I chase shiny ideas, then learn to reduce them.</li>
-          <li>I keep showing up.</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="section-pad signal-section" id="signal">
-      <div class="signal-copy" data-reveal>
-        <p class="eyebrow">Signal</p>
-        <h2>Find me where the work is visible.</h2>
-        <p>GitHub has the builds. Socials have the notes. This domain is the home base.</p>
-      </div>
-      <div class="social-grid" data-reveal>
-        <a href="https://github.com/attridevv" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <a href="https://linkedin.com/in/attridevv" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-        <a href="https://x.com/attridevv" target="_blank" rel="noopener noreferrer">X</a>
-        <a href="https://instagram.com/attridevv" target="_blank" rel="noopener noreferrer">Instagram</a>
-        <a href="https://youtube.com/@attridevv" target="_blank" rel="noopener noreferrer">YouTube</a>
-        <a href="https://anilist.co/user/Attridevv/" target="_blank" rel="noopener noreferrer">AniList</a>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <p>Built by Dev Attri. Last signal: <span id="year">2026</span>.</p>
-    <a href="https://github.com/attridevv/portfolio" target="_blank" rel="noopener noreferrer">View source</a>
-  </footer>
-
-  <script src="/script.js" defer></script>
 </body>
 </html>

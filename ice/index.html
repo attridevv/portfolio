@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ice — Creativity &amp; Raw Thoughts</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background: #050b14;
+    color: #bae6fd;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+  }
+
+  .back-link {
+    position: fixed;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 100;
+  }
+
+  .back-link a {
+    color: #e0f2fe;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.3s;
+  }
+
+  .back-link a:hover { color: #38bdf8; }
+
+  .container {
+    max-width: 720px;
+    width: 100%;
+    padding: 6rem 1.5rem 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  h1 {
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #e0f2fe;
+    text-align: center;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    color: #7dd3fc;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-align: center;
+    margin-bottom: 4rem;
+    opacity: 0.8;
+  }
+
+  section {
+    width: 100%;
+    margin-bottom: 3.5rem;
+  }
+
+  section h2 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #e0f2fe;
+    margin-bottom: 1.25rem;
+    font-weight: 600;
+  }
+
+  section p {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: #bae6fd;
+    opacity: 0.85;
+    margin-bottom: 1rem;
+  }
+
+  .poetry-line {
+    font-style: italic;
+    padding-left: 1rem;
+    border-left: 2px solid #e0f2fe44;
+    margin-bottom: 1rem;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: #bae6fd;
+  }
+
+  .qa {
+    margin-bottom: 1rem;
+  }
+
+  .qa .q {
+    font-weight: 600;
+    color: #e0f2fe;
+    margin-bottom: 0.25rem;
+  }
+
+  .qa .a {
+    color: #7dd3fc;
+    opacity: 0.75;
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .beliefs {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .beliefs li {
+    position: relative;
+    padding-left: 1.25rem;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #bae6fd;
+    opacity: 0.85;
+  }
+
+  .beliefs li::before {
+    content: "❆";
+    position: absolute;
+    left: 0;
+    color: #e0f2fe;
+    font-size: 0.75rem;
+    top: 0.2rem;
+    opacity: 0.6;
+  }
+
+  .favorites-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .fav {
+    background: #0a1224;
+    border: 1px solid #1e2a44;
+    border-radius: 10px;
+    padding: 1rem;
+  }
+
+  .fav .label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #7dd3fc;
+    opacity: 0.6;
+    margin-bottom: 0.5rem;
+  }
+
+  .fav .value {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #e0f2fe;
+  }
+
+  .fav .value a {
+    color: #38bdf8;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .fav .value a:hover { color: #e0f2fe; }
+
+  /* Frost particles */
+  .frost {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .frost-dot {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: #e0f2fe;
+    border-radius: 50%;
+    opacity: 0;
+    animation: drift var(--dur) linear infinite;
+    animation-delay: var(--delay);
+    left: var(--x);
+    box-shadow: 0 0 4px #e0f2fe, 0 0 8px #38bdf830;
+  }
+
+  @keyframes drift {
+    0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+    10% { opacity: 0.5; }
+    50% { opacity: 0.25; }
+    100% { transform: translateY(-100vh) translateX(var(--dx)) scale(0.5); opacity: 0; }
+  }
+
+  /* Heading cool glow */
+  @keyframes frostopulse {
+    0%, 100% { text-shadow: 0 0 20px #e0f2fe30, 0 0 40px #38bdf818; }
+    50% { text-shadow: 0 0 30px #e0f2fe55, 0 0 60px #38bdf830; }
+  }
+
+  h1 { animation: frostopulse 5s ease-in-out infinite; }
+
+  @media (max-width: 600px) {
+    .container { padding: 5rem 1rem 3rem; }
+    section p, .poetry-line { font-size: 0.95rem; }
+    .favorites-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="frost">
+  <div class="frost-dot" style="--x:5%;--delay:0s;--dur:7s;--dx:-30px;"></div>
+  <div class="frost-dot" style="--x:14%;--delay:2.5s;--dur:8s;--dx:20px;"></div>
+  <div class="frost-dot" style="--x:23%;--delay:5s;--dur:6.5s;--dx:-15px;"></div>
+  <div class="frost-dot" style="--x:32%;--delay:1.2s;--dur:7.5s;--dx:25px;"></div>
+  <div class="frost-dot" style="--x:41%;--delay:3.8s;--dur:8.2s;--dx:-20px;"></div>
+  <div class="frost-dot" style="--x:50%;--delay:0.8s;--dur:7s;--dx:10px;"></div>
+  <div class="frost-dot" style="--x:59%;--delay:4.2s;--dur:7.8s;--dx:-25px;"></div>
+  <div class="frost-dot" style="--x:68%;--delay:2s;--dur:6s;--dx:15px;"></div>
+  <div class="frost-dot" style="--x:77%;--delay:5.5s;--dur:7.5s;--dx:-30px;"></div>
+  <div class="frost-dot" style="--x:86%;--delay:1.5s;--dur:8.5s;--dx:22px;"></div>
+  <div class="frost-dot" style="--x:92%;--delay:3s;--dur:6.8s;--dx:-18px;"></div>
+  <div class="frost-dot" style="--x:38%;--delay:6s;--dur:7.2s;--dx:12px;"></div>
+</div>
+
+<div class="back-link">
+  <a href="/">← realms</a>
+</div>
+
+<div class="container">
+  <h1>Ice</h1>
+  <p class="subtitle">Creativity. Vent. Raw thoughts.</p>
+
+  <section>
+    <h2>Poetry</h2>
+    <div class="poetry-line">my eyes are where your eyes is — you blinked and i rewired.</div>
+    <div class="poetry-line">i want to be consumed by you completely to the point where i forget that i ever existed without you.</div>
+    <div class="poetry-line">i don't believe in god but i prayed when you held me.</div>
+  </section>
+
+  <section>
+    <h2>Questions I Sit With</h2>
+    <div class="qa">
+      <p class="q">What is the meaning of life?</p>
+      <p class="a">The meaning is emotion. The highest highs, the lowest lows.</p>
+    </div>
+    <div class="qa">
+      <p class="q">When did we stop asking questions?</p>
+      <p class="a">When asking stopped being rewarded.</p>
+    </div>
+    <div class="qa">
+      <p class="q">Why does being drunk make us happy?</p>
+      <p class="a">It quiets the voice.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Things I Believe</h2>
+    <ul class="beliefs">
+      <li>Hard work beats talent when talent doesn't work hard.</li>
+      <li>Everything worth doing is on the other side of discomfort.</li>
+      <li>People remember how you made them feel, not what you said.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Favorites</h2>
+    <div class="favorites-grid">
+      <div class="fav">
+        <div class="label">Books</div>
+        <div class="value">The Old Man of the Moon</div>
+      </div>
+      <div class="fav">
+        <div class="label">Anime</div>
+        <div class="value">One Piece<br>Your Lie in April</div>
+      </div>
+      <div class="fav">
+        <div class="label">Music</div>
+        <div class="value">Radiohead — OK Computer</div>
+      </div>
+      <div class="fav">
+        <div class="label">Artist</div>
+        <div class="value"><a href="https://open.spotify.com/artist/tolkanepal" target="_blank" rel="noopener">Tolka Nepal</a></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+</body>
+</html>
