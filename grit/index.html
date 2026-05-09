@@ -3,1020 +3,1131 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gritier — Hybrid Athlete Command Center</title>
+<title>VEKTOR — Adaptive Human Performance OS</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#050508;--surface:#0a0a14;--border:#1a1a28;--text:#c8cad4;--text-dim:#6b6e7c;
-  --accent:#34d399;--warn:#fbbf24;--danger:#f87171;
-  --radius:8px;--radius-sm:4px;
-  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --bg:#020408;--surface:#080c14;--border:#131a28;--border-hover:#1e2a3a;
+  --text:#e2e8f0;--text-secondary:#64748b;--text-dim:#334155;
+  --accent:#22d3ee;--accent-glow:rgba(34,211,238,0.15);
+  --green:#10b981;--amber:#f59e0b;--red:#ef4444;
+  --radius:10px;--radius-sm:6px;--sidebar:220px;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'SF Mono','JetBrains Mono','Consolas',monospace;
 }
-html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.5}
-#app{display:flex;height:100vh}
-#sidebar{width:200px;min-width:200px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:24px 0;flex-shrink:0}
-#sidebar .logo{padding:0 20px 20px;border-bottom:1px solid var(--border);margin-bottom:12px}
-#sidebar .logo h1{font-size:14px;font-weight:800;letter-spacing:0.12em;color:var(--accent);text-transform:uppercase}
-#sidebar .logo .sub{font-size:10px;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;margin-top:2px}
-#sidebar nav{display:flex;flex-direction:column;padding:0 12px}
-#sidebar nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius);color:var(--text-dim);text-decoration:none;font-size:13px;font-weight:600;transition:background .15s,color .15s;cursor:pointer}
-#sidebar nav a:hover{background:rgba(255,255,255,0.04);color:var(--text)}
-#sidebar nav a.active{background:rgba(52,211,153,0.1);color:var(--accent)}
-#main{flex:1;overflow-y:auto;padding:32px 36px}
-.view{display:none;animation:fadeIn .2s ease}
-.view.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-h2{font-size:18px;font-weight:700;margin-bottom:16px;color:#fff}
-h3{font-size:14px;font-weight:700;color:var(--text);margin-bottom:10px}
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:24px}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
-.stat-card .label{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim);margin-bottom:4px}
-.stat-card .value{font-size:32px;font-weight:800;line-height:1}
-.stat-card .sub{font-size:12px;color:var(--text-dim);margin-top:4px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
-.chart-wrap{overflow-x:auto}
-svg text{fill:var(--text-dim);font-size:10px;font-family:var(--font)}
-form{display:flex;flex-direction:column;gap:14px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.form-group{display:flex;flex-direction:column;gap:4px}
-.form-group label{font-size:12px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em}
-input,select,textarea{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:10px 12px;font-size:14px;font-family:var(--font);outline:none;transition:border-color .15s}
-input:focus,select:focus,textarea:focus{border-color:var(--accent)}
-input[type=number]{appearance:textfield;-moz-appearance:textfield}
-input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{appearance:none;margin:0}
-textarea{resize:vertical;min-height:70px}
-.range-wrap{display:flex;align-items:center;gap:10px}
-.range-wrap input[type=range]{flex:1;appearance:none;height:6px;background:var(--border);border-radius:3px;outline:none}
-.range-wrap input[type=range]::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer}
-.range-wrap .range-val{min-width:24px;text-align:center;font-weight:700;font-size:14px}
-button,.btn{background:var(--accent);color:#000;border:none;border-radius:var(--radius-sm);padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:0.04em;transition:opacity .15s}
-button:hover,.btn:hover{opacity:.85}
-button:active{opacity:.7}
-.btn-sm{padding:6px 12px;font-size:11px}
-.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}
-.btn-danger{background:var(--danger)}
-.btn-amber{background:var(--warn);color:#000}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.5;overflow:hidden}
+body{display:flex}
+#sidebar{width:var(--sidebar);min-width:var(--sidebar);height:100vh;background:var(--bg);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:1.5rem 0;position:fixed;left:0;top:0;z-index:100;overflow-y:auto}
+#sidebar .logo{padding:0 1.25rem 1.5rem;border-bottom:1px solid var(--border);margin-bottom:0.75rem}
+#sidebar .logo h1{font-size:1.5rem;font-weight:800;letter-spacing:0.06em;color:var(--text);line-height:1.2}
+#sidebar .logo span{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--text-dim);display:block;margin-top:2px}
+#sidebar nav{display:flex;flex-direction:column;gap:2px;padding:0 0.75rem;flex:1}
+#sidebar nav a{display:flex;align-items:center;gap:0.65rem;padding:0.6rem 0.75rem;color:var(--text-secondary);text-decoration:none;font-size:0.8rem;font-weight:500;letter-spacing:0.04em;border-radius:var(--radius-sm);transition:all 0.15s;border-left:2px solid transparent;margin-left:-2px}
+#sidebar nav a:hover{color:var(--text);background:rgba(255,255,255,0.02)}
+#sidebar nav a.active{color:var(--text);background:rgba(34,211,238,0.06);border-left-color:var(--accent)}
+#sidebar nav a .nav-icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0}
+#sidebar div.sf{padding:1rem 1.25rem;border-top:1px solid var(--border);font-size:0.6rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em}
+#main{flex:1;margin-left:var(--sidebar);height:100vh;overflow-y:auto;overflow-x:hidden;padding:1.5rem}
+#bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);z-index:100;padding:0.4rem 0;padding-bottom:env(safe-area-inset-bottom,0.4rem)}
+#bottom-nav .bnr{display:flex;justify-content:space-around;align-items:center}
+#bottom-nav button.bni{display:flex;flex-direction:column;align-items:center;gap:2px;padding:0.3rem 0.15rem;background:none;border:none;color:var(--text-secondary);font-size:0.6rem;font-family:var(--font);font-weight:500;letter-spacing:0.04em;cursor:pointer;transition:color 0.15s;min-width:55px}
+#bottom-nav button.bni.active{color:var(--accent)}
+#bottom-nav button.bni .bnic{font-size:1rem}
+#more-menu{display:none;position:fixed;bottom:58px;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);z-index:101;padding:0.65rem;flex-wrap:wrap;justify-content:center;gap:0.4rem}
+#more-menu.open{display:flex}
+#more-menu button.mmi{background:var(--bg);border:1px solid var(--border);color:var(--text-secondary);padding:0.45rem 0.85rem;border-radius:var(--radius-sm);font-size:0.65rem;cursor:pointer;letter-spacing:0.04em;font-family:var(--font);transition:all 0.15s}
+#more-menu button.mmi:hover{color:var(--text);border-color:var(--accent)}
+h2{font-size:1.2rem;font-weight:700;letter-spacing:-0.01em;margin-bottom:1.25rem}
+h3{font-size:0.9rem;font-weight:600;letter-spacing:0.02em;margin-bottom:0.75rem;color:var(--text)}
+h4{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-secondary);margin-bottom:0.75rem}
+.card,.section{margin-top:1.25rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;transition:border-color 0.2s;box-shadow:inset 0 1px 0 rgba(255,255,255,0.02)}
+.card:hover{border-color:#1e2a3a}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.stat-card{text-align:center;padding:1rem}
+.stat-card .sv{font-family:var(--mono);font-size:1.5rem;font-weight:700;color:var(--text)}
+.stat-card .sl{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-secondary);margin-top:0.2rem}
+.stat-card .ss{font-size:0.68rem;color:var(--text-dim);margin-top:0.1rem;font-family:var(--mono)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:0.4rem;padding:0.55rem 1rem;border-radius:var(--radius-sm);font-family:var(--font);font-size:0.78rem;font-weight:600;letter-spacing:0.02em;cursor:pointer;transition:all 0.15s;border:1px solid transparent;text-decoration:none}
+.btn-primary{background:var(--accent);color:#020408;border-color:var(--accent)}
+.btn-primary:hover{background:#38d9f0}
+.btn-secondary{background:transparent;border-color:#1e2a3a;color:var(--text)}
+.btn-secondary:hover{background:rgba(255,255,255,0.03);border-color:#26344a}
+.btn-danger{background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.25);color:var(--red)}
+.btn-danger:hover{background:rgba(239,68,68,0.2)}
+.btn-sm{padding:0.35rem 0.65rem;font-size:0.7rem}
 .btn-block{width:100%}
-.pain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
-.pain-item{display:flex;align-items:center;gap:8px}
-.pain-item .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.pain-item .name{font-size:12px;color:var(--text-dim);min-width:90px}
-.checkbox-group{display:flex;flex-wrap:wrap;gap:14px}
-.checkbox-group label{display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
-th{font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-dim);font-weight:700}
-td{color:var(--text)}
-tr{cursor:pointer;transition:background .1s}
-tr:hover{background:rgba(255,255,255,0.02)}
-.expanded-row td{padding:0 12px 12px}
-.expanded-detail{background:var(--bg);border-radius:var(--radius);padding:12px;font-size:12px;color:var(--text-dim);display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
-.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase}
-.badge-red{background:rgba(248,113,113,0.15);color:var(--danger)}
-.badge-amber{background:rgba(251,191,36,0.15);color:var(--warn)}
-.badge-green{background:rgba(52,211,153,0.15);color:var(--accent)}
-.delete-btn{color:var(--danger);cursor:pointer;font-size:16px;line-height:1;background:none;border:none;padding:0 4px;font-weight:700}
-.delete-btn:hover{opacity:.7}
-.exercise-list{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px}
-.exercise-item{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-bottom:1px solid var(--border);font-size:13px}
-.exercise-item:last-child{border-bottom:none}
-.exercise-item .ex-info{display:flex;flex-direction:column;gap:2px}
-.exercise-item .ex-rm{font-size:11px;color:var(--accent)}
-.exercise-item .remove-ex{color:var(--danger);cursor:pointer;padding:2px 6px;font-size:14px;font-weight:700;background:none;border:none}
-.insight-card{background:var(--surface);border:2px solid var(--accent);border-radius:var(--radius);padding:24px;text-align:center;margin-bottom:16px}
-.insight-card .big-score{font-size:72px;font-weight:900;line-height:1}
-.insight-card .zone-label{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px}
-.insight-card .breakdown{display:flex;justify-content:center;gap:24px;margin:12px 0;font-size:13px;color:var(--text-dim)}
-.insight-card ul{list-style:none;text-align:left;max-width:400px;margin:12px auto 0;font-size:13px;color:var(--text-dim)}
-.insight-card ul li{padding:4px 0;border-bottom:1px solid var(--border)}
-.insight-card ul li::before{content:'→ ';color:var(--accent)}
-.empty-state{text-align:center;padding:40px 20px;color:var(--text-dim);font-size:14px}
-.empty-state .empty-icon{font-size:40px;margin-bottom:12px}
-.prose{font-size:14px;line-height:1.7;color:var(--text-dim)}
-.prose p{margin-bottom:12px}
-.prose strong{color:var(--text)}
-.prose .hl{color:var(--accent)}
-#mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);z-index:100;padding:6px 0 env(safe-area-inset-bottom,0)}
-#mobile-nav .tabs{display:flex;justify-content:space-around}
-#mobile-nav .tab{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 10px;color:var(--text-dim);font-size:10px;text-decoration:none;cursor:pointer;transition:color .15s}
-#mobile-nav .tab.active{color:var(--accent)}
-#mobile-nav .tab .tab-icon{font-size:18px}
-#mobile-sheet{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);z-index:101;padding:20px;border-radius:12px 12px 0 0;animation:slideUp .2s ease}
-#mobile-sheet .sheet-links{display:flex;flex-direction:column;gap:4px}
-#mobile-sheet .sheet-link{display:flex;align-items:center;gap:10px;padding:12px;border-radius:var(--radius);color:var(--text);text-decoration:none;font-size:14px;cursor:pointer;transition:background .15s}
-#mobile-sheet .sheet-link:hover{background:rgba(255,255,255,0.04)}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100}
-.coach-report{font-size:14px;line-height:1.7}
-.coach-report h3{color:var(--accent);margin:16px 0 6px}
-.coach-report strong{color:#fff}
-.history-item{cursor:pointer;padding:12px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;transition:border-color .15s}
-.history-item:hover{border-color:var(--accent)}
-.history-item .hi-header{display:flex;justify-content:space-between;align-items:center}
-.history-item .hi-body{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
-.history-item.open .hi-body{display:block}
+label{display:block;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-secondary);margin-bottom:0.3rem;font-weight:600}
+input[type=text],input[type=number],input[type=date],select,textarea{width:100%;padding:0.55rem 0.65rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:var(--font);font-size:0.8rem;outline:none;transition:border-color 0.15s}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+textarea{resize:vertical;min-height:70px}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2364748b'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0.65rem center;padding-right:2rem}
+.form-group{margin-bottom:0.85rem}
+.form-row{display:flex;gap:0.75rem}
+.form-row>*{flex:1}
+input[type=range]{-webkit-appearance:none;width:100%;height:6px;background:var(--border);border-radius:3px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:var(--accent);border-radius:50%;cursor:pointer;border:2px solid var(--bg)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;background:var(--accent);border-radius:50%;cursor:pointer;border:2px solid var(--bg)}
+.sv-label{font-family:var(--mono);font-size:0.85rem;font-weight:700;color:var(--accent);margin-left:0.4rem;min-width:1.5rem;text-align:center}
+.range-wrap{display:flex;align-items:center;gap:0.4rem}
+.toggle-wrap{display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0}
+.toggle{position:relative;width:42px;height:24px;cursor:pointer;display:inline-block}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle .track{position:absolute;top:0;left:0;right:0;bottom:0;background:var(--border);border-radius:12px;transition:0.2s}
+.toggle .track::after{content:'';position:absolute;width:18px;height:18px;left:3px;bottom:3px;background:var(--text-dim);border-radius:50%;transition:0.2s}
+.toggle input:checked+.track{background:rgba(34,211,238,0.25)}
+.toggle input:checked+.track::after{background:var(--accent);transform:translateX(18px)}
+.pill-group{display:flex;gap:0.5rem;flex-wrap:wrap}
+.pill{padding:0.4rem 0.85rem;border-radius:20px;background:var(--bg);border:1px solid var(--border);color:var(--text-secondary);font-size:0.72rem;font-weight:500;cursor:pointer;transition:all 0.15s;font-family:var(--font);letter-spacing:0.02em}
+.pill:hover{border-color:#1e2a3a;color:var(--text)}
+.pill.selected{background:rgba(34,211,238,0.1);border-color:var(--accent);color:var(--accent);font-weight:600}
+.pain-row{display:flex;align-items:center;justify-content:space-between;padding:0.25rem 0;gap:0.75rem}
+.pain-row .pl{font-size:0.72rem;color:var(--text);min-width:115px}
+.pain-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;display:inline-block;margin-right:4px}
+.pain-dot.g{background:var(--green);box-shadow:0 0 6px rgba(16,185,129,0.4)}
+.pain-dot.a{background:var(--amber);box-shadow:0 0 6px rgba(245,158,11,0.4)}
+.pain-dot.r{background:var(--red);box-shadow:0 0 6px rgba(239,68,68,0.4)}
+.badge{display:inline-block;padding:0.15rem 0.45rem;border-radius:4px;font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em}
+.badge-green{background:rgba(16,185,129,0.15);color:var(--green)}
+.badge-amber{background:rgba(245,158,11,0.15);color:var(--amber)}
+.badge-red{background:rgba(239,68,68,0.15);color:var(--red)}
+.badge-cyan{background:rgba(34,211,238,0.12);color:var(--accent)}
+#orb-wrap{display:flex;flex-direction:column;align-items:center;padding:1.5rem 0 0.5rem}
+#orb-svg{width:160px;height:160px}
+#orb-glow{animation:orbPulse 3s ease-in-out infinite}
+@keyframes orbPulse{0%,100%{opacity:0.55}50%{opacity:1}}
+#orb-score{font-family:var(--mono);font-size:2.2rem;font-weight:800}
+#orb-zone{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;margin-top:0.35rem;text-align:center}
+#orb-zone.prime{color:var(--green)}#orb-zone.stable{color:var(--amber)}#orb-zone.strained{color:var(--red)}#orb-zone.nd{color:var(--text-dim)}
+table{width:100%;border-collapse:collapse;font-size:0.78rem}
+th{text-align:left;padding:0.5rem 0.65rem;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-secondary);font-weight:600;border-bottom:1px solid var(--border)}
+td{padding:0.5rem 0.65rem;border-bottom:1px solid var(--border);color:var(--text)}
+tr:nth-child(even) td{background:rgba(255,255,255,0.01)}
+tr:hover td{background:rgba(34,211,238,0.03)}
+.mono{font-family:var(--mono);font-weight:600}
+.tg{color:var(--green)}.ta{color:var(--amber)}.tr{color:var(--red)}.tc{color:var(--accent)}
+.exp-sum{cursor:pointer;transition:background 0.15s}
+.exp-det{display:none;padding:0.65rem 0;border-bottom:1px solid var(--border)}
+.exp-det.open{display:block}
+.injury-card{padding:0.85rem;border-radius:var(--radius-sm);background:var(--bg);border:1px solid var(--border);margin-bottom:0.5rem}
+.injury-card .inj-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.35rem}
+.rpt-prose{line-height:1.75;font-size:0.82rem;color:var(--text-secondary)}
+.rpt-prose h3{color:var(--text);margin:1rem 0 0.35rem;font-size:0.75rem;letter-spacing:0.08em}
+.rpt-prose .callout{padding:0.75rem 1rem;border-left:3px solid var(--accent);background:rgba(34,211,238,0.05);color:var(--text);border-radius:0 var(--radius-sm) var(--radius-sm) 0;margin:0.75rem 0;font-weight:500}
+.rpt-prose ol{padding-left:1.25rem;margin-top:0.25rem}
+.rpt-prose ol li{margin-bottom:0.2rem}
+.rpt-prose .rpt-meta{font-size:0.62rem;color:var(--text-dim);margin-bottom:1rem}
+.result-card{text-align:center;padding:1.5rem;margin-top:1rem}
+.result-big{font-family:var(--mono);font-size:3rem;font-weight:800;margin-bottom:0.2rem}
+.result-zone{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:1rem}
+.bar-row{display:flex;align-items:center;gap:0.75rem;margin:0.4rem 0;font-size:0.7rem}
+.bar-label{min-width:65px;text-align:right;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em}
+.bar-track{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;transition:width 0.3s}
+.bar-val{min-width:35px;font-family:var(--mono);font-weight:600;font-size:0.78rem}
+.insights{margin-top:0.75rem;text-align:left}
+.insights ul{list-style:none;padding:0}
+.insights ul li{padding:0.25rem 0;font-size:0.7rem;color:var(--text-secondary);border-bottom:1px solid var(--border)}
+.insights ul li::before{content:'— ';color:var(--accent)}
+.acwr-gauge{position:relative;height:24px;background:var(--bg);border-radius:4px;overflow:hidden;margin:0.5rem 0}
+.acwr-fill{height:100%;border-radius:4px;transition:width 0.4s}
+.acwr-zones{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;pointer-events:none}
+.acwr-zone{border-right:1px solid var(--bg)}
+.acwr-marker{position:absolute;top:-4px;width:3px;height:32px;background:var(--text);border-radius:2px;transition:left 0.4s}
+.chart-svg{width:100%;height:auto}
+.empty-state{padding:2rem;text-align:center;color:var(--text-dim)}
+.empty-state .ei{font-size:2rem;margin-bottom:0.5rem;opacity:0.3}
+.empty-state p{font-size:0.75rem}
+.risk-indicator{display:flex;align-items:center;gap:0.75rem;padding:0.75rem;border-radius:var(--radius-sm);margin-bottom:0.75rem}
+.risk-indicator .rd{width:16px;height:16px;border-radius:50%;flex-shrink:0}
+.risk-indicator.low{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2)}
+.risk-indicator.moderate{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2)}
+.risk-indicator.high{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2)}
+.ex-item{display:flex;justify-content:space-between;align-items:center;padding:0.45rem 0.6rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:0.3rem;font-size:0.72rem}
+.ex-item .ei-name{font-weight:600}
+.ex-item .ei-detail{font-family:var(--mono);font-size:0.65rem;color:var(--text-secondary)}
+.ex-item .ei-rm{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:0.8rem;padding:0.15rem 0.35rem}
+.confirm-overlay{display:none;position:fixed;inset:0;background:rgba(2,4,8,0.8);z-index:200;align-items:center;justify-content:center}
+.confirm-overlay.open{display:flex}
+.confirm-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;max-width:340px;width:90%;text-align:center}
+.confirm-box p{margin-bottom:1rem;color:var(--text);font-size:0.82rem}
+.confirm-box .btn-row{display:flex;gap:0.5rem;justify-content:center}
 @media(max-width:768px){
   #sidebar{display:none}
-  #main{padding:16px 16px 80px}
-  #mobile-nav{display:block}
-  .stat-grid{grid-template-columns:1fr 1fr}
-  .form-row{grid-template-columns:1fr}
-  .pain-grid{grid-template-columns:1fr}
-  .insight-card .big-score{font-size:56px}
-  .insight-card .breakdown{flex-direction:column;gap:8px;align-items:center}
-  table{font-size:12px}
-  th,td{padding:8px 6px}
-}
-@media(min-width:769px){
-  #mobile-nav,#mobile-sheet,#overlay{display:none!important}
+  #main{margin-left:0;padding-bottom:75px;padding:0.75rem}
+  #bottom-nav{display:block}
+  .grid2,.grid4{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr 1fr}
+  .form-row{flex-direction:column}
+  #orb-svg{width:130px;height:130px}
 }
 </style>
 </head>
 <body>
-<div id="app">
+
 <aside id="sidebar">
-  <div class="logo">
-    <h1>⚔️ HYBRID ATHLETE</h1>
-    <div class="sub">Command Center</div>
-  </div>
+  <div class="logo"><h1>VEKTOR</h1><span>adaptive human performance os</span></div>
   <nav>
-    <a data-view="dash" class="active">⚔️ Dashboard</a>
-    <a data-view="checkin">📋 Check-In</a>
-    <a data-view="runs">🏃 Runs</a>
-    <a data-view="workouts">🏋️ Workouts</a>
-    <a data-view="injuries">🩹 Injuries</a>
-    <a data-view="coach">🧠 Coach</a>
+    <a href="#" data-view="dashboard" class="active"><span class="nav-icon">◎</span>Dashboard</a>
+    <a href="#" data-view="checkin"><span class="nav-icon">▣</span>Check-In</a>
+    <a href="#" data-view="runs"><span class="nav-icon">↘</span>Runs</a>
+    <a href="#" data-view="strength"><span class="nav-icon">▲</span>Strength</a>
+    <a href="#" data-view="recovery"><span class="nav-icon">◇</span>Recovery</a>
+    <a href="#" data-view="injuries"><span class="nav-icon">⚠</span>Injuries</a>
+    <a href="#" data-view="analytics"><span class="nav-icon">◈</span>Analytics</a>
+    <a href="#" data-view="coach"><span class="nav-icon">◆</span>AI Coach</a>
   </nav>
+  <div class="sf">v1.0</div>
 </aside>
-<main id="main">
 
-<div id="view-dash" class="view active">
-  <h2>Dashboard</h2>
-  <div class="stat-grid" id="dash-stats"></div>
-  <div class="card"><h3>📈 Readiness Trend</h3><div class="chart-wrap"><svg id="readiness-chart" viewBox="0 0 300 150" width="100%" style="max-width:600px"></svg></div></div>
-  <div class="card"><h3>📋 Recent Activity</h3><div id="recent-activity" class="empty-state"><div class="empty-icon">⚔️</div>No activity yet. Start by logging a run or workout.</div></div>
-  <div class="card"><h3>🩹 Injury Status</h3><div id="injury-status" class="empty-state"><div class="empty-icon">✅</div>No injuries reported. Stay healthy!</div></div>
-</div>
+<div id="main"><div id="content"></div></div>
 
-<div id="view-checkin" class="view">
-  <h2>Daily Check-In</h2>
-  <div id="checkin-result"></div>
-  <form id="checkin-form" class="card">
-    <h3>😴 Sleep</h3>
-    <div class="form-row">
-      <div class="form-group"><label>Hours</label><input type="number" id="ci-sleep" step="0.5" min="0" max="24" placeholder="7.5" required></div>
-      <div class="form-group"><label>Quality</label><div class="range-wrap"><input type="range" id="ci-sleepq" min="1" max="10" value="5"><span class="range-val" id="ci-sleepq-val">5</span></div></div>
-    </div>
-    <h3>💪 Physical</h3>
-    <div class="form-row">
-      <div class="form-group"><label>Resting HR</label><input type="number" id="ci-hr" min="30" max="200" placeholder="58" required></div>
-      <div class="form-group"><label>Bodyweight (kg)</label><input type="number" id="ci-bw" step="0.1" min="30" max="300" placeholder="75.0"></div>
-    </div>
-    <h3>⚡ Energy & Mood</h3>
-    <div class="form-row">
-      <div class="form-group"><label>Energy</label><div class="range-wrap"><input type="range" id="ci-energy" min="1" max="10" value="5"><span class="range-val" id="ci-energy-val">5</span></div></div>
-      <div class="form-group"><label>Motivation</label><div class="range-wrap"><input type="range" id="ci-motivation" min="1" max="10" value="5"><span class="range-val" id="ci-motivation-val">5</span></div></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Stress</label><div class="range-wrap"><input type="range" id="ci-stress" min="1" max="10" value="5"><span class="range-val" id="ci-stress-val">5</span></div></div>
-      <div class="form-group"><label>Mood</label><select id="ci-mood"><option value="good">Good</option><option value="neutral" selected>Neutral</option><option value="bad">Bad</option><option value="anxious">Anxious</option></select></div>
-    </div>
-    <h3>🔄 Recovery</h3>
-    <div class="form-row">
-      <div class="form-group"><label>Soreness</label><div class="range-wrap"><input type="range" id="ci-soreness" min="1" max="10" value="3"><span class="range-val" id="ci-soreness-val">3</span></div></div>
-      <div class="form-group checkbox-group">
-        <label><input type="checkbox" id="ci-hydration"> Hydration target</label>
-        <label><input type="checkbox" id="ci-protein"> Protein target</label>
-        <label><input type="checkbox" id="ci-mobility"> Mobility done</label>
-      </div>
-    </div>
-    <h3>🩹 Pain Tracking</h3>
-    <div class="pain-grid" id="pain-sliders"></div>
-    <div class="form-group"><label>Notes</label><textarea id="ci-notes" placeholder="How are you feeling today?"></textarea></div>
-    <button type="submit" class="btn-block">Submit Check-In</button>
-  </form>
-</div>
-
-<div id="view-runs" class="view">
-  <h2>🏃 Runs</h2>
-  <div class="stat-grid" id="run-stats"></div>
-  <form id="run-form" class="card">
-    <h3>Log Run</h3>
-    <div class="form-row">
-      <div class="form-group"><label>Distance (km)</label><input type="number" id="run-dist" step="0.1" min="0.1" max="200" placeholder="5.0" required></div>
-      <div class="form-group"><label>Duration (min)</label><input type="number" id="run-dur" min="1" max="1440" placeholder="30" required></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Pace (min/km)</label><input type="number" id="run-pace" step="0.01" min="2" max="15" placeholder="5.5"></div>
-      <div class="form-group"><label>Avg HR</label><input type="number" id="run-avgHr" min="30" max="250" placeholder="150"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Max HR</label><input type="number" id="run-maxHr" min="30" max="250" placeholder="175"></div>
-      <div class="form-group"><label>Cadence (spm)</label><input type="number" id="run-cadence" min="50" max="250" placeholder="170"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Elevation (m)</label><input type="number" id="run-elev" min="0" max="10000" placeholder="50"></div>
-      <div class="form-group"><label>RPE (1-10)</label><input type="number" id="run-rpe" min="1" max="10" placeholder="6"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Type</label><select id="run-type"><option>Easy</option><option>Tempo</option><option>Intervals</option><option>Long Run</option><option>Recovery</option><option>Race</option></select></div>
-      <div class="form-group"><label>Terrain</label><select id="run-terrain"><option>Road</option><option>Trail</option><option>Track</option><option>Treadmill</option></select></div>
-    </div>
-    <div class="form-group"><label>Notes</label><input type="text" id="run-notes" placeholder="How did it feel?"></div>
-    <button type="submit" class="btn-block">Log Run</button>
-  </form>
-  <div class="card"><h3>📈 Pace Trend</h3><div class="chart-wrap"><svg id="pace-chart" viewBox="0 0 300 150" width="100%" style="max-width:600px"></svg></div></div>
-  <div class="card"><h3>📜 Run History</h3><div id="run-history"></div></div>
-</div>
-
-<div id="view-workouts" class="view">
-  <h2>🏋️ Workouts</h2>
-  <div class="stat-grid" id="workout-stats"></div>
-  <form id="workout-form" class="card">
-    <h3>Log Workout</h3>
-    <div class="form-row">
-      <div class="form-group"><label>Type</label><select id="wo-type"><option>Strength</option><option>Mobility</option><option>Cross Training</option><option>Rehab</option></select></div>
-      <div class="form-group"><label>Duration (min)</label><input type="number" id="wo-dur" min="1" max="600" placeholder="60" required></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Session RPE (1-10)</label><input type="number" id="wo-rpe" min="1" max="10" placeholder="7"></div>
-    </div>
-    <h3>Add Exercise</h3>
-    <div class="form-row">
-      <div class="form-group"><label>Exercise Name</label><input type="text" id="ex-name" placeholder="Back Squat"></div>
-      <div class="form-group"><label>Category</label><select id="ex-cat"><option>Squat</option><option>Hinge</option><option>Push</option><option>Pull</option><option>Carry</option><option>Accessory</option></select></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Weight (kg)</label><input type="number" id="ex-weight" step="0.5" min="0" placeholder="80"></div>
-      <div class="form-group"><label>Sets</label><input type="number" id="ex-sets" min="1" max="50" placeholder="3"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Reps</label><input type="number" id="ex-reps" min="1" max="100" placeholder="8"></div>
-      <div class="form-group"><label>RPE (1-10)</label><input type="number" id="ex-rpe" min="1" max="10" placeholder="7"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Tempo</label><input type="text" id="ex-tempo" placeholder="3-1-3-0"></div>
-      <div class="form-group"><label>Pain Notes</label><input type="text" id="ex-pain" placeholder="Any discomfort?"></div>
-    </div>
-    <button type="button" id="add-ex-btn" class="btn-outline btn-block">+ Add Exercise</button>
-    <div class="exercise-list" id="exercise-list"></div>
-    <input type="hidden" id="ex-data" value="[]">
-    <button type="submit" class="btn-block">Log Workout</button>
-  </form>
-  <div class="card"><h3>📜 Workout History</h3><div id="workout-history"></div></div>
-</div>
-
-<div id="view-injuries" class="view">
-  <h2>🩹 Injuries</h2>
-  <div class="stat-grid" id="injury-stats"></div>
-  <form id="injury-form" class="card">
-    <h3>Report Injury</h3>
-    <div class="form-row">
-      <div class="form-group"><label>Location</label><select id="inj-loc"><option>Groin</option><option>Lower Back</option><option>Shoulder</option><option>Knee</option><option>Hamstring</option><option>Ankle</option><option>Hip</option><option>Wrist</option><option>Elbow</option></select></div>
-      <div class="form-group"><label>Side</label><select id="inj-side"><option>Left</option><option>Right</option><option>Bilateral</option></select></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Severity</label><div class="range-wrap"><input type="range" id="inj-severity" min="1" max="10" value="5"><span class="range-val" id="inj-sev-val">5</span></div></div>
-      <div class="form-group"><label>Type</label><select id="inj-type"><option>Strain</option><option>Tendinopathy</option><option>Contusion</option><option>Other</option></select></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Status</label><select id="inj-status"><option>Active</option><option>Monitoring</option></select></div>
-      <div class="form-group"><label>Mechanism</label><input type="text" id="inj-mech" placeholder="How did it happen?"></div>
-    </div>
-    <div class="form-group"><label>Notes</label><textarea id="inj-notes" placeholder="Describe the injury..."></textarea></div>
-    <button type="submit" class="btn-block">Report Injury</button>
-  </form>
-  <div class="card"><h3>📜 Injury Log</h3><div id="injury-log"></div></div>
-</div>
-
-<div id="view-coach" class="view">
-  <h2>🧠 AI Coach</h2>
-  <div id="coach-report"></div>
-  <div class="card" style="text-align:center">
-    <button id="gen-coach-btn" class="btn-block" style="font-size:16px;padding:16px">⚡ Generate Coaching Report</button>
-  </div>
-  <div class="card"><h3>📜 Report History</h3><div id="coach-history"></div></div>
-</div>
-
-</main>
-</div>
-
-<nav id="mobile-nav">
-  <div class="tabs">
-    <div class="tab active" data-view="dash"><span class="tab-icon">⚔️</span>Dash</div>
-    <div class="tab" data-view="checkin"><span class="tab-icon">📋</span>Check</div>
-    <div class="tab" data-view="runs"><span class="tab-icon">🏃</span>Runs</div>
-    <div class="tab" id="more-tab"><span class="tab-icon">⋮</span>More</div>
+<nav id="bottom-nav">
+  <div class="bnr">
+    <button class="bni active" data-view="dashboard"><span class="bnic">◎</span>Dash</button>
+    <button class="bni" data-view="checkin"><span class="bnic">▣</span>Check</button>
+    <button class="bni" data-view="runs"><span class="bnic">↘</span>Runs</button>
+    <button class="bni" data-view="strength"><span class="bnic">▲</span>Strength</button>
+    <button class="bni" id="more-btn"><span class="bnic">⊙</span>More</button>
   </div>
 </nav>
-<div id="overlay"></div>
-<div id="mobile-sheet">
-  <div class="sheet-links">
-    <div class="sheet-link" data-view="workouts">🏋️ Workouts</div>
-    <div class="sheet-link" data-view="injuries">🩹 Injuries</div>
-    <div class="sheet-link" data-view="coach">🧠 Coach</div>
+<div id="more-menu">
+  <button class="mmi" data-view="recovery">◇ Recovery</button>
+  <button class="mmi" data-view="injuries">⚠ Injuries</button>
+  <button class="mmi" data-view="analytics">◈ Analytics</button>
+  <button class="mmi" data-view="coach">◆ AI Coach</button>
+</div>
+
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <p id="confirm-msg">Are you sure?</p>
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="confirm-no">Cancel</button>
+      <button class="btn btn-danger" id="confirm-yes">Delete</button>
+    </div>
   </div>
 </div>
 
 <script>
-(function(){
-'use strict';
 
-function uuid(){return Date.now().toString(36)+Math.random().toString(36).slice(2)}
-function load(key,def){try{var v=localStorage.getItem('grit_'+key);return v?JSON.parse(v):def}catch(e){return def}}
-function save(key,data){try{localStorage.setItem('grit_'+key,JSON.stringify(data));return true}catch(e){showToast('Storage full — clear some data');return false}}
-function clamp(v,min,max){return Math.min(max,Math.max(min,v))}
+// ======================== UTILITIES ========================
+const $=(s,p)=>(p||document).querySelector(s);
+const $$=(s,p)=>(p||document).querySelectorAll(s);
+const uid=()=>'id_'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);
+const save=(k,v)=>{try{localStorage.setItem('vektor_'+k,JSON.stringify(v))}catch(e){}}
+const load=(k,d)=>{try{const v=localStorage.getItem('vektor_'+k);return v?JSON.parse(v):d}catch(e){return d}}
+const nowISO=()=>new Date().toISOString().split('T')[0];
+const daysAgo=n=>{const d=new Date();d.setDate(d.getDate()-n);return d.toISOString().split('T')[0]}
+const todayStr=()=>new Date().toISOString().split('T')[0];
+const daysBetween=(a,b)=>Math.floor((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/86400000);
+
 function formatDate(iso){
   if(!iso)return'';
-  var d=new Date(iso),now=new Date();
-  var td=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-  var dd=new Date(d.getFullYear(),d.getMonth(),d.getDate());
-  var diff=(td-dd)/86400000;
+  const d=new Date(iso+'T00:00:00'),now=new Date();now.setHours(0,0,0,0);
+  const diff=Math.floor((now-d)/86400000);
   if(diff===0)return'Today';
   if(diff===1)return'Yesterday';
-  var m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  return m[d.getMonth()]+' '+d.getDate();
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
+function formatPace(mpk){
+  if(!mpk||mpk===Infinity)return'\u2014';
+  const m=Math.floor(mpk),s=Math.round((mpk-m)*60);
+  return m+':'+String(s).padStart(2,'0')+'/km';
+}
+function formatDuration(sec){
+  if(!sec)return'0:00';
+  const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=Math.floor(sec%60);
+  if(h>0)return h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  return m+':'+String(s).padStart(2,'0');
+}
+function sc(v){return v>=80?'var(--green)':v>=60?'var(--amber)':'var(--red)'}
+function scls(v){return v>=80?'tg':v>=60?'ta':'tr'}
+function zlbl(s){return s>=80?'PRIME':s>=60?'STABLE':'STRAINED'}
+function zcls(s){return s>=80?'prime':s>=60?'stable':'strained'}
+
+// ======================== ENGINES ========================
+function calculateReadiness(data){
+  const ss=Math.min(100,(data.sleepHours/10)*100*(data.sleepQuality/10));
+  let hr=100;
+  if(data.restingHR>0){
+    if(data.restingHR<=50)hr=100;
+    else if(data.restingHR>=80)hr=20;
+    else hr=Math.max(20,100-((data.restingHR-50)/30)*80);
+  }
+  const es=(data.energy/10)*100,ms=(data.motivation/10)*100;
+  const ce=es*0.7+ms*0.3;
+  const sor=Math.max(0,100-(data.soreness/10)*100);
+  const pk=['groin','lowerBack','shoulder','knee','hamstring'];
+  let ps=0; const pso={};
+  pk.forEach(k=>{const v=data[k]||0;pso[k]=v;ps+=v});
+  const ap=ps/5,pp=Math.min(50,ap*5);
+  let rb=0;
+  if(data.hydration)rb+=3;if(data.protein)rb+=3;if(data.mobility)rb+=4;
+  const sp=data.stress?(data.stress/10)*10:0;
+  const base=(ss*0.3+hr*0.2+ce*0.25+sor*0.15)*(1-sp/150);
+  const ov=Math.round(Math.min(100,Math.max(10,base+rb-pp)));
+  const ins=[];
+  if(ss<50)ins.push('Sleep quality is low \u2014 prioritize 7-9h tonight');
+  if(hr<50)ins.push('Elevated resting HR suggests incomplete recovery');
+  if(es<40)ins.push('Energy levels depleted \u2014 consider an easy day');
+  if(ap>3)ins.push('Pain elevated in '+pk.filter(k=>pso[k]>=4).join(', ')+' \u2014 modify training');
+  if(data.stress>7)ins.push('High perceived stress \u2014 recovery may be compromised');
+  if(ov>=80&&ap<2)ins.push('Green zone \u2014 ready for high-quality training');
+  if(ov>=60&&ov<80)ins.push('Stable zone \u2014 train with awareness');
+  if(ov<60)ins.push('Strained \u2014 prioritize recovery over training');
+  let zone,rec;
+  if(ov>=80){zone='PRIME';rec='You\u2019re primed for performance. Consider a quality session today.'}
+  else if(ov>=60){zone='STABLE';rec='Train at moderate intensity. Monitor how you feel during warm-up.'}
+  else{zone='STRAINED';rec='Focus on recovery. Low-intensity movement or complete rest recommended.'}
+  return{overall:ov,sleepScore:Math.round(ss),hrRecoveryScore:Math.round(hr),
+    energyScore:Math.round(ce),sorenessScore:Math.round(sor),painPenalty:Math.round(pp),
+    zone,insights:ins,recommendation:rec,painScores:pso};
 }
 
-var profile=load('profile',{restingHR:60});
-
-// --- Sports Science Engine ---
-function calculateReadiness(d){
-  var ss=Math.min(100,(d.sleepHours/8)*50+d.sleepQuality*5);
-  var hd=((d.restingHR-(profile.restingHR||60))/(profile.restingHR||60))*100;
-  var hs=hd<=3?90:hd<=8?70:hd<=15?45:20;
-  var es=d.energy*10;
-  var sos=100-d.soreness*10;
-  var pns=d.pains||[0,0,0,0,0];
-  var ap=pns.reduce(function(a,b){return a+b},0)/5;
-  var pp=Math.max(0,100-ap*15);
-  var mm=d.mood==='good'?1.05:d.mood==='bad'||d.mood==='anxious'?0.9:1.0;
-  var o=Math.round((ss*.25+hs*.25+es*.15+sos*.15+pp*.10+10)*mm);
-  o=clamp(o,0,100);
-  var z=o>=80?'green':o>=60?'yellow':'red';
-  var ins=[];
-  if(ss<60)ins.push('Sleep quality is low — aim for 7-8 hours and improve sleep hygiene');
-  if(hs<60)ins.push('Resting heart rate is elevated — consider an easier day or active recovery');
-  if(es<50)ins.push('Energy levels are low — check nutrition timing and overall intake');
-  if(sos<50)ins.push('Soreness is high — prioritize foam rolling, stretching, and hydration');
-  if(ap>4)ins.push('Pain scores are elevated — reduce intensity on affected areas and monitor');
-  if(mm===0.9)ins.push('Your mood indicates added stress — consider mindfulness or a lighter session');
-  if(ins.length===0)ins.push('All systems look good — this is a green light for quality training');
-  return{overall:o,sleepScore:ss,hrScore:hs,energyScore:es,sorenessScore:sos,painPenalty:pp,zone:z,insights:ins};
+function calculateACWR(sessions){
+  if(!sessions.length)return{acuteLoad:0,chronicLoad:0,acwr:0,status:'No data',fatigueIndex:0};
+  const sl=sessions.map(s=>({...s,load:(s.duration||0)*(s.rpe||0)}));
+  const now=new Date();
+  const l7=new Date(now);l7.setDate(l7.getDate()-7);
+  const l28=new Date(now);l28.setDate(l28.getDate()-28);
+  const ac=sl.filter(s=>new Date(s.date)>=l7);
+  const ch=sl.filter(s=>new Date(s.date)>=l28);
+  const acl=ac.length?ac.reduce((a,b)=>a+b.load,0)/7:0;
+  const chl=ch.length?ch.reduce((a,b)=>a+b.load,0)/28:0;
+  const acwr=chl>0?acl/chl:0;
+  const fi=ac.length?ac.reduce((a,b)=>a+b.load,0)/ac.length/(chl||1):0;
+  let st;
+  if(acwr===0)st='No data';
+  else if(acwr<0.8)st='Detraining Risk';
+  else if(acwr<=1.3)st='Optimal';
+  else if(acwr<=1.5)st='Overload Risk';
+  else st='High Injury Risk';
+  return{acuteLoad:Math.round(acl),chronicLoad:Math.round(chl),acwr:Math.round(acwr*100)/100,status:st,fatigueIndex:Math.round(fi*100)/100};
 }
 
-function calculate1RM(w,r){return Math.round(w*(1+r/30))}
-function calculateVolumeLoad(s,r,w){return s*r*w}
-function getWeeklyDistance(runs){
-  var cutoff=Date.now()-7*86400000,tot=0;
-  (runs||[]).forEach(function(r){if(new Date(r.date).getTime()>=cutoff)tot+=r.distance||0});
-  return Math.round(tot*10)/10;
-}
-function getWeeklyVolume(workouts){
-  var cutoff=Date.now()-7*86400000,tot=0;
-  (workouts||[]).forEach(function(w){if(new Date(w.date).getTime()>=cutoff)tot+=w.totalVolume||0});
-  return Math.round(tot);
+function assessInjuryRisk(checkins,runs,mobComp){
+  const rc=checkins.filter(c=>daysBetween(c.date,todayStr())<=14);
+  const rr=runs.filter(r=>daysBetween(r.date,todayStr())<=14);
+  const pk=['groin','lowerBack','shoulder','knee','hamstring'];
+  const lr={};
+  pk.forEach(k=>{
+    const rt=rc.filter(c=>c.readiness&&c.readiness.painScores&&c.readiness.painScores[k]>0);
+    if(rt.length>=2){
+      const tr=rt[rt.length-1].readiness.painScores[k]-rt[0].readiness.painScores[k];
+      lr[k]=tr>0?'rising':tr<0?'falling':'stable';
+    }else if(rt.length===1){
+      const v=rt[0].readiness.painScores[k];
+      lr[k]=v>=7?'high':v>=4?'moderate':'low';
+    }else{lr[k]='unknown';}
+  });
+  const ap=rr.filter(r=>r.distance>0).map(r=>r.pace||(r.duration/60)/r.distance);
+  const ri=ap.length?ap.reduce((a,b)=>a+b,0)/ap.length:0;
+  const mr=mobComp<50?15:mobComp<75?8:0;
+  let os=100;
+  Object.entries(lr).forEach(([k,v])=>{
+    if(v==='rising')os-=15;else if(v==='high')os-=12;else if(v==='moderate')os-=6;
+  });
+  if(ri<4.5)os-=8;
+  os-=mr;os=Math.max(0,Math.min(100,os));
+  let ors;
+  if(os>=80)ors='LOW';else if(os>=60)ors='MODERATE';else ors='HIGH';
+  const recs=[];
+  if(lr.groin==='rising'||lr.groin==='high')recs.push('Monitor groin/adductor \u2014 reduce sprint volume');
+  if(lr.lowerBack==='rising'||lr.lowerBack==='high')recs.push('Lower back pain increasing \u2014 check lifting form');
+  if(lr.knee==='rising'||lr.knee==='high')recs.push('Knee load elevated \u2014 reduce impact, check footwear');
+  if(mobComp<50)recs.push('Low mobility compliance \u2014 add 10min daily mobility');
+  if(ors==='HIGH')recs.push('HIGH overall injury risk \u2014 reduce training load 30-40%');
+  return{overallScore:os,overallRisk:ors,locationRisks:lr,recommendations:recs};
 }
 
-// --- Toast ---
-function showToast(msg){
-  var t=document.createElement('div');
-  t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--accent);color:var(--accent);padding:10px 20px;border-radius:20px;font-size:13px;z-index:999;animation:fadeIn .2s ease';
-  t.textContent=msg;
-  document.body.appendChild(t);
-  setTimeout(function(){t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(function(){t.remove()},300)},2500);
+function calculateProgression(readiness,painScores,acwr,phase){
+  const ap=painScores?Object.values(painScores).reduce((a,b)=>a+b,0)/5:0;
+  let ma=0,sa=0,rd=1;
+  if(readiness>=80&&ap<2&&acwr<=1.3){ma=10;sa=5;rd=1}
+  else if(readiness>=60&&ap<4&&acwr<=1.5){ma=0;sa=0;rd=2}
+  else{ma=-30;sa=-20;rd=3}
+  return{mileageAdj:ma,strengthAdj:sa,recoveryDays:rd,
+    recommendations:[
+      ma>0?'Increase running volume by '+ma+'%':ma<0?'Reduce running volume by '+Math.abs(ma)+'%':'Maintain current running volume',
+      sa>0?'Increase strength load by '+sa+'%':sa<0?'Reduce strength load by '+Math.abs(sa)+'%':'Maintain current strength load',
+      'Schedule at least '+rd+' recovery day'+(rd>1?'s':'')+' this week'
+    ]};
 }
 
-// --- Navigation ---
-var currentView='dash';
+function predictRace(bestDist,bestTime,targetDist){
+  if(!bestDist||!bestTime||!targetDist)return null;
+  const ps=bestTime*Math.pow(targetDist/bestDist,1.06);
+  const pp=ps/targetDist;
+  const conf=targetDist<=21.1?'HIGH':targetDist<=42.2?'MODERATE':'LOW';
+  return{predictedTime:Math.round(ps),predictedPace:pp,confidence:conf,
+    formattedTime:formatDuration(Math.round(ps)),formattedPace:formatPace(pp/60)};
+}
+
+function generateCoachReport(allData){
+  const{checkins,runs,workouts,injuries}=allData;
+  const lc=checkins.length?checkins[checkins.length-1]:null;
+  const rd=lc&&lc.readiness?lc.readiness.overall:null;
+  let recStr='';
+  if(rd!==null){
+    recStr='Readiness is currently '+rd+'/100 ('+zlbl(rd)+' zone). ';
+    if(lc.readiness.sleepScore<60)recStr+='Sleep quality needs improvement \u2014 aim for consistent 7-9h. ';
+    else recStr+='Sleep metrics are adequate. ';
+    if(lc.readiness.hrRecoveryScore<60)recStr+='Resting HR is elevated, indicating incomplete autonomic recovery. ';
+    else recStr+='Autonomic recovery (HR) is within acceptable range. ';
+  }else{recStr='No check-in data available. Complete your daily check-in to track recovery trends. ';}
+  let trStr='';
+  const sess=[...runs.map(r=>({date:r.date,duration:r.duration,rpe:r.rpe})),
+    ...workouts.map(w=>({date:w.date,duration:(w.duration||0)*60,rpe:w.rpe}))];
+  const acwr=calculateACWR(sess);
+  const wr=runs.filter(r=>daysBetween(r.date,todayStr())<=7);
+  const td=wr.reduce((a,b)=>a+(b.distance||0),0);
+  trStr='Weekly running volume: '+td.toFixed(1)+' km. ACWR: '+acwr.acwr+' ('+acwr.status+'). ';
+  if(acwr.status==='Overload Risk')trStr+='Training load is climbing faster than chronic adaptation \u2014 take a down week soon. ';
+  else if(acwr.status==='Detraining Risk')trStr+='Training load has dropped significantly \u2014 gradually rebuild. ';
+  else if(acwr.status==='Optimal')trStr+='Training load is in the optimal window \u2014 continue structured progression. ';
+  const mc=lc&&lc.mobility?100:lc?50:0;
+  const risk=assessInjuryRisk(checkins,runs,mc);
+  let ijStr='Overall injury risk: '+risk.overallRisk+'. ';
+  if(risk.overallRisk==='HIGH')ijStr+=risk.recommendations.join('. ')+'. ';
+  else ijStr+='No critical injury concerns. Remain consistent with mobility and strength work. ';
+  let insight='';
+  if(rd!==null&&rd>=80&&acwr.status==='Optimal')
+    insight='You are in a high-performance window. Push quality sessions while remaining attentive to early warning signs.';
+  else if(rd!==null&&rd<50)
+    insight='Recovery is deeply compromised. Prioritize sleep, nutrition, and stress management before resuming training.';
+  else if(acwr.acwr>1.5)
+    insight='ACWR is in the danger zone. Risk of overuse injury is significantly elevated \u2014 reduce load immediately.';
+  else insight='Consistency over intensity. Your long-term trends matter more than any single session. Stay steady.';
+  const recs=[];
+  if(rd!==null&&lc.readiness.sleepScore<50)recs.push('Target 8h sleep with consistent bed/wake times');
+  if(acwr.status==='Overload Risk'||acwr.status==='High Injury Risk')recs.push('Reduce training volume by 20-30% this week');
+  if(td<5)recs.push('Add one easy run of 30-40 minutes');
+  if(workouts.length<2)recs.push('Add at least one structured strength session this week');
+  recs.push('Complete daily mobility work (minimum 10 minutes)');
+  if(lc&&lc.stress>7)recs.push('Incorporate 5-10 minutes of breathwork or meditation daily');
+  if(recs.length===0)recs.push('Maintain current balanced training schedule');
+  return{id:uid(),date:nowISO(),content:{readiness:rd,recoveryStr:recStr,trainingStr:trStr,
+    injuryStr:ijStr,insight,recs}};
+}
+
+// ======================== DATA & NAV ========================
+let currentView='dashboard';
+
 function showView(name){
   currentView=name;
-  document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active')});
-  var tv=document.getElementById('view-'+name);
-  if(tv)tv.classList.add('active');
-  document.querySelectorAll('#sidebar nav a').forEach(function(a){a.classList.toggle('active',a.dataset.view===name)});
-  document.querySelectorAll('#mobile-nav .tab').forEach(function(t){t.classList.toggle('active',t.dataset.view===name)});
-  document.getElementById('mobile-sheet').style.display='none';
-  document.getElementById('overlay').style.display='none';
-  if(name==='dash')renderDashboard();
-  if(name==='runs')renderRuns();
-  if(name==='workouts')renderWorkouts();
-  if(name==='injuries')renderInjuries();
-  if(name==='coach')renderCoachHistory();
-  if(name==='checkin')initPainSliders();
-}
-function initPainSliders(){
-  ['groin','back','shoulder','knee','hamstring'].forEach(function(p,i){
-    var r=document.getElementById('pain-'+p);
-    var v=document.getElementById('pain-'+p+'-val');
-    var d=document.getElementById('pain-'+p+'-dot');
-    if(r&&v&&d){
-      r.addEventListener('input',function(){updatePainSlider(p)});
-      updatePainSlider(p);
-    }
-  });
-}
-function updatePainSlider(p){
-  var r=document.getElementById('pain-'+p);
-  var v=document.getElementById('pain-'+p+'-val');
-  var d=document.getElementById('pain-'+p+'-dot');
-  if(!r||!v||!d)return;
-  var val=parseInt(r.value);
-  v.textContent=val;
-  v.style.color=val<=3?'var(--accent)':val<=6?'var(--warn)':'var(--danger)';
-  d.style.background=val<=3?'var(--accent)':val<=6?'var(--warn)':'var(--danger)';
-  d.style.boxShadow='0 0 6px '+(val<=3?'var(--accent)':val<=6?'var(--warn)':'var(--danger)');
+  $$('#sidebar nav a').forEach(a=>a.classList.toggle('active',a.dataset.view===name));
+  $$('#bottom-nav .bni').forEach(b=>b.classList.toggle('active',b.dataset.view===name));
+  $$('#more-menu .mmi').forEach(m=>m.classList.toggle('active',m.dataset.view===name));
+  const mb=document.getElementById('more-btn');
+  if(mb)mb.classList.toggle('active',!!document.querySelector('#more-menu .mmi.active'));
+  document.getElementById('content').innerHTML=renderView(name);
+  document.getElementById('main').scrollTop=0;
+  setTimeout(bindViewEvents,0);
 }
 
-// --- Render Dashboard ---
+function renderView(name){
+  switch(name){
+    case'dashboard':return renderDashboard();
+    case'checkin':return renderCheckIn();
+    case'runs':return renderRuns();
+    case'strength':return renderStrength();
+    case'recovery':return renderRecovery();
+    case'injuries':return renderInjuries();
+    case'analytics':return renderAnalytics();
+    case'coach':return renderCoach();
+  }
+}
+
+function bindViewEvents(){
+  switch(currentView){
+    case'checkin':bindCheckIn();break;
+    case'runs':bindRuns();break;
+    case'strength':bindStrength();break;
+    case'injuries':bindInjuries();break;
+    case'analytics':bindAnalytics();break;
+    case'coach':bindCoach();break;
+  }
+}
+
+function confirmAction(msg,cb){
+  document.getElementById('confirm-msg').textContent=msg;
+  window._confirmCb=cb;
+  document.getElementById('confirm-overlay').classList.add('open');
+}
+
+// ======================== DASHBOARD ========================
 function renderDashboard(){
-  var checkins=load('checkins',[]);
-  var runs=load('runs',[]);
-  var workouts=load('workouts',[]);
-  var injuries=load('injuries',[]);
-  var latestCI=checkins.length?checkins[checkins.length-1]:null;
+  const d={checkins:load('checkins',[]),runs:load('runs',[]),workouts:load('workouts',[]),
+    injuries:load('injuries',[]),reports:load('reports',[])};
+  const lc=d.checkins.length?d.checkins[d.checkins.length-1]:null;
+  const rd=lc&&lc.readiness?lc.readiness:null;
+  const wr=d.runs.filter(r=>daysBetween(r.date,todayStr())<=7);
+  const ww=d.workouts.filter(w=>daysBetween(w.date,todayStr())<=7);
+  const td=wr.reduce((a,b)=>a+(b.distance||0),0);
+  const tv=ww.reduce((a,b)=>a+(b.totalVolume||0),0);
+  const sess=[...d.runs.map(r=>({date:r.date,duration:r.duration||0,rpe:r.rpe||0})),
+    ...d.workouts.map(w=>({date:w.date,duration:(w.duration||0)*60,rpe:w.rpe||0}))];
+  const acwr=calculateACWR(sess);
+  let sh='\u2014',sq='\u2014';
+  if(lc){sh=lc.sleepHours||'\u2014';sq=lc.sleepQuality||'\u2014';}
 
-  var readiness=latestCI&&latestCI.readiness?latestCI.readiness.overall:'--';
-  var zone=latestCI&&latestCI.readiness?latestCI.readiness.zone:'grey';
-  var trend='–';
-  if(checkins.length>=2){
-    var prev=checkins[checkins.length-2].readiness.overall;
-    var cur=checkins[checkins.length-1].readiness.overall;
-    trend=cur>prev?'↑':cur<prev?'↓':'→';
-  }
-  var col='var(--text-dim)';
-  if(zone==='green')col='var(--accent)';
-  else if(zone==='yellow')col='var(--warn)';
-  else if(zone==='red')col='var(--danger)';
-
-  var wkDist=getWeeklyDistance(runs);
-  var wkVol=getWeeklyVolume(workouts);
-  var sleepH=latestCI?latestCI.sleepHours:'--';
-  var sleepQ=latestCI?latestCI.sleepQuality:'--';
-
-  var statsHTML='';
-  statsHTML+='<div class="stat-card"><div class="label">Readiness</div><div class="value" style="color:'+col+'">'+readiness+'</div><div class="sub">'+(zone==='green'?'GREEN':zone==='yellow'?'YELLOW':'RED')+' Zone '+trend+'</div></div>';
-  statsHTML+='<div class="stat-card"><div class="label">Weekly Distance</div><div class="value" style="color:var(--accent)">'+(wkDist||'0')+'</div><div class="sub">km this week</div></div>';
-  statsHTML+='<div class="stat-card"><div class="label">Weekly Volume</div><div class="value" style="color:var(--accent)">'+(wkVol||'0')+'</div><div class="sub">kg this week</div></div>';
-  statsHTML+='<div class="stat-card"><div class="label">Sleep</div><div class="value" style="color:var(--text)">'+sleepH+'h</div><div class="sub">Quality '+sleepQ+'/10</div></div>';
-  document.getElementById('dash-stats').innerHTML=statsHTML;
-
-  renderReadinessChart(checkins);
-  renderRecentActivity(checkins,runs,workouts);
-  renderInjuryStatus(injuries,latestCI);
-}
-
-function renderReadinessChart(checkins){
-  var svg=document.getElementById('readiness-chart');
-  var w=300,h=150,pad=32,bpad=20,rpad=10,top=10;
-  var scores=checkins.slice(-7).map(function(c){return c.readiness?c.readiness.overall:null}).filter(function(v){return v!=null});
-  var hLines=[25,50,75,100];
-  var html='<line x1="'+pad+'" y1="'+(h-top)+'" x2="'+(w-rpad)+'" y2="'+(h-top)+'" stroke="var(--border)"/>';
-  hLines.forEach(function(lv){
-    var y=h-top-(lv/100)*(h-top-pad);
-    html+='<line x1="'+pad+'" y1="'+y+'" x2="'+(w-rpad)+'" y2="'+y+'" stroke="var(--border)" stroke-dasharray="3,3"/>';
-    html+='<text x="'+(pad-6)+'" y="'+(y+3)+'" text-anchor="end">'+lv+'</text>';
-  });
-  if(scores.length===0){
-    html+='<text x="150" y="'+(h/2)+'" text-anchor="middle" fill="var(--text-dim)" font-size="12">No data yet</text>';
+  let h='<div id="orb-wrap">';
+  if(rd){
+    const s=rd.overall,c=sc(s);
+    h+=`<svg id="orb-svg" viewBox="0 0 160 160">
+      <defs><radialGradient id="og"><stop offset="0%" stop-color="${c}" stop-opacity="0.3"/><stop offset="100%" stop-color="${c}" stop-opacity="0"/></radialGradient>
+      <radialGradient id="oi"><stop offset="0%" stop-color="${c}" stop-opacity="0.08"/><stop offset="100%" stop-color="transparent"/></radialGradient></defs>
+      <circle cx="80" cy="80" r="72" fill="none" stroke="${c}" stroke-width="1.5" stroke-opacity="0.3"/>
+      <circle cx="80" cy="80" r="68" fill="url(#oi)"/>
+      <circle cx="80" cy="75" r="60" fill="none" stroke="${c}" stroke-width="3" stroke-dasharray="${(s/100)*377} 377" stroke-linecap="round" transform="rotate(-90 80 80)" stroke-opacity="0.7"/>
+      <circle cx="80" cy="80" r="82" fill="url(#og)" opacity="0.5" id="orb-glow"/>
+      <text x="80" y="72" text-anchor="middle" id="orb-score" fill="${c}">${s}</text>
+      <text x="80" y="96" text-anchor="middle" fill="var(--text-secondary)" font-size="10" font-family="var(--mono)">/100</text>
+    </svg><div id="orb-zone" class="${zcls(s)}">${zlbl(s)}</div>`;
   }else{
-    var pts=[];
-    scores.forEach(function(s,i){
-      var x=pad+(i/(Math.max(scores.length-1,1)))*(w-pad-rpad);
-      var y=h-top-(s/100)*(h-top-pad);
-      pts.push({x:x,y:y,s:s});
-    });
-    if(scores.length===1){
-      html+='<circle cx="'+pts[0].x+'" cy="'+pts[0].y+'" r="4" fill="var(--accent)"/>';
-    }else{
-      var d='M'+pts[0].x+' '+pts[0].y;
-      for(var i=1;i<pts.length;i++)d+=' L'+pts[i].x+' '+pts[i].y;
-      html+='<path d="'+d+'" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
-    }
-    pts.forEach(function(p){html+='<circle cx="'+p.x+'" cy="'+p.y+'" r="4" fill="var(--accent)"><title>'+p.s+'</title></circle>'});
-    var labels=scores.length===7?['7d ago','6d ago','5d ago','4d ago','3d ago','2d ago','today']:[];
-    if(labels.length===scores.length){
-      pts.forEach(function(p,i){
-        html+='<text x="'+p.x+'" y="'+(h-4)+'" text-anchor="middle">'+labels[i]+'</text>';
-      });
-    }
+    h+=`<svg id="orb-svg" viewBox="0 0 160 160">
+      <circle cx="80" cy="80" r="72" fill="none" stroke="var(--text-dim)" stroke-width="1.5" stroke-opacity="0.3"/>
+      <circle cx="80" cy="80" r="60" fill="none" stroke="var(--text-dim)" stroke-width="1" stroke-dasharray="10 5"/>
+      <text x="80" y="78" text-anchor="middle" fill="var(--text-dim)" font-size="12" font-family="var(--mono)">NO DATA</text>
+    </svg><div id="orb-zone" class="nd">Complete a check-in</div>`;
   }
-  svg.innerHTML=html;
+  h+='</div>';
+
+  const ac=acwr.status==='Optimal'?'tg':acwr.status==='Overload Risk'?'ta':acwr.status==='No data'?'':'tr';
+  h+='<div class="grid4">';
+  h+=`<div class="card stat-card"><div class="sv">${typeof td==='number'?td.toFixed(1):'\u2014'}</div><div class="sl">Weekly Distance</div><div class="ss">km</div></div>`;
+  h+=`<div class="card stat-card"><div class="sv">${tv?Math.round(tv).toLocaleString():'\u2014'}</div><div class="sl">Weekly Volume</div><div class="ss">kg</div></div>`;
+  h+=`<div class="card stat-card"><div class="sv ${ac}">${acwr.acwr||'\u2014'}</div><div class="sl">ACWR</div><div class="ss">${acwr.status}</div></div>`;
+  h+=`<div class="card stat-card"><div class="sv">${sh}${sq!=='\u2014'?'<span class="ss"> / '+sq+'/10</span>':''}</div><div class="sl">Sleep</div><div class="ss">hours / quality</div></div>`;
+  h+='</div>';
+
+  h+='<div class="card section"><h4>Readiness Trend \u2014 7 Days</h4>'+renderTrendChart(d.checkins)+'</div>';
+  h+='<div class="card section"><h4>Performance Radar</h4>'+renderRadarChart(d)+'</div>';
+
+  h+='<div class="card section"><h4>Recent Activity</h4>';
+  const ra=[];
+  d.runs.forEach(r=>ra.push({date:r.date,type:'Run',detail:((r.distance||0)+'km \u00b7 '+formatDuration(r.duration||0)+' \u00b7 '+formatPace(r.pace))}));
+  d.workouts.forEach(w=>ra.push({date:w.date,type:'Workout',detail:((w.type||'Training')+' \u00b7 '+(w.duration||0)+'min \u00b7 '+(w.totalVolume?Math.round(w.totalVolume)+'kg':'\u2014'))}));
+  ra.sort((a,b)=>b.date.localeCompare(a.date));
+  if(ra.length){
+    ra.slice(0,5).forEach(r=>{
+      h+=`<div style="display:flex;justify-content:space-between;padding:0.4rem 0;font-size:0.72rem;border-bottom:1px solid var(--border)">
+        <span><span class="badge badge-cyan" style="margin-right:0.5rem">${r.type}</span>${r.detail}</span>
+        <span style="color:var(--text-dim)">${formatDate(r.date)}</span></div>`;
+    });
+  }else{h+='<div class="empty-state"><p>No activity logged yet</p></div>';}
+  h+='</div>';
+  return h;
 }
 
-function renderRecentActivity(checkins,runs,workouts){
-  var all=[];
-  checkins.forEach(function(c){all.push({type:'checkin',date:c.date,text:'Daily check-in (Readiness: '+(c.readiness?c.readiness.overall:'--')+')'})});
-  runs.forEach(function(r){all.push({type:'run',date:r.date,text:r.distance+'km '+r.type+' run ('+(r.pace||'--')+'/km)'})});
-  workouts.forEach(function(w){all.push({type:'workout',date:w.date,text:w.type+' workout ('+(w.duration||'--')+'min, '+w.totalVolume+'kg)'})});
-  all.sort(function(a,b){return new Date(b.date)-new Date(a.date)});
-  all=all.slice(0,5);
-  var el=document.getElementById('recent-activity');
-  if(all.length===0){el.innerHTML='<div class="empty-state"><div class="empty-icon">⚔️</div>No activity yet. Start by logging a run or workout.</div>';return}
-  var icons={checkin:'📋',run:'🏃',workout:'🏋️'};
-  el.innerHTML=all.map(function(a){return'<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="font-size:18px">'+(icons[a.type]||'')+'</span><span>'+a.text+'</span><span style="margin-left:auto;color:var(--text-dim);font-size:11px">'+formatDate(a.date)+'</span></div>'}).join('');
+function renderTrendChart(checkins){
+  const last7=[];
+  for(let i=6;i>=0;i--){const d=daysAgo(i);const ci=checkins.slice().reverse().find(c=>c.date===d);last7.push(ci&&ci.readiness?ci.readiness:null)}
+  const has=last7.some(d=>d);
+  let s='<svg viewBox="0 0 600 180" class="chart-svg">';
+  [25,50,75].forEach(y=>{const py=155-(y/100)*135;s+=`<line x1="40" y1="${py}" x2="580" y2="${py}" stroke="#131a28" stroke-width="0.5"/>
+    <text x="36" y="${py+3}" text-anchor="end" fill="#334155" font-size="9" font-family="var(--mono)">${y}</text>`});
+  const days=['6d','5d','4d','3d','2d','1d','Today'];
+  days.forEach((d,i)=>{const x=50+i*(530/6);s+=`<text x="${x}" y="172" text-anchor="middle" fill="#334155" font-size="9">${d}</text>`});
+  if(has){
+    let p='',pts='';
+    last7.forEach((d,i)=>{const x=50+i*(530/6),y=d?155-(d.overall/100)*135:155;p+=(i===0?'M':'L')+x+','+y+' ';if(d)pts+=`<circle cx="${x}" cy="${y}" r="3" fill="#22d3ee"><title>Score: ${d.overall} \u2014 ${d.zone}</title></circle>`});
+    s+=`<path d="${p}" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linejoin="round"/>${pts}`;
+    let sp='',sps='';
+    last7.forEach((d,i)=>{const x=50+i*(530/6),y=d?155-(d.sleepScore/100)*135:155;sp+=(i===0?'M':'L')+x+','+y+' ';if(d)sps+=`<circle cx="${x}" cy="${y}" r="2" fill="#a78bfa"><title>Sleep: ${d.sleepScore}</title></circle>`});
+    s+=`<path d="${sp}" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4 3"/>${sps}`;
+    s+='<line x1="420" y1="20" x2="445" y2="20" stroke="#22d3ee" stroke-width="2"/><text x="450" y="23" fill="#64748b" font-size="9">Overall</text>';
+    s+='<line x1="510" y1="20" x2="535" y2="20" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4 3"/><text x="540" y="23" fill="#64748b" font-size="9">Sleep</text>';
+  }else{
+    s+='<text x="300" y="90" text-anchor="middle" fill="var(--text-dim)" font-size="12" font-family="var(--mono)">No data \u2014 complete daily check-ins</text>';
+  }
+  s+='</svg>';return s;
 }
 
-function renderInjuryStatus(injuries,latestCI){
-  var areas=['Groin/Adductor','Lower Back','Shoulder','Knee','Hamstring'];
-  var pains=[0,0,0,0,0];
-  if(latestCI){pains=[latestCI.groinPain||0,latestCI.lowerBackPain||0,latestCI.shoulderPain||0,latestCI.kneePain||0,latestCI.hamstringTightness||0]}
-  var html='<div style="display:flex;gap:16px;flex-wrap:wrap">';
-  areas.forEach(function(a,i){
-    var v=pains[i],c='var(--accent)';
-    if(v>=7)c='var(--danger)';else if(v>=4)c='var(--warn)';
-    html+='<div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+c+'"></span><span style="font-size:12px">'+a+': '+v+'/10</span></div>';
+function renderRadarChart(data){
+  const lc=data.checkins.length?data.checkins[data.checkins.length-1]:null;
+  const r=lc&&lc.readiness?lc.readiness:null;
+  const cx=300,cy=150,mr=110;
+  const axes=['Endurance','Strength','Mobility','Recovery','Resilience'];
+  let values;
+  if(r){
+    const rns=data.runs.filter(rn=>daysBetween(rn.date,todayStr())<=28);
+    const trd=rns.reduce((a,b)=>a+(b.distance||0),0);
+    const endur=Math.min(100,trd*2);
+    const wos=data.workouts.filter(w=>daysBetween(w.date,todayStr())<=28);
+    const tv=wos.reduce((a,b)=>a+(b.totalVolume||0),0);
+    const str=Math.min(100,tv/50);
+    const mob=lc.mobility?80:(lc.hydration?50:30);
+    const recov=r.overall>0?r.overall:50;
+    const res=Math.min(100,Math.max(20,recov*0.5+(100-r.painPenalty)*0.5));
+    values=[endur,str,mob,recov,res];
+  }else{values=[20,20,20,20,20];}
+  let s='<svg viewBox="0 0 600 300" class="chart-svg">';
+  [25,50,75,100].forEach(lvl=>{
+    const pts=axes.map((_,i)=>{const a=(Math.PI*2*i)/5-Math.PI/2,rr=(lvl/100)*mr;return`${cx+rr*Math.cos(a)},${cy+rr*Math.sin(a)}`});
+    s+=`<polygon points="${pts.join(' ')}" fill="none" stroke="#131a28" stroke-width="0.5"/>`;
+    s+=`<text x="${cx+(lvl/100)*mr+5}" y="${cy+4}" fill="#334155" font-size="8">${lvl}</text>`;
   });
-  html+='</div>';
-  document.getElementById('injury-status').innerHTML=html||'<div class="empty-state">No data</div>';
+  axes.forEach((_,i)=>{const a=(Math.PI*2*i)/5-Math.PI/2;s+=`<line x1="${cx}" y1="${cy}" x2="${cx+mr*Math.cos(a)}" y2="${cy+mr*Math.sin(a)}" stroke="#131a28" stroke-width="0.5"/>`});
+  const dpts=axes.map((_,i)=>{const a=(Math.PI*2*i)/5-Math.PI/2,vr=(values[i]/100)*mr;return`${cx+vr*Math.cos(a)},${cy+vr*Math.sin(a)}`});
+  s+=`<polygon points="${dpts.join(' ')}" fill="rgba(34,211,238,0.12)" stroke="#22d3ee" stroke-width="1.5"/>`;
+  values.forEach((v,i)=>{const a=(Math.PI*2*i)/5-Math.PI/2,vr=(v/100)*mr;s+=`<circle cx="${cx+vr*Math.cos(a)}" cy="${cy+vr*Math.sin(a)}" r="3" fill="#22d3ee"/>`});
+  axes.forEach((lb,i)=>{const a=(Math.PI*2*i)/5-Math.PI/2,lx=cx+(mr+20)*Math.cos(a),ly=cy+(mr+14)*Math.sin(a);
+    s+=`<text x="${lx}" y="${ly}" fill="#64748b" font-size="9" font-weight="600" text-anchor="middle" font-family="var(--font)" letter-spacing="0.05em">${lb}</text>
+    <text x="${lx}" y="${ly+11}" fill="#22d3ee" font-size="8" text-anchor="middle" font-family="var(--mono)">${Math.round(values[i])}</text>`});
+  s+='</svg>';return s;
 }
 
-// --- Check-In Form ---
-function initPainSliders(){
-  var pains=['groin','back','shoulder','knee','hamstring'];
-  var labels=['Groin/Adductor','Lower Back','Shoulder','Knee','Hamstring'];
-  var existing=document.getElementById('pain-sliders');
-  if(existing.children.length>0)return;
-  pains.forEach(function(p,i){
-    var html='<div class="pain-item"><span class="dot" id="pain-'+p+'-dot" style="background:var(--accent);box-shadow:0 0 6px var(--accent)"></span><span class="name">'+labels[i]+'</span><input type="range" id="pain-'+p+'" min="0" max="10" value="0" style="flex:1"><span class="range-val" id="pain-'+p+'-val" style="min-width:20px;font-size:12px">0</span></div>';
-    existing.insertAdjacentHTML('beforeend',html);
-    var r=document.getElementById('pain-'+p);
-    r.addEventListener('input',function(){updatePainSlider(p)});
+// ======================== CHECK-IN ========================
+function renderCheckIn(){
+  const checkins=load('checkins',[]);
+  const tc=checkins.find(c=>c.date===todayStr());
+  if(tc&&tc.readiness){
+    const r=tc.readiness,c=sc(r.overall);
+    let h=`<h2>Daily Check-In</h2>
+    <div class="card result-card"><div class="result-big" style="color:${c}">${r.overall}</div>
+    <div class="result-zone ${scls(r.overall)}">${r.zone}</div>`;
+    const bars=[{l:'Sleep',v:r.sleepScore,c:'#22d3ee'},{l:'HR Recov',v:r.hrRecoveryScore,c:'#10b981'},
+      {l:'Energy',v:r.energyScore,c:'#f59e0b'},{l:'Soreness',v:r.sorenessScore,c:'#a78bfa'},
+      {l:'Pain Pen',v:100-r.painPenalty,c:r.painPenalty>20?'#ef4444':'#22d3ee'}];
+    bars.forEach(b=>{h+=`<div class="bar-row"><span class="bar-label">${b.l}</span><div class="bar-track"><div class="bar-fill" style="width:${b.v}%;background:${b.c}"></div></div><span class="bar-val" style="color:${b.c}">${b.v}</span></div>`});
+    h+=`<div class="insights"><ul>${r.insights.map(i=>'<li>'+i+'</li>').join('')}</ul></div>`;
+    h+=`<p style="margin-top:0.75rem;color:var(--accent);font-size:0.78rem;font-weight:500">${r.recommendation}</p>`;
+    h+=`<button class="btn btn-secondary btn-sm" style="margin-top:0.75rem" onclick="window._redoCheckin()">Re-do Check-In</button></div>`;
+    return h;
+  }
+  let h='<h2>Daily Check-In</h2>';
+  h+='<div class="card"><h4>Sleep</h4><div class="form-row">';
+  h+='<div class="form-group"><label>Hours</label><input type="number" id="ci-sh" step="0.5" min="0" max="14" value="7.5"></div>';
+  h+='<div class="form-group"><label>Quality</label><div class="range-wrap"><input type="range" id="ci-sq" min="1" max="10" value="7"><span class="sv-label" id="ci-sq-v">7</span></div></div>';
+  h+='</div></div>';
+
+  h+='<div class="card"><h4>Physical</h4><div class="form-row">';
+  h+='<div class="form-group"><label>Resting HR (bpm)</label><input type="number" id="ci-hr" min="30" max="120" value="55"></div>';
+  h+='<div class="form-group"><label>Bodyweight (kg)</label><input type="number" id="ci-bw" step="0.1" min="30" max="200" value="75"></div>';
+  h+='</div></div>';
+
+  h+='<div class="card"><h4>Energy &amp; State</h4>';
+  ['energy','motivation','stress'].forEach(f=>{
+    const dv=f==='stress'?3:7;
+    h+=`<div class="form-group"><label>${f.charAt(0).toUpperCase()+f.slice(1)}</label><div class="range-wrap"><input type="range" id="ci-${f}" min="1" max="10" value="${dv}"><span class="sv-label" id="ci-${f}-v">${dv}</span></div></div>`;
   });
+  h+='<div class="form-group"><label>Mood</label><div class="pill-group" id="ci-mood-g">';
+  ['Good','Neutral','Bad','Anxious'].forEach(m=>h+=`<button class="pill${m==='Good'?' selected':''}" data-mood="${m}">${m}</button>`);
+  h+='</div></div></div>';
+
+  h+='<div class="card"><h4>Recovery Behaviors</h4>';
+  h+='<div class="form-group"><label>Soreness</label><div class="range-wrap"><input type="range" id="ci-sor" min="1" max="10" value="3"><span class="sv-label" id="ci-sor-v">3</span></div></div>';
+  ['Hydration','Protein','Mobility'].forEach(t=>h+=`<div class="toggle-wrap"><span style="font-size:0.72rem;color:var(--text)">${t}</span><label class="toggle"><input type="checkbox" id="ci-${t.toLowerCase()}"${t==='Hydration'?' checked':''}><span class="track"></span></label></div>`);
+  h+='</div>';
+
+  h+='<div class="card"><h4>Pain Matrix</h4>';
+  const pl=['Groin/Adductor','Lower Back','Shoulder','Knee','Hamstring'];
+  const pk=['groin','lowerBack','shoulder','knee','hamstring'];
+  pk.forEach((k,i)=>{h+=`<div class="pain-row"><span class="pl"><span class="pain-dot g" id="pd-${k}"></span>${pl[i]}</span><div class="range-wrap" style="flex:1"><input type="range" class="pain-range" id="ci-${k}" min="0" max="10" value="0" data-key="${k}"><span class="sv-label" id="ci-${k}-v">0</span></div></div>`});
+  h+='</div>';
+
+  h+='<div class="card"><div class="form-group"><label>Notes</label><textarea id="ci-notes" placeholder="How are you feeling today?"></textarea></div>';
+  h+='<button class="btn btn-primary btn-block" id="ci-submit">Calculate Readiness</button></div>';
+  return h;
 }
 
-document.getElementById('ci-sleepq').addEventListener('input',function(){document.getElementById('ci-sleepq-val').textContent=this.value});
-document.getElementById('ci-energy').addEventListener('input',function(){document.getElementById('ci-energy-val').textContent=this.value});
-document.getElementById('ci-motivation').addEventListener('input',function(){document.getElementById('ci-motivation-val').textContent=this.value});
-document.getElementById('ci-stress').addEventListener('input',function(){document.getElementById('ci-stress-val').textContent=this.value});
-document.getElementById('ci-soreness').addEventListener('input',function(){document.getElementById('ci-soreness-val').textContent=this.value});
+function bindCheckIn(){
+  $$('.range-wrap input[type=range]').forEach(r=>{r.addEventListener('input',function(){
+    const ve=document.getElementById(this.id+'-v');if(ve)ve.textContent=this.value;
+    if(this.classList.contains('pain-range')){
+      const d=document.getElementById('pd-'+this.dataset.key);
+      if(d){const v=parseInt(this.value);d.className='pain-dot '+(v<=3?'g':v<=6?'a':'r')}
+    }
+  })});
+  const mp=$$('#ci-mood-g .pill');mp.forEach(p=>p.addEventListener('click',function(){mp.forEach(pp=>pp.classList.remove('selected'));this.classList.add('selected')}));
+  const sb=document.getElementById('ci-submit');if(sb)sb.addEventListener('click',submitCheckIn);
+}
 
-document.getElementById('checkin-form').addEventListener('submit',function(e){
-  e.preventDefault();
-  var sh=parseFloat(document.getElementById('ci-sleep').value);
-  if(isNaN(sh)||sh<0||sh>24){showToast('Enter valid sleep hours');return}
-  var sq=parseInt(document.getElementById('ci-sleepq').value);
-  var hr=parseInt(document.getElementById('ci-hr').value);
-  if(isNaN(hr)||hr<30||hr>200){showToast('Enter valid resting HR');return}
-  var bw=parseFloat(document.getElementById('ci-bw').value)||0;
-  var en=parseInt(document.getElementById('ci-energy').value);
-  var mo=parseInt(document.getElementById('ci-motivation').value);
-  var st=parseInt(document.getElementById('ci-stress').value);
-  var mood=document.getElementById('ci-mood').value;
-  var sore=parseInt(document.getElementById('ci-soreness').value);
-  var hyd=document.getElementById('ci-hydration').checked;
-  var pro=document.getElementById('ci-protein').checked;
-  var mob=document.getElementById('ci-mobility').checked;
-  var gp=parseInt(document.getElementById('pain-groin').value)||0;
-  var bp=parseInt(document.getElementById('pain-back').value)||0;
-  var sp=parseInt(document.getElementById('pain-shoulder').value)||0;
-  var kp=parseInt(document.getElementById('pain-knee').value)||0;
-  var hp=parseInt(document.getElementById('pain-hamstring').value)||0;
-  var notes=document.getElementById('ci-notes').value;
+function submitCheckIn(){
+  const data={
+    date:todayStr(),sleepHours:parseFloat(document.getElementById('ci-sh')?.value)||0,
+    sleepQuality:parseInt(document.getElementById('ci-sq')?.value)||1,
+    restingHR:parseInt(document.getElementById('ci-hr')?.value)||60,
+    bodyweight:parseFloat(document.getElementById('ci-bw')?.value)||75,
+    energy:parseInt(document.getElementById('ci-energy')?.value)||5,
+    motivation:parseInt(document.getElementById('ci-motivation')?.value)||5,
+    stress:parseInt(document.getElementById('ci-stress')?.value)||3,
+    mood:document.querySelector('#ci-mood-g .pill.selected')?.dataset.mood||'Neutral',
+    soreness:parseInt(document.getElementById('ci-sor')?.value)||1,
+    hydration:document.getElementById('ci-hydration')?.checked||!1,
+    protein:document.getElementById('ci-protein')?.checked||!1,
+    mobility:document.getElementById('ci-mobility')?.checked||!1,
+    groin:parseInt(document.getElementById('ci-groin')?.value)||0,
+    lowerBack:parseInt(document.getElementById('ci-lowerBack')?.value)||0,
+    shoulder:parseInt(document.getElementById('ci-shoulder')?.value)||0,
+    knee:parseInt(document.getElementById('ci-knee')?.value)||0,
+    hamstring:parseInt(document.getElementById('ci-hamstring')?.value)||0,
+    notes:document.getElementById('ci-notes')?.value||''
+  };
+  const rd=calculateReadiness(data);data.readiness=rd;data.id=uid();
+  const cis=load('checkins',[]);const idx=cis.findIndex(c=>c.date===todayStr());
+  if(idx>=0)cis[idx]=data;else cis.push(data);
+  save('checkins',cis);showView('checkin');
+}
+window._redoCheckin=function(){
+  const cis=load('checkins',[]);const idx=cis.findIndex(c=>c.date===todayStr());
+  if(idx>=0){cis.splice(idx,1);save('checkins',cis)}showView('checkin');
+};
 
-  var readiness=calculateReadiness({sleepHours:sh,sleepQuality:sq,restingHR:hr,energy:en,soreness:sore,stress:st,mood:mood,pains:[gp,bp,sp,kp,hp]});
-  var entry={id:uuid(),date:new Date().toISOString(),sleepHours:sh,sleepQuality:sq,restingHeartRate:hr,bodyweight:bw,energyLevel:en,motivation:mo,mood:mood,stressLevel:st,soreness:sore,hydrationHit:hyd,proteinHit:pro,mobilityCompleted:mob,groinPain:gp,lowerBackPain:bp,shoulderPain:sp,kneePain:kp,hamstringTightness:hp,notes:notes,readiness:readiness};
-  var checkins=load('checkins',[]);
-  checkins.push(entry);
-  save('checkins',checkins);
-
-  var col=readiness.zone==='green'?'var(--accent)':readiness.zone==='yellow'?'var(--warn)':'var(--danger)';
-  var zl=readiness.zone==='green'?'GREEN ZONE':readiness.zone==='yellow'?'YELLOW ZONE':'RED ZONE';
-  var ins=readiness.insights.map(function(i){return'<li>'+i+'</li>'}).join('');
-
-  document.getElementById('checkin-result').innerHTML='<div class="insight-card"><div class="zone-label" style="color:'+col+'">'+zl+'</div><div class="big-score" style="color:'+col+'">'+readiness.overall+'</div><div class="breakdown"><span>Sleep: '+Math.round(readiness.sleepScore)+'</span><span>HR: '+Math.round(readiness.hrScore)+'</span><span>Energy: '+readiness.energyScore+'</span></div><ul>'+ins+'</ul></div>';
-  document.getElementById('checkin-form').reset();
-  document.getElementById('ci-sleepq-val').textContent='5';
-  document.getElementById('ci-energy-val').textContent='5';
-  document.getElementById('ci-motivation-val').textContent='5';
-  document.getElementById('ci-stress-val').textContent='5';
-  document.getElementById('ci-soreness-val').textContent='3';
-  document.querySelectorAll('.range-val').forEach(function(rv){if(rv.textContent==='5'&&rv.id!==''){}});
-  showToast('Check-in saved! Readiness: '+readiness.overall);
-});
-
-// --- Run Form ---
-document.getElementById('run-form').addEventListener('submit',function(e){
-  e.preventDefault();
-  var dist=parseFloat(document.getElementById('run-dist').value);
-  if(isNaN(dist)||dist<=0){showToast('Enter valid distance');return}
-  var dur=parseFloat(document.getElementById('run-dur').value);
-  if(isNaN(dur)||dur<=0){showToast('Enter valid duration');return}
-  var pace=parseFloat(document.getElementById('run-pace').value)||0;
-  var avgHr=parseInt(document.getElementById('run-avgHr').value)||0;
-  var maxHr=parseInt(document.getElementById('run-maxHr').value)||0;
-  var cad=parseInt(document.getElementById('run-cadence').value)||0;
-  var elev=parseInt(document.getElementById('run-elev').value)||0;
-  var rpe=parseInt(document.getElementById('run-rpe').value)||0;
-  var type=document.getElementById('run-type').value;
-  var terrain=document.getElementById('run-terrain').value;
-  var notes=document.getElementById('run-notes').value;
-
-  var entry={id:uuid(),date:new Date().toISOString(),distance:dist,duration:dur,pace:pace,avgHr:avgHr,maxHr:maxHr,cadence:cad,elevation:elev,rpe:rpe,type:type,terrain:terrain,notes:notes};
-  var runs=load('runs',[]);
-  runs.push(entry);
-  save('runs',runs);
-  document.getElementById('run-form').reset();
-  showToast('Run logged: '+dist+'km');
-  renderRuns();
-});
-
+// ======================== RUNS ========================
 function renderRuns(){
-  var runs=load('runs',[]);
-  runs.sort(function(a,b){return new Date(b.date)-new Date(a.date)});
-  var wkDist=getWeeklyDistance(runs);
-  var totalRuns=runs.length;
-  var avgPace='--';
-  if(runs.length>0){
-    var paces=runs.filter(function(r){return r.pace>0}).map(function(r){return r.pace});
-    if(paces.length>0)avgPace=(paces.reduce(function(a,b){return a+b},0)/paces.length).toFixed(1);
-  }
-  var efficiency='--';
-  var latest=runs.length>0?runs[0]:null;
-  if(latest&&latest.pace>0&&latest.avgHr>0)efficiency=(latest.pace/latest.avgHr).toFixed(3);
+  const runs=load('runs',[]);
+  const wr=runs.filter(r=>daysBetween(r.date,todayStr())<=7);
+  const td=wr.reduce((a,b)=>a+(b.distance||0),0);
+  const ap=runs.filter(r=>r.pace&&r.pace>0).map(r=>r.pace);
+  const avgp=ap.length?ap.reduce((a,b)=>a+b,0)/ap.length:null;
+  const lr=runs.length?runs[runs.length-1]:null;
+  const eff=lr&&lr.avgHR&&lr.pace?(lr.pace/lr.avgHR).toFixed(3):'\u2014';
 
-  document.getElementById('run-stats').innerHTML='<div class="stat-card"><div class="label">Weekly km</div><div class="value" style="color:var(--accent)">'+wkDist+'</div></div>'
-    +'<div class="stat-card"><div class="label">Total Runs</div><div class="value" style="color:var(--accent)">'+totalRuns+'</div></div>'
-    +'<div class="stat-card"><div class="label">Avg Pace</div><div class="value" style="color:var(--text)">'+(avgPace!=='--'?avgPace+'/km':avgPace)+'</div></div>'
-    +'<div class="stat-card"><div class="label">Efficiency</div><div class="value" style="color:var(--text)">'+efficiency+'</div><div class="sub">pace/HR</div></div>';
+  let h='<h2>Runs</h2><div class="grid4">';
+  h+=`<div class="card stat-card"><div class="sv">${td.toFixed(1)}</div><div class="sl">Weekly km</div></div>`;
+  h+=`<div class="card stat-card"><div class="sv">${runs.length}</div><div class="sl">Total Runs</div></div>`;
+  h+=`<div class="card stat-card"><div class="sv mono">${avgp?formatPace(avgp):'\u2014'}</div><div class="sl">Avg Pace</div></div>`;
+  h+=`<div class="card stat-card"><div class="sv mono">${eff}</div><div class="sl">Efficiency</div><div class="ss">pace/HR</div></div>`;
+  h+='</div>';
 
-  renderPaceChart(runs);
-  renderRunHistory(runs);
-}
+  h+='<div class="card"><h4>Log Run</h4>';
+  h+='<div class="form-row"><div class="form-group"><label>Date</label><input type="date" id="rn-date" value="'+nowISO()+'"></div>';
+  h+='<div class="form-group"><label>Distance (km)</label><input type="number" id="rn-dist" step="0.1" min="0" max="100"></div>';
+  h+='<div class="form-group"><label>Duration (min)</label><input type="number" id="rn-dur" step="0.1" min="0" max="600"></div></div>';
+  h+='<div class="form-row"><div class="form-group"><label>Pace (auto)</label><input type="text" id="rn-pace" placeholder="Auto-calculated" readonly></div>';
+  h+='<div class="form-group"><label>Avg HR</label><input type="number" id="rn-avghr" min="80" max="220"></div>';
+  h+='<div class="form-group"><label>Max HR</label><input type="number" id="rn-maxhr" min="80" max="240"></div></div>';
+  h+='<div class="form-row"><div class="form-group"><label>Cadence (spm)</label><input type="number" id="rn-cad" min="100" max="220"></div>';
+  h+='<div class="form-group"><label>Elevation (m)</label><input type="number" id="rn-elev" min="0" max="5000"></div>';
+  h+='<div class="form-group"><label>RPE</label><div class="range-wrap"><input type="range" id="rn-rpe" min="1" max="10" value="5"><span class="sv-label" id="rn-rpe-v">5</span></div></div></div>';
+  h+='<div class="form-row"><div class="form-group"><label>Type</label><select id="rn-type"><option>Easy</option><option>Tempo</option><option>Intervals</option><option>Long Run</option><option>Recovery</option><option>Race</option></select></div>';
+  h+='<div class="form-group"><label>Terrain</label><select id="rn-terr"><option>Road</option><option>Trail</option><option>Track</option><option>Treadmill</option></select></div></div>';
+  h+='<div class="form-group"><label>Notes</label><textarea id="rn-notes"></textarea></div>';
+  h+='<button class="btn btn-primary btn-block" id="rn-submit">Log Run</button></div>';
 
-function renderPaceChart(runs){
-  var svg=document.getElementById('pace-chart');
-  var w=300,h=150,pad=32,bpad=20,rpad=10,top=10;
-  var recent=runs.slice(0,10).reverse();
-  var paces=recent.map(function(r){return r.pace||null});
-  if(paces.length<2){
-    svg.innerHTML='<text x="150" y="'+(h/2)+'" text-anchor="middle" fill="var(--text-dim)" font-size="12">Log more runs to see trends</text>';
-    return;
-  }
-  var minP=Math.min.apply(null,paces.filter(function(p){return p!=null}))-0.5;
-  var maxP=Math.max.apply(null,paces.filter(function(p){return p!=null}))+0.5;
-  if(maxP-minP<1){minP-=1;maxP+=1}
-  var html='';
-  var hLines=[Math.round(minP*10)/10,Math.round((minP+maxP)/2*10)/10,Math.round(maxP*10)/10];
-  hLines.forEach(function(lv){
-    var y=h-top-((lv-minP)/(maxP-minP))*(h-top-pad);
-    html+='<line x1="'+pad+'" y1="'+y+'" x2="'+(w-rpad)+'" y2="'+y+'" stroke="var(--border)" stroke-dasharray="3,3"/>';
-    html+='<text x="'+(pad-6)+'" y="'+(y+3)+'" text-anchor="end" font-size="9">'+lv.toFixed(1)+'</text>';
-  });
-  var pts=[];
-  paces.forEach(function(p,i){
-    if(p){
-      var x=pad+(i/(paces.length-1))*(w-pad-rpad);
-      var y=h-top-((p-minP)/(maxP-minP))*(h-top-pad);
-      pts.push({x:x,y:y,p:p});
-    }
-  });
-  if(pts.length>=2){
-    var d='M'+pts[0].x+' '+pts[0].y;
-    for(var i=1;i<pts.length;i++)d+=' L'+pts[i].x+' '+pts[i].y;
-    html+='<path d="'+d+'" fill="none" stroke="var(--warn)" stroke-width="2" stroke-linecap="round"/>';
-  }
-  pts.forEach(function(pt){html+='<circle cx="'+pt.x+'" cy="'+pt.y+'" r="3" fill="var(--warn)"><title>'+pt.p+'/km</title></circle>'});
-  svg.innerHTML=html;
-}
+  h+='<div class="card"><h4>Pace vs HR \u2014 Last 10 Runs</h4>'+renderPaceHRChart(runs)+'</div>';
 
-function renderRunHistory(runs){
-  var el=document.getElementById('run-history');
-  if(runs.length===0){el.innerHTML='<div class="empty-state"><div class="empty-icon">🏃</div>No runs logged yet</div>';return}
-  var html='<table><thead><tr><th>Date</th><th>Dist</th><th>Dur</th><th>Pace</th><th>Type</th><th>HR</th><th></th></tr></thead><tbody>';
-  runs.forEach(function(r,i){
-    html+='<tr class="run-row" data-idx="'+i+'"><td>'+formatDate(r.date)+'</td><td>'+r.distance+'km</td><td>'+r.duration+'min</td><td>'+(r.pace||'--')+'/km</td><td>'+r.type+'</td><td>'+(r.avgHr||'--')+'</td><td><button class="delete-btn run-del" data-id="'+r.id+'">×</button></td></tr>';
-    html+='<tr class="expanded-row" style="display:none" id="run-detail-'+i+'"><td colspan="7"><div class="expanded-detail"><span>Duration: '+r.duration+'min</span><span>Max HR: '+(r.maxHr||'--')+'</span><span>Cadence: '+(r.cadence||'--')+'spm</span><span>Elev: '+(r.elevation||'--')+'m</span><span>RPE: '+(r.rpe||'--')+'</span><span>Terrain: '+(r.terrain||'--')+'</span><span>Notes: '+(r.notes||'--')+'</span></div></td></tr>';
-  });
-  html+='</tbody></table>';
-  el.innerHTML=html;
-  el.querySelectorAll('.run-row').forEach(function(tr){
-    tr.addEventListener('click',function(e){
-      if(e.target.classList.contains('delete-btn')||e.target.classList.contains('run-del'))return;
-      var idx=parseInt(tr.dataset.idx);
-      var det=document.getElementById('run-detail-'+idx);
-      if(det)det.style.display=det.style.display==='none'?'':'none';
+  h+='<div class="card"><h4>Run History</h4>';
+  if(runs.length){
+    h+='<table><thead><tr><th>Date</th><th>Dist</th><th>Time</th><th>Pace</th><th>Type</th><th>HR</th><th>RPE</th><th></th></tr></thead><tbody>';
+    runs.sort((a,b)=>b.date.localeCompare(a.date)).forEach((r,i)=>{
+      h+=`<tr class="exp-sum" data-ri="${i}"><td>${formatDate(r.date)}</td><td class="mono">${r.distance||0} km</td><td class="mono">${formatDuration(r.duration)}</td><td class="mono">${formatPace(r.pace)}</td><td><span class="badge badge-cyan">${r.type||'\u2014'}</span></td><td class="mono">${r.avgHR||'\u2014'}</td><td class="mono">${r.rpe||'\u2014'}/10</td><td><button class="btn btn-danger btn-sm rn-del" data-rid="${r.id}">\u00d7</button></td></tr>`;
+      h+=`<tr class="exp-det" id="rd-${i}"><td colspan="8" style="padding:0.75rem"><div style="display:flex;gap:2rem;flex-wrap:wrap;font-size:0.7rem">`;
+      h+=`<span>Cadence: <b>${r.cadence||'\u2014'}</b> spm</span><span>Elevation: <b>${r.elevation||'\u2014'}</b> m</span>`;
+      h+=`<span>Max HR: <b>${r.maxHR||'\u2014'}</b></span><span>Efficiency: <b>${r.avgHR&&r.pace?(r.pace/r.avgHR).toFixed(3):'\u2014'}</b></span>`;
+      h+=`<span>Terrain: <b>${r.terrain||'\u2014'}</b></span></div>${r.notes?`<div style="margin-top:0.4rem;color:var(--text-dim);font-size:0.68rem">${r.notes}</div>`:''}</td></tr>`;
     });
-  });
-  el.querySelectorAll('.run-del').forEach(function(btn){
-    btn.addEventListener('click',function(e){
-      e.stopPropagation();
-      var id=btn.dataset.id;
-      if(confirm('Delete this run?')){
-        var runs=load('runs',[]);
-        runs=runs.filter(function(r){return r.id!==id});
-        save('runs',runs);
-        renderRuns();
-        showToast('Run deleted');
+    h+='</tbody></table>';
+  }else{h+='<div class="empty-state"><p>Log your first run to see trends</p></div>';}
+  h+='</div>';return h;
+}
+
+function renderPaceHRChart(runs){
+  const l10=runs.slice(-10).filter(r=>r.pace&&r.avgHR);
+  let s='<svg viewBox="0 0 600 200" class="chart-svg">';
+  if(!l10.length){s+='<text x="300" y="100" text-anchor="middle" fill="var(--text-dim)" font-size="12" font-family="var(--mono)">No data</text></svg>';return s;}
+  const mnP=Math.min(...l10.map(r=>r.pace))-0.5,mxP=Math.max(...l10.map(r=>r.pace))+0.5;
+  const mnH=Math.min(...l10.map(r=>r.avgHR))-5,mxH=Math.max(...l10.map(r=>r.avgHR))+5;
+  const rP=mxP-mnP,rH=mxH-mnH;
+  for(let i=0;i<=4;i++){const y=20+i*35;s+=`<line x1="50" y1="${y}" x2="580" y2="${y}" stroke="#131a28" stroke-width="0.5"/>`;
+    s+=`<text x="44" y="${y+3}" text-anchor="end" fill="#334155" font-size="8" font-family="var(--mono)">${(mxP-(i/4)*rP).toFixed(1)}</text>`;
+    s+=`<text x="586" y="${y+3}" text-anchor="start" fill="#10b981" font-size="8" font-family="var(--mono)">${Math.round(mnH+((4-i)/4)*rH)}</text>`;}
+  let p='';l10.forEach((r,i)=>{const x=55+i*(520/(l10.length-1||1)),y=20+((mxP-r.pace)/rP)*140;p+=(i===0?'M':'L')+x+','+y+' '});
+  s+=`<path d="${p}" fill="none" stroke="#22d3ee" stroke-width="2"/>`;
+  l10.forEach((r,i)=>{const x=55+i*(520/(l10.length-1||1)),y=20+((mxH-r.avgHR)/rH)*140;s+=`<circle cx="${x}" cy="${y}" r="3" fill="#10b981"><title>HR: ${r.avgHR} bpm</title></circle>`});
+  s+='<text x="55" y="16" fill="#22d3ee" font-size="8">\u2014 Pace (min/km)</text><text x="55" y="195" fill="#10b981" font-size="8">\u25cf HR (bpm, right axis)</text>';
+  s+='</svg>';return s;
+}
+
+function bindRuns(){
+  const de=document.getElementById('rn-dist'),du=document.getElementById('rn-dur'),pe=document.getElementById('rn-pace');
+  function up(){const d=parseFloat(de?.value)||0,t=parseFloat(du?.value)||0;if(d>0&&t>0)pe.value=formatPace(t/d);else pe.value=''}
+  if(de)de.addEventListener('input',up);if(du)du.addEventListener('input',up);
+  const re=document.getElementById('rn-rpe'),rv=document.getElementById('rn-rpe-v');if(re)re.addEventListener('input',()=>{if(rv)rv.textContent=re.value});
+  const sb=document.getElementById('rn-submit');if(sb)sb.addEventListener('click',submitRun);
+  $$('.exp-sum').forEach(r=>{r.addEventListener('click',function(e){if(e.target.closest('.rn-del'))return;
+    const d=document.getElementById('rd-'+this.dataset.ri);if(d)d.classList.toggle('open')})});
+  $$('.rn-del').forEach(b=>{b.addEventListener('click',function(e){e.stopPropagation();
+    confirmAction('Delete this run?',()=>{const runs=load('runs',[]);save('runs',runs.filter(r=>r.id!==this.dataset.rid));showView('runs')})})});
+}
+
+function submitRun(){
+  const dist=parseFloat(document.getElementById('rn-dist')?.value)||0,durMin=parseFloat(document.getElementById('rn-dur')?.value)||0;
+  let pace=0;if(dist>0&&durMin>0)pace=durMin/dist;
+  const run={id:uid(),date:document.getElementById('rn-date')?.value||todayStr(),distance:dist,
+    duration:Math.round(durMin*60),pace,
+    avgHR:parseInt(document.getElementById('rn-avghr')?.value)||null,
+    maxHR:parseInt(document.getElementById('rn-maxhr')?.value)||null,
+    cadence:parseInt(document.getElementById('rn-cad')?.value)||null,
+    elevation:parseInt(document.getElementById('rn-elev')?.value)||null,
+    rpe:parseInt(document.getElementById('rn-rpe')?.value)||5,
+    type:document.getElementById('rn-type')?.value||'Easy',
+    terrain:document.getElementById('rn-terr')?.value||'Road',
+    notes:document.getElementById('rn-notes')?.value||''};
+  const runs=load('runs',[]);runs.push(run);save('runs',runs);showView('runs');
+}
+
+// ======================== STRENGTH ========================
+let strEx=[];
+
+function renderStrength(){
+  const wos=load('workouts',[]);
+  const ww=wos.filter(w=>daysBetween(w.date,todayStr())<=7);
+  const tv=ww.reduce((a,b)=>a+(b.totalVolume||0),0);
+  const ar=ww.length?(ww.reduce((a,b)=>a+(b.rpe||0),0)/ww.length).toFixed(1):'\u2014';
+
+  let h='<h2>Strength</h2><div class="grid4">';
+  h+=`<div class="card stat-card"><div class="sv">${Math.round(tv).toLocaleString()}</div><div class="sl">Weekly Volume</div><div class="ss">kg</div></div>`;
+  h+=`<div class="card stat-card"><div class="sv">${wos.length}</div><div class="sl">Sessions</div></div>`;
+  h+=`<div class="card stat-card"><div class="sv mono">${ar}</div><div class="sl">Avg RPE</div></div>`;
+  h+=`<div class="card stat-card"><div class="sv">${Math.round(tv).toLocaleString()}</div><div class="sl">Total kg</div><div class="ss">all time</div></div>`;
+  h+='</div>';
+
+  h+='<div class="card"><h4>Log Workout</h4>';
+  h+='<div class="form-row"><div class="form-group"><label>Date</label><input type="date" id="wo-date" value="'+nowISO()+'"></div>';
+  h+='<div class="form-group"><label>Type</label><select id="wo-type"><option>Strength</option><option>Mobility</option><option>Cross Training</option><option>Rehab</option></select></div>';
+  h+='<div class="form-group"><label>Duration (min)</label><input type="number" id="wo-dur" min="0" max="300" value="60"></div></div>';
+  h+='<div class="form-row"><div class="form-group"><label>Session RPE</label><div class="range-wrap"><input type="range" id="wo-rpe" min="1" max="10" value="6"><span class="sv-label" id="wo-rpe-v">6</span></div></div>';
+  h+='<div class="form-group"><label>Notes</label><input type="text" id="wo-notes"></div></div>';
+
+  h+='<div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.75rem;margin-top:0.75rem">';
+  h+='<h5 style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-secondary);margin-bottom:0.5rem">Add Exercise</h5>';
+  h+='<div class="form-row"><div class="form-group"><label>Name</label><input type="text" id="ex-name" placeholder="e.g. Back Squat"></div>';
+  h+='<div class="form-group"><label>Category</label><select id="ex-cat"><option>Squat</option><option>Hinge</option><option>Push</option><option>Pull</option><option>Carry</option><option>Accessory</option></select></div></div>';
+  h+='<div class="form-row"><div class="form-group"><label>Weight (kg)</label><input type="number" id="ex-wt" min="0" step="0.5" value="0"></div>';
+  h+='<div class="form-group"><label>Sets</label><input type="number" id="ex-sets" min="1" max="20" value="3"></div>';
+  h+='<div class="form-group"><label>Reps</label><input type="number" id="ex-reps" min="1" max="100" value="10"></div></div>';
+  h+='<div class="form-row"><div class="form-group"><label>RPE (1-10)</label><input type="number" id="ex-rpe" min="1" max="10" value="7"></div>';
+  h+='<div class="form-group"><label>Tempo</label><input type="text" id="ex-tempo" placeholder="e.g. 3-0-1"></div>';
+  h+='<div class="form-group"><label>Pain Notes</label><input type="text" id="ex-pain" placeholder="Any discomfort?"></div></div>';
+  h+='<button class="btn btn-secondary btn-sm" id="ex-add">+ Add Exercise</button></div>';
+  h+='<div id="ex-list" class="card" style="display:none"><h4>Exercises</h4><div id="ex-list-in"></div></div>';
+  h+='<button class="btn btn-primary btn-block" id="wo-submit" style="margin-top:0.75rem">Save Workout</button></div>';
+
+  h+='<div class="card"><h4>Workout History</h4>';
+  if(wos.length){
+    wos.sort((a,b)=>b.date.localeCompare(a.date)).forEach((w,i)=>{
+      h+=`<div class="exp-sum" data-wi="${i}" style="padding:0.45rem 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;cursor:pointer">
+        <span><span class="badge badge-cyan">${w.type||'Strength'}</span> ${formatDate(w.date)}</span>
+        <span style="font-size:0.7rem;color:var(--text-secondary)">${w.duration||0}min \u00b7 ${w.totalVolume?Math.round(w.totalVolume)+'kg':'\u2014'} \u00b7 RPE ${w.rpe||'\u2014'}</span>
+        <button class="btn btn-danger btn-sm wo-del" data-wid="${w.id}" style="margin-left:0.5rem">\u00d7</button></div>`;
+      h+=`<div class="exp-det" id="wd-${i}"><div style="padding:0 0 0.75rem">`;
+      if(w.exercises&&w.exercises.length){
+        w.exercises.forEach(ex=>{
+          const rm=ex.weight>0&&ex.reps>0?Math.round(ex.weight*(1+ex.reps/30)):0,vl=ex.weight*ex.sets*ex.reps;
+          h+=`<div style="font-size:0.68rem;padding:0.15rem 0;color:var(--text-secondary)">
+            <span style="color:var(--text);font-weight:600">${ex.name}</span> \u00b7 ${ex.sets}\u00d7${ex.reps} @ ${ex.weight}kg \u00b7 1RM: ~${rm}kg \u00b7 Vol: ${vl}kg
+            ${ex.tempo?'\u00b7 Tempo: '+ex.tempo:''} ${ex.pain?'\u00b7 \u26a0 '+ex.pain:''}</div>`;
+        });
       }
+      h+=`${w.notes?`<div style="font-size:0.68rem;color:var(--text-dim);margin-top:0.25rem">${w.notes}</div>`:''}</div></div>`;
     });
-  });
+  }else{h+='<div class="empty-state"><p>No workouts logged yet</p></div>';}
+  h+='</div>';return h;
 }
 
-// --- Workout Form ---
-var tempExercises=[];
-var exCounter=0;
-function renderExerciseList(){
-  var el=document.getElementById('exercise-list');
-  if(tempExercises.length===0){el.innerHTML='<div style="padding:10px;color:var(--text-dim);font-size:12px;text-align:center">No exercises added yet</div>';return}
-  el.innerHTML=tempExercises.map(function(ex,i){
-    return'<div class="exercise-item"><div class="ex-info"><span>'+ex.name+' — '+ex.sets+'×'+ex.reps+' @ '+ex.weight+'kg</span><span class="ex-rm">1RM: '+ex.estimated1RM+'kg | Vol: '+ex.volumeLoad+'kg</span></div><button class="remove-ex" data-exidx="'+i+'">×</button></div>';
-  }).join('');
-  el.querySelectorAll('.remove-ex').forEach(function(btn){
-    btn.addEventListener('click',function(){tempExercises.splice(parseInt(btn.dataset.exidx),1);renderExerciseList()});
-  });
+function bindStrength(){
+  strEx=[];
+  const re=document.getElementById('wo-rpe'),rv=document.getElementById('wo-rpe-v');if(re)re.addEventListener('input',()=>{if(rv)rv.textContent=re.value});
+  const ab=document.getElementById('ex-add');if(ab)ab.addEventListener('click',addExercise);
+  const sb=document.getElementById('wo-submit');if(sb)sb.addEventListener('click',submitWorkout);
+  $$('.exp-sum').forEach(r=>{r.addEventListener('click',function(e){if(e.target.closest('.wo-del'))return;
+    const d=document.getElementById('wd-'+this.dataset.wi);if(d)d.classList.toggle('open')})});
+  $$('.wo-del').forEach(b=>{b.addEventListener('click',function(e){e.stopPropagation();
+    confirmAction('Delete this workout?',()=>{const wos=load('workouts',[]);save('workouts',wos.filter(w=>w.id!==this.dataset.wid));showView('strength')})})});
+  renderExList();
 }
 
-document.getElementById('add-ex-btn').addEventListener('click',function(){
-  var name=(document.getElementById('ex-name').value||'').trim();
-  if(!name){showToast('Enter exercise name');return}
-  var cat=document.getElementById('ex-cat').value;
-  var wgt=parseFloat(document.getElementById('ex-weight').value)||0;
-  var sets=parseInt(document.getElementById('ex-sets').value)||0;
-  var reps=parseInt(document.getElementById('ex-reps').value)||0;
-  if(sets<=0||reps<=0){showToast('Enter valid sets and reps');return}
-  var rpe=parseInt(document.getElementById('ex-rpe').value)||0;
-  var tempo=document.getElementById('ex-tempo').value;
-  var pain=document.getElementById('ex-pain').value;
-  var rm=calculate1RM(wgt,reps);
-  var vl=calculateVolumeLoad(sets,reps,wgt);
-  tempExercises.push({name:name,category:cat,weight:wgt,sets:sets,reps:reps,rpe:rpe,estimated1RM:rm,volumeLoad:vl,tempo:tempo,painNotes:pain});
-  renderExerciseList();
-  document.getElementById('ex-name').value='';
-  document.getElementById('ex-weight').value='';
-  document.getElementById('ex-sets').value='';
-  document.getElementById('ex-reps').value='';
-  document.getElementById('ex-rpe').value='';
-  document.getElementById('ex-tempo').value='';
-  document.getElementById('ex-pain').value='';
-});
-
-document.getElementById('workout-form').addEventListener('submit',function(e){
-  e.preventDefault();
-  if(tempExercises.length===0){showToast('Add at least one exercise');return}
-  var type=document.getElementById('wo-type').value;
-  var dur=parseInt(document.getElementById('wo-dur').value);
-  if(isNaN(dur)||dur<=0){showToast('Enter valid duration');return}
-  var rpe=parseInt(document.getElementById('wo-rpe').value)||0;
-  var totalVol=tempExercises.reduce(function(a,ex){return a+(ex.volumeLoad||0)},0);
-  var entry={id:uuid(),date:new Date().toISOString(),type:type,duration:dur,rpe:rpe,totalVolume:totalVol,exercises:tempExercises.slice()};
-  var workouts=load('workouts',[]);
-  workouts.push(entry);
-  save('workouts',workouts);
-  tempExercises=[];
-  renderExerciseList();
-  document.getElementById('workout-form').reset();
-  showToast('Workout logged: '+totalVol+'kg');
-  renderWorkouts();
-});
-
-function renderWorkouts(){
-  var workouts=load('workouts',[]);
-  workouts.sort(function(a,b){return new Date(b.date)-new Date(a.date)});
-  var wkVol=getWeeklyVolume(workouts);
-  var totalSessions=workouts.length;
-  var avgRpe='--';
-  if(workouts.length>0){
-    var rpes=workouts.filter(function(w){return w.rpe>0}).map(function(w){return w.rpe});
-    if(rpes.length>0)avgRpe=(rpes.reduce(function(a,b){return a+b},0)/rpes.length).toFixed(1);
-  }
-  var totalKg=workouts.reduce(function(a,w){return a+(w.totalVolume||0)},0);
-
-  document.getElementById('workout-stats').innerHTML='<div class="stat-card"><div class="label">Weekly Vol</div><div class="value" style="color:var(--accent)">'+wkVol+'</div><div class="sub">kg</div></div>'
-    +'<div class="stat-card"><div class="label">Sessions</div><div class="value" style="color:var(--accent)">'+totalSessions+'</div></div>'
-    +'<div class="stat-card"><div class="label">Avg RPE</div><div class="value" style="color:var(--text)">'+avgRpe+'</div></div>'
-    +'<div class="stat-card"><div class="label">Total kg</div><div class="value" style="color:var(--text)">'+totalKg+'</div></div>';
-
-  renderWorkoutHistory(workouts);
+function addExercise(){
+  const ex={name:document.getElementById('ex-name')?.value?.trim(),category:document.getElementById('ex-cat')?.value,
+    weight:parseFloat(document.getElementById('ex-wt')?.value)||0,sets:parseInt(document.getElementById('ex-sets')?.value)||1,
+    reps:parseInt(document.getElementById('ex-reps')?.value)||1,rpe:parseInt(document.getElementById('ex-rpe')?.value)||7,
+    tempo:document.getElementById('ex-tempo')?.value?.trim()||'',pain:document.getElementById('ex-pain')?.value?.trim()||''};
+  if(!ex.name)return;ex.oneRM=ex.weight>0&&ex.reps>0?Math.round(ex.weight*(1+ex.reps/30)):0;
+  ex.volumeLoad=ex.weight*ex.sets*ex.reps;ex.id=uid();strEx.push(ex);
+  ['ex-name','ex-wt','ex-tempo','ex-pain'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  document.getElementById('ex-sets').value='3';document.getElementById('ex-reps').value='10';
+  document.getElementById('ex-rpe').value='7';document.getElementById('ex-wt').value='0';
+  renderExList();
 }
 
-function renderWorkoutHistory(workouts){
-  var el=document.getElementById('workout-history');
-  if(workouts.length===0){el.innerHTML='<div class="empty-state"><div class="empty-icon">🏋️</div>No workouts logged yet</div>';return}
-  var html='';
-  workouts.forEach(function(w,i){
-    var exCount=w.exercises?w.exercises.length:0;
-    html+='<div class="history-item" data-idx="'+i+'"><div class="hi-header"><span><strong>'+formatDate(w.date)+'</strong> — '+w.type+' · '+w.duration+'min · '+w.totalVolume+'kg · RPE '+(w.rpe||'--')+'</span><span style="font-size:12px;color:var(--text-dim)">'+exCount+' exercises ▾</span></div><div class="hi-body"><div style="display:flex;flex-direction:column;gap:6px">';
-    (w.exercises||[]).forEach(function(ex){
-      html+='<div style="background:var(--bg);padding:8px;border-radius:var(--radius-sm);display:flex;justify-content:space-between"><span>'+ex.name+' — '+ex.sets+'×'+ex.reps+' @ '+ex.weight+'kg</span><span style="color:var(--accent)">1RM: '+ex.estimated1RM+'kg | Vol: '+ex.volumeLoad+'kg</span></div>';
-    });
-    html+='</div></div></div>';
-  });
-  el.innerHTML=html;
-  el.querySelectorAll('.history-item').forEach(function(item){
-    item.addEventListener('click',function(){item.classList.toggle('open')});
-  });
+function renderExList(){
+  const l=document.getElementById('ex-list'),in_=document.getElementById('ex-list-in');if(!l||!in_)return;
+  if(strEx.length===0){l.style.display='none';return;}l.style.display='block';
+  in_.innerHTML=strEx.map((ex,i)=>`<div class="ex-item"><div>
+    <span class="ei-name">${ex.name}</span><span class="ei-detail"> \u00b7 ${ex.category} \u00b7 ${ex.sets}\u00d7${ex.reps} @ ${ex.weight}kg \u00b7 1RM: ~${ex.oneRM}kg \u00b7 ${ex.volumeLoad}kg</span>
+    ${ex.tempo?'<span class="ei-detail"> \u00b7 Tempo: '+ex.tempo+'</span>':''}${ex.pain?'<span class="ei-detail" style="color:var(--red)"> \u00b7 '+ex.pain+'</span>':''}
+    </div><button class="ei-rm" data-ei="${i}">\u00d7</button></div>`).join('');
+  in_.querySelectorAll('.ei-rm').forEach(b=>{b.addEventListener('click',function(){strEx.splice(parseInt(this.dataset.ei),1);renderExList()})});
 }
 
-// --- Injury Form ---
-document.getElementById('inj-severity').addEventListener('input',function(){
-  var v=parseInt(this.value);
-  var el=document.getElementById('inj-sev-val');el.textContent=v;
-  el.style.color=v<=3?'var(--accent)':v<=6?'var(--warn)':'var(--danger)';
-});
+function submitWorkout(){
+  const wo={id:uid(),date:document.getElementById('wo-date')?.value||todayStr(),
+    type:document.getElementById('wo-type')?.value||'Strength',
+    duration:parseInt(document.getElementById('wo-dur')?.value)||0,
+    rpe:parseInt(document.getElementById('wo-rpe')?.value)||5,
+    notes:document.getElementById('wo-notes')?.value||'',
+    exercises:[...strEx],totalVolume:strEx.reduce((a,b)=>a+(b.volumeLoad||0),0)};
+  if(!wo.exercises.length&&!wo.notes)return;
+  const wos=load('workouts',[]);wos.push(wo);save('workouts',wos);strEx=[];showView('strength');
+}
 
-document.getElementById('injury-form').addEventListener('submit',function(e){
-  e.preventDefault();
-  var loc=document.getElementById('inj-loc').value;
-  var side=document.getElementById('inj-side').value;
-  var sev=parseInt(document.getElementById('inj-severity').value);
-  var type=document.getElementById('inj-type').value;
-  var status=document.getElementById('inj-status').value;
-  var mech=document.getElementById('inj-mech').value;
-  var notes=document.getElementById('inj-notes').value;
-  var entry={id:uuid(),location:loc,side:side,severity:sev,status:status,type:type,mechanism:mech,notes:notes,reportedAt:new Date().toISOString(),resolvedAt:null};
-  var injuries=load('injuries',[]);
-  injuries.push(entry);
-  save('injuries',injuries);
-  document.getElementById('injury-form').reset();
-  document.getElementById('inj-sev-val').textContent='5';
-  document.getElementById('inj-sev-val').style.color='var(--warn)';
-  showToast('Injury reported');
-  renderInjuries();
-});
+// ======================== RECOVERY ========================
+function renderRecovery(){
+  const d={checkins:load('checkins',[]),runs:load('runs',[]),workouts:load('workouts',[])};
+  const lc=d.checkins.length?d.checkins[d.checkins.length-1]:null,r=lc&&lc.readiness?lc.readiness:null;
+  let h='<h2>Recovery</h2>';
 
+  h+='<div class="card"><h4>Readiness Breakdown</h4>';
+  if(r){
+    const bars=[{l:'Sleep',v:r.sleepScore,c:'#22d3ee'},{l:'HR Recovery',v:r.hrRecoveryScore,c:'#10b981'},
+      {l:'Energy',v:r.energyScore,c:'#f59e0b'},{l:'Soreness',v:r.sorenessScore,c:'#a78bfa'},
+      {l:'Pain Penalty',v:100-r.painPenalty,c:r.painPenalty>20?'#ef4444':'#22d3ee'}];
+    bars.forEach(b=>{h+=`<div class="bar-row"><span class="bar-label">${b.l}</span><div class="bar-track"><div class="bar-fill" style="width:${b.v}%;background:${b.c}"></div></div><span class="bar-val" style="color:${b.c}">${b.v}</span></div>`});
+  }else{h+='<div class="empty-state"><p>Complete a check-in to see recovery breakdown</p></div>';}
+  h+='</div>';
+
+  h+='<div class="card"><h4>14-Day Readiness Trend</h4>'+renderRecoveryTrend(d.checkins)+'</div>';
+
+  h+='<div class="card"><h4>Sleep History \u2014 Last 7 Days</h4>';
+  const l7=d.checkins.filter(c=>daysBetween(c.date,todayStr())<=7).sort((a,b)=>b.date.localeCompare(a.date));
+  if(l7.length){h+='<table><thead><tr><th>Date</th><th>Hours</th><th>Quality</th></tr></thead><tbody>';
+    l7.forEach(c=>{h+=`<tr><td>${formatDate(c.date)}</td><td class="mono">${c.sleepHours||'\u2014'} h</td><td class="mono">${c.sleepQuality||'\u2014'}/10</td></tr>`});
+    h+='</tbody></table>';}else{h+='<div class="empty-state"><p>No sleep data</p></div>';}
+  h+='</div>';
+
+  h+='<div class="card"><h4>HR Trend \u2014 Last 7 Days</h4>';
+  if(l7.length){const bl=l7.reduce((a,b)=>a+(b.restingHR||0),0)/l7.length;
+    h+='<table><thead><tr><th>Date</th><th>RHR</th><th>Deviation</th></tr></thead><tbody>';
+    l7.forEach(c=>{const dev=c.restingHR?c.restingHR-bl:0;
+      h+=`<tr><td>${formatDate(c.date)}</td><td class="mono">${c.restingHR||'\u2014'} bpm</td><td class="mono ${dev>3?'tr':dev<-3?'tg':''}">${dev>0?'+':''}${dev.toFixed(1)}</td></tr>`});
+    h+='</tbody></table>';}else{h+='<div class="empty-state"><p>No HR data</p></div>';}
+  h+='</div>';
+
+  h+='<div class="card"><h4>Mobility Compliance \u2014 This Week</h4>';
+  const tw=d.checkins.filter(c=>daysBetween(c.date,todayStr())<=7);
+  const mc=tw.filter(c=>c.mobility).length,mp=tw.length?Math.round((mc/tw.length)*100):0;
+  h+=`<div class="bar-row"><span class="bar-label">Mobility</span><div class="bar-track"><div class="bar-fill" style="width:${mp}%;background:#22d3ee"></div></div><span class="bar-val tc">${mp}%</span></div>`;
+  h+=`<p style="font-size:0.62rem;color:var(--text-dim);margin-top:0.2rem">${mc} of ${tw.length} days</p></div>`;
+  return h;
+}
+
+function renderRecoveryTrend(checkins){
+  const last14=[];for(let i=13;i>=0;i--){const d=daysAgo(i),ci=checkins.slice().reverse().find(c=>c.date===d);last14.push(ci&&ci.readiness?ci.readiness:null)}
+  const has=last14.some(d=>d);
+  let s='<svg viewBox="0 0 600 200" class="chart-svg">';
+  s+='<rect x="40" y="15" width="540" height="45" fill="rgba(16,185,129,0.06)"/><rect x="40" y="60" width="540" height="45" fill="rgba(245,158,11,0.04)"/><rect x="40" y="105" width="540" height="45" fill="rgba(239,68,68,0.06)"/>';
+  s+='<text x="44" y="40" fill="#10b981" font-size="8" font-family="var(--mono)">PRIME</text><text x="44" y="85" fill="#f59e0b" font-size="8" font-family="var(--mono)">STABLE</text><text x="44" y="130" fill="#ef4444" font-size="8" font-family="var(--mono)">STRAINED</text>';
+  [25,50,75].forEach(y=>{const py=155-(y/100)*140;s+=`<line x1="40" y1="${py}" x2="580" y2="${py}" stroke="#131a28" stroke-width="0.5"/>
+    <text x="35" y="${py+3}" text-anchor="end" fill="#334155" font-size="8">${y}</text>`});
+  if(has){
+    let p='';last14.forEach((d,i)=>{const x=42+i*(536/13),y=d?155-(d.overall/100)*140:155;p+=(i===0?'M':'L')+x+','+y+' '});
+    s+=`<path d="${p}" fill="none" stroke="#22d3ee" stroke-width="2"/>`;
+    last14.forEach((d,i)=>{if(d){const x=42+i*(536/13),y=155-(d.overall/100)*140;s+=`<circle cx="${x}" cy="${y}" r="2.5" fill="#22d3ee"><title>${d.overall} \u2014 ${d.zone}</title></circle>`}});
+  }else{s+='<text x="300" y="95" text-anchor="middle" fill="var(--text-dim)" font-size="12" font-family="var(--mono)">No data</text>';}
+  s+='</svg>';return s;
+}
+
+// ======================== INJURIES ========================
 function renderInjuries(){
-  var injuries=load('injuries',[]);
-  var active=injuries.filter(function(i){return i.status==='Active'}).length;
-  var monitoring=injuries.filter(function(i){return i.status==='Monitoring'}).length;
-  var recovered=injuries.filter(function(i){return i.status==='Recovered'}).length;
+  const injs=load('injuries',[]);
+  const act=injs.filter(i=>i.status==='active').length,mon=injs.filter(i=>i.status==='monitoring').length,rec=injs.filter(i=>i.status==='recovered').length;
+  const cks=load('checkins',[]),lc=cks.length?cks[cks.length-1]:null;
+  const mc=lc&&lc.mobility?100:lc?50:0;
+  const risk=assessInjuryRisk(cks,load('runs',[]),mc);
+  const ln={groin:'Groin/Adductor',lowerBack:'Lower Back',shoulder:'Shoulder',knee:'Knee',hamstring:'Hamstring'};
 
-  document.getElementById('injury-stats').innerHTML='<div class="stat-card"><div class="label">Active</div><div class="value" style="color:var(--danger)">'+active+'</div></div>'
-    +'<div class="stat-card"><div class="label">Monitoring</div><div class="value" style="color:var(--warn)">'+monitoring+'</div></div>'
-    +'<div class="stat-card"><div class="label">Recovered</div><div class="value" style="color:var(--accent)">'+recovered+'</div></div>';
+  let h='<h2>Injuries</h2><div class="grid3">';
+  h+=`<div class="card stat-card"><div class="sv tr">${act}</div><div class="sl">Active</div></div>`;
+  h+=`<div class="card stat-card"><div class="sv ta">${mon}</div><div class="sl">Monitoring</div></div>`;
+  h+=`<div class="card stat-card"><div class="sv tg">${rec}</div><div class="sl">Recovered</div></div>`;
+  h+='</div>';
 
-  var log=document.getElementById('injury-log');
-  if(injuries.length===0){log.innerHTML='<div class="empty-state"><div class="empty-icon">✅</div>No injuries reported</div>';return}
-  var html='<table><thead><tr><th>Location</th><th>Side</th><th>Severity</th><th>Status</th><th>Date</th><th></th></tr></thead><tbody>';
-  injuries.sort(function(a,b){return new Date(b.reportedAt)-new Date(a.reportedAt)});
-  injuries.forEach(function(ij){
-    var bc=ij.status==='Active'?'badge-red':ij.status==='Monitoring'?'badge-amber':'badge-green';
-    html+='<tr><td>'+ij.location+'</td><td>'+ij.side+'</td><td>'+ij.severity+'/10</td><td><span class="badge '+bc+'">'+ij.status+'</span></td><td>'+formatDate(ij.reportedAt)+'</td><td>';
-    if(ij.status==='Active'||ij.status==='Monitoring')html+='<button class="btn-sm btn-outline resolve-btn" data-id="'+ij.id+'">Resolve</button>';
-    html+='</td></tr>';
-  });
-  html+='</tbody></table>';
-  log.innerHTML=html;
-  log.querySelectorAll('.resolve-btn').forEach(function(btn){
-    btn.addEventListener('click',function(){
-      var id=btn.dataset.id;
-      var injuries=load('injuries',[]);
-      var ij=injuries.find(function(i){return i.id===id});
-      if(ij){ij.status='Recovered';ij.resolvedAt=new Date().toISOString();save('injuries',injuries);renderInjuries();showToast('Injury marked as recovered')}
+  const rc=risk.overallRisk.toLowerCase(),rcol=risk.overallRisk==='LOW'?'var(--green)':risk.overallRisk==='MODERATE'?'var(--amber)':'var(--red)';
+  h+=`<div class="card"><h4>Injury Risk Assessment</h4>
+    <div class="risk-indicator ${rc}"><div class="rd" style="background:${rcol};box-shadow:0 0 8px ${rcol}"></div>
+    <div><strong style="color:${rcol}">${risk.overallRisk} RISK</strong> \u2014 Score: ${risk.overallScore}/100</div></div>`;
+  Object.entries(risk.locationRisks).forEach(([k,v])=>{
+    const dc=v==='rising'||v==='high'?'var(--red)':v==='moderate'?'var(--amber)':'var(--green)';
+    h+=`<div style="display:flex;justify-content:space-between;padding:0.25rem 0;font-size:0.7rem;border-bottom:1px solid var(--border)"><span>${ln[k]}</span><span style="color:${dc};font-weight:600">${v}</span></div>`});
+  if(risk.recommendations.length){h+='<div style="margin-top:0.4rem;font-size:0.68rem;color:var(--amber)">';risk.recommendations.forEach(r=>h+='<div style="padding:0.15rem 0">\u26a0 '+r+'</div>');h+='</div>';}
+  h+='</div>';
+
+  h+='<div class="card"><h4>Report Injury</h4>';
+  h+='<div class="form-row"><div class="form-group"><label>Location</label><select id="inj-loc">';
+  Object.entries(ln).forEach(([k,v])=>h+=`<option value="${k}">${v}</option>`);
+  h+='</select></div><div class="form-group"><label>Side</label><select id="inj-side"><option>Left</option><option>Right</option><option>Both</option><option>Central</option></select></div></div>';
+  h+='<div class="form-group"><label>Severity</label><div class="range-wrap"><input type="range" id="inj-sev" min="1" max="10" value="3"><span class="sv-label" id="inj-sev-v">3</span></div></div>';
+  h+='<div class="form-row"><div class="form-group"><label>Type</label><select id="inj-type"><option>Strain</option><option>Sprain</option><option>Tendinopathy</option><option>Stress Reaction</option><option>Contusion</option><option>Other</option></select></div>';
+  h+='<div class="form-group"><label>Mechanism</label><select id="inj-mech"><option>Running</option><option>Lifting</option><option>Unknown</option><option>Contact</option><option>Other</option></select></div></div>';
+  h+='<div class="form-group"><label>Notes</label><textarea id="inj-notes"></textarea></div>';
+  h+='<button class="btn btn-primary btn-block" id="inj-submit">Report Injury</button></div>';
+
+  h+='<div class="card"><h4>Injury Log</h4>';
+  if(injs.length){
+    injs.sort((a,b)=>b.date.localeCompare(a.date)).forEach(inj=>{
+      const sc=inj.status==='active'?'badge-red':inj.status==='monitoring'?'badge-amber':'badge-green';
+      h+=`<div class="injury-card"><div class="inj-hdr"><span><strong>${ln[inj.location]||inj.location}</strong> \u00b7 ${inj.side} \u00b7 ${inj.type||'\u2014'}</span>
+        <span class="badge ${sc}">${inj.status}</span></div>
+        <div style="font-size:0.62rem;color:var(--text-dim)">${formatDate(inj.date)} \u00b7 Severity: ${inj.severity}/10 \u00b7 ${inj.mechanism||''}</div>
+        ${inj.notes?`<div style="font-size:0.68rem;color:var(--text-secondary);margin-top:0.2rem">${inj.notes}</div>`:''}
+        ${inj.status!=='recovered'?`<button class="btn btn-sm btn-secondary inj-res" data-ij="${inj.id}" style="margin-top:0.35rem">Mark Recovered</button>`:''}</div>`;
     });
-  });
+  }else{h+='<div class="empty-state"><p>No injuries reported</p></div>';}
+  h+='</div>';return h;
 }
 
-// --- Coach ---
-function generateCoachReport(){
-  var checkins=load('checkins',[]);
-  var runs=load('runs',[]);
-  var workouts=load('workouts',[]);
-  var injuries=load('injuries',[]);
+function bindInjuries(){
+  const se=document.getElementById('inj-sev'),sv=document.getElementById('inj-sev-v');if(se)se.addEventListener('input',()=>{if(sv)sv.textContent=se.value});
+  const sb=document.getElementById('inj-submit');if(sb)sb.addEventListener('click',submitInjury);
+  $$('.inj-res').forEach(b=>{b.addEventListener('click',function(){
+    const injs=load('injuries',[]);const inj=injs.find(i=>i.id===this.dataset.ij);
+    if(inj){inj.status='recovered';inj.resolvedDate=todayStr();save('injuries',injs);showView('injuries')}})})}
+function submitInjury(){
+  const inj={id:uid(),date:todayStr(),location:document.getElementById('inj-loc')?.value||'groin',
+    side:document.getElementById('inj-side')?.value||'Left',
+    severity:parseInt(document.getElementById('inj-sev')?.value)||1,
+    type:document.getElementById('inj-type')?.value||'Strain',
+    mechanism:document.getElementById('inj-mech')?.value||'Unknown',
+    notes:document.getElementById('inj-notes')?.value||'',status:'active'};
+  const injs=load('injuries',[]);injs.push(inj);save('injuries',injs);showView('injuries');
+}
 
-  var latestCI=checkins.length?checkins[checkins.length-1]:null;
-  var readiness=latestCI&&latestCI.readiness?latestCI.readiness.overall:0;
-  var zone=latestCI&&latestCI.readiness?latestCI.readiness.zone:'grey';
-
-  var activeInjuries=injuries.filter(function(i){return i.status!=='Recovered'}).length;
-  var wkDist=getWeeklyDistance(runs);
-  var wkVol=getWeeklyVolume(workouts);
-
-  var sleepHours=latestCI?latestCI.sleepHours:0;
-  var sleepAvg=0;checkins.forEach(function(c){sleepAvg+=c.sleepHours||0});if(checkins.length)sleepAvg/=checkins.length;
-
-  var hrTrend='stable';if(checkins.length>=3){
-    var recentHR=checkins.slice(-3).map(function(c){return c.restingHeartRate||0});
-    if(recentHR[2]&&recentHR[0]&&recentHR[0]>recentHR[2]*1.05)hrTrend='elevating';
+// ======================== ANALYTICS ========================
+function renderAnalytics(){
+  const d={checkins:load('checkins',[]),runs:load('runs',[]),workouts:load('workouts',[])};
+  const sess=[...d.runs.map(r=>({date:r.date,duration:r.duration||0,rpe:r.rpe||0})),
+    ...d.workouts.map(w=>({date:w.date,duration:(w.duration||0)*60,rpe:w.rpe||0}))];
+  const acwr=calculateACWR(sess);
+  const bw=d.checkins.filter(c=>c.bodyweight).slice(-14);
+  const wd=[];for(let i=0;i<7;i++)wd.push(daysAgo(i));
+  const td=new Set([...d.runs.filter(r=>wd.includes(r.date)).map(r=>r.date),
+    ...d.workouts.filter(w=>wd.includes(w.date)).map(w=>w.date)]);
+  const csy=Math.round((td.size/7)*100);
+  const rr=d.runs.filter(r=>r.distance>0&&r.avgHR).slice(-10);let vo2=null;
+  if(rr.length){
+    const best=rr.reduce((b,r)=>{
+      const pms=(r.pace||0)*60;if(pms<=0)return b;
+      const vo=pms?(-4.6+0.182258*(1000/pms)+0.000104*Math.pow(1000/pms,2))/3.5*1000:0;
+      return vo>(b.vo2||0)?{vo2:vo,pace:r.pace,date:r.date}:b},{vo2:0});
+    if(best.vo2>0)vo2=best;
   }
+  const br=d.runs.filter(r=>r.distance>=1&&r.duration).reduce((b,r)=>{const p=r.duration/r.distance;return p<(b?.pace||Infinity)?{distance:r.distance,duration:r.duration,pace:p,date:r.date}:b},null);
 
-  var content='';
+  let h='<h2>Analytics</h2>';
+  const ap=Math.min(100,(acwr.acwr/2)*100),ac=acwr.status==='Optimal'?'#10b981':acwr.status==='Overload Risk'?'#f59e0b':acwr.acwr>1.5?'#ef4444':'#22d3ee';
+  h+=`<div class="card"><h4>Training Load</h4>
+    <div class="acwr-gauge"><div class="acwr-zones">
+      <div class="acwr-zone" style="flex:0.4;background:rgba(239,68,68,0.15)"></div>
+      <div class="acwr-zone" style="flex:0.5;background:rgba(16,185,129,0.15)"></div>
+      <div class="acwr-zone" style="flex:0.2;background:rgba(245,158,11,0.15)"></div>
+      <div class="acwr-zone" style="flex:0.9;background:rgba(239,68,68,0.2)"></div>
+    </div><div class="acwr-marker" style="left:${ap}%;background:${ac}"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:0.62rem;color:var(--text-dim);margin-bottom:0.4rem">
+      <span>0</span><span>0.5</span><span>0.8</span><span>1.3</span><span>1.5</span><span>2.0</span></div>
+    <div style="font-size:0.72rem"><span class="mono">Acute: ${acwr.acuteLoad}</span> \u00b7 <span class="mono">Chronic: ${acwr.chronicLoad}</span> \u00b7 <span style="color:${ac};font-weight:600">${acwr.status}</span></div></div>`;
 
-  content+='<h3>RECOVERY STATUS</h3><p>';
-  if(!latestCI){content+='No check-in data available. Start with a daily check-in to get recovery insights.'}
-  else{
-    var rz=zone==='green'?'well-recovered':zone==='yellow'?'moderately recovered':'under-recovered';
-    content+='Your latest readiness score is <strong>'+readiness+'/100</strong> — you are <strong>'+rz+'</strong>. ';
-    content+='Average sleep: <strong>'+sleepAvg.toFixed(1)+'h</strong>. ';
-    if(hrTrend==='elevating')content+='<strong class="hl">Warning:</strong> Your resting HR is trending upward — a key sign of accumulated fatigue. ';
-  }
-  content+='</p>';
+  h+='<div class="card"><h4>Bodyweight Trend</h4>';
+  if(bw.length>=2){
+    const tr=bw[bw.length-1].bodyweight-bw[0].bodyweight;
+    h+=`<div style="font-size:0.78rem;margin-bottom:0.5rem">Current: <span class="mono">${bw[bw.length-1].bodyweight} kg</span> \u00b7 Change: <span class="mono ${tr>0?'ta':'tg'}">${tr>0?'+':''}${tr.toFixed(1)} kg</span></div>`;
+    const mn=Math.min(...bw.map(d=>d.bodyweight))-1,mx=Math.max(...bw.map(d=>d.bodyweight))+1,rg=mx-mn;
+    let s='<svg viewBox="0 0 600 120" class="chart-svg">',p='';
+    bw.forEach((d,i)=>{const x=40+i*(540/(bw.length-1||1)),y=100-((d.bodyweight-mn)/rg)*80;p+=(i===0?'M':'L')+x+','+y+' '});
+    s+=`<path d="${p}" fill="none" stroke="#22d3ee" stroke-width="1.5"/>`;
+    bw.forEach((d,i)=>{const x=40+i*(540/(bw.length-1||1)),y=100-((d.bodyweight-mn)/rg)*80;s+=`<circle cx="${x}" cy="${y}" r="2" fill="#22d3ee"><title>${d.bodyweight} kg \u00b7 ${d.date}</title></circle>`});
+    s+=`<line x1="40" y1="100" x2="580" y2="100" stroke="#131a28" stroke-width="0.5"/><text x="40" y="100" fill="#334155" font-size="8">${mn.toFixed(1)}</text><text x="40" y="25" fill="#334155" font-size="8">${mx.toFixed(1)}</text></svg>`;
+    h+=s;
+  }else{h+='<div class="empty-state"><p>Not enough bodyweight data \u2014 log daily check-ins</p></div>';}
+  h+='</div>';
 
-  content+='<h3>TRAINING ANALYSIS</h3><p>';
-  if(runs.length===0&&workouts.length===0){content+='No training data yet. Log runs and workouts to see your training analysis.'}
-  else{
-    content+='Weekly running distance: <strong>'+wkDist+'km</strong>. ';
-    if(runs.length>=2){
-      var recentRuns=runs.slice(0,7);
-      var dists=recentRuns.map(function(r){return r.distance||0});
-      var avgDist=dists.reduce(function(a,b){return a+b},0)/dists.length;
-      content+='Recent average run distance: <strong>'+avgDist.toFixed(1)+'km</strong>. ';
+  h+=`<div class="card"><h4>Training Consistency</h4>
+    <div class="bar-row"><span class="bar-label">This Week</span><div class="bar-track"><div class="bar-fill" style="width:${csy}%;background:#22d3ee"></div></div><span class="bar-val tc">${csy}%</span></div>
+    <p style="font-size:0.62rem;color:var(--text-dim);margin-top:0.2rem">${td.size} of 7 days with training</p></div>`;
+
+  h+='<div class="card"><h4>VO\u2082 Max Estimate</h4>';
+  if(vo2){h+=`<div><span class="mono" style="font-size:1.5rem;font-weight:700;color:#22d3ee">${vo2.vo2.toFixed(1)}</span> <span style="font-size:0.62rem;color:var(--text-dim)">ml/kg/min</span></div>
+    <div style="font-size:0.62rem;color:var(--text-dim);margin-top:0.2rem">Based on best recent run: ${formatPace(vo2.pace)} pace</div>`;}
+  else{h+='<div class="empty-state"><p>Log runs with HR data to estimate VO\u2082 max</p></div>';}
+  h+='</div>';
+
+  h+='<div class="card"><h4>Race Predictor</h4>';
+  if(br&&br.distance>=1){
+    h+=`<div style="font-size:0.7rem;margin-bottom:0.75rem">Best: ${br.distance}km in ${formatDuration(br.duration)} (${formatPace(br.pace)})</div>
+      <div class="form-row"><div class="form-group"><label>Recent Best Distance (km)</label><input type="number" id="rp-dist" value="${br.distance}" step="0.1"></div>
+      <div class="form-group"><label>Time (seconds)</label><input type="number" id="rp-time" value="${br.duration}"></div></div>
+      <div style="margin:0.75rem 0"><button class="btn btn-primary btn-sm" onclick="window._predictRaces()">Predict</button></div>
+      <div id="race-predictions"></div>`;
+  }else{h+='<div class="empty-state"><p>Log a run with distance and time to use race prediction</p></div>';}
+  h+='</div>';return h;
+}
+
+function bindAnalytics(){}
+window._predictRaces=function(){
+  const d=parseFloat(document.getElementById('rp-dist')?.value)||0,t=parseInt(document.getElementById('rp-time')?.value)||0;
+  const tgs=[{n:'Mile',km:1.609},{n:'5K',km:5},{n:'10K',km:10},{n:'Half Marathon',km:21.1},{n:'Marathon',km:42.2}];
+  let h='';tgs.forEach(tg=>{const pr=predictRace(d,t,tg.km);if(pr){const cc=pr.confidence==='HIGH'?'tg':pr.confidence==='MODERATE'?'ta':'tr';
+    h+=`<div style="display:flex;justify-content:space-between;padding:0.25rem 0;font-size:0.7rem;border-bottom:1px solid var(--border)">
+      <span>${tg.n}</span><span><span class="mono">${pr.formattedTime}</span> \u00b7 <span class="mono">${pr.formattedPace}</span> \u00b7 <span class="${cc}" style="font-size:0.58rem">${pr.confidence}</span></span></div>`}});
+  const el=document.getElementById('race-predictions');if(el)el.innerHTML=h||'<div class="empty-state"><p>Enter valid distance and time</p></div>';
+};
+
+// ======================== AI COACH ========================
+function renderCoach(){
+  const reps=load('reports',[]);
+  let h='<h2>AI Coach</h2>';
+  h+='<div class="card" style="text-align:center;padding:2rem"><p style="color:var(--text-secondary);margin-bottom:1rem;font-size:0.8rem">Generate a comprehensive training report based on all your data</p>';
+  h+='<button class="btn btn-primary" id="coach-gen">\u25c6 Generate Report</button></div>';
+
+  if(reps.length){
+    const lr=reps[reps.length-1],c=lr.content;
+    h+=`<div class="card"><h4>Latest Report</h4>
+      <div class="rpt-meta">${formatDate(lr.date)} \u00b7 Readiness: ${c.readiness!==null?c.readiness+'/100':'N/A'}</div>
+      <div class="rpt-prose"><h3>RECOVERY STATUS</h3><p>${c.recoveryStr}</p>
+      <h3>TRAINING ANALYSIS</h3><p>${c.trainingStr}</p>
+      <h3>INJURY RISK</h3><p>${c.injuryStr}</p>
+      <div class="callout"><strong>KEY INSIGHT</strong><br>${c.insight}</div>
+      <h3>THIS WEEK</h3><ol>${c.recs.map(r=>'<li>'+r+'</li>').join('')}</ol></div></div>`;
+
+    if(reps.length>1){
+      h+='<div class="card"><h4>Report History</h4>';
+      reps.slice().reverse().slice(1).forEach((r,i)=>{
+        h+=`<div class="exp-sum" data-rpi="${i}" style="padding:0.35rem 0;border-bottom:1px solid var(--border);cursor:pointer">${formatDate(r.date)} \u00b7 Readiness: ${r.content.readiness!==null?r.content.readiness+'/100':'N/A'}</div>`;
+        h+=`<div class="exp-det" id="rpd-${i}"><div class="rpt-prose" style="padding:0 0 0.75rem;font-size:0.72rem">
+          <h3>RECOVERY</h3><p>${r.content.recoveryStr}</p><h3>TRAINING</h3><p>${r.content.trainingStr}</p>
+          <h3>INJURY</h3><p>${r.content.injuryStr}</p><div class="callout">${r.content.insight}</div></div></div>`;
+      });
+      h+='</div>';
     }
-    content+='Weekly strength volume: <strong>'+wkVol+'kg</strong>. ';
-    if(workouts.length>=4){
-      var recentWOs=workouts.slice(0,4);
-      var rpeSum=recentWOs.reduce(function(a,w){return a+(w.rpe||0)},0)/recentWOs.length;
-      content+='Average session RPE: <strong>'+rpeSum.toFixed(1)+'/10</strong>. ';
-    }
-    if(wkDist>60)content+='<strong class="hl">Note:</strong> Your weekly distance is high — ensure you are fueling and recovering adequately. ';
-  }
-  content+='</p>';
-
-  content+='<h3>INJURY RISK</h3><p>';
-  if(activeInjuries===0)content+='No active injuries — excellent. Maintain your mobility work and listen to early warning signals.';
-  else content+='You have <strong>'+activeInjuries+'</strong> active/monitoring injuries. Prioritize rehab work and avoid aggravating movements. ';
-  if(latestCI){
-    var pains=[latestCI.groinPain||0,latestCI.lowerBackPain||0,latestCI.shoulderPain||0,latestCI.kneePain||0,latestCI.hamstringTightness||0];
-    var maxPain=Math.max.apply(null,pains);
-    if(maxPain>=5)content+='<strong class="hl">Caution:</strong> Pain scores indicate elevated discomfort — consider reducing load on affected areas. ';
-  }
-  content+='</p>';
-
-  var keyInsight='';
-  if(readiness<60)keyInsight='Your readiness is in the red zone. Prioritize sleep, nutrition, and active recovery this week.';
-  else if(hrTrend==='elevating')keyInsight='Your resting heart rate is climbing — a classic sign of overreaching. Dial back intensity for 3-5 days.';
-  else if(activeInjuries>0)keyInsight='Managing injuries while training requires discipline. Stick to your rehab plan and avoid testing the injury.';
-  else if(readiness>=80)keyInsight='You are in a prime training window. This is the time to push quality sessions.';
-  else keyInsight='Consistency is everything. Keep showing up, keep logging data, and the trends will guide your progression.';
-
-  content+='<h3>KEY INSIGHT</h3><p class="hl"><strong>'+keyInsight+'</strong></p>';
-
-  content+='<h3>THIS WEEK</h3><p>';
-  var recs=[];
-  if(readiness<60){recs.push('Take an extra rest day or active recovery session.');recs.push('Focus on sleep hygiene — consistent bedtime, cool dark room.');}
-  if(sleepAvg<7)recs.push('Aim for at least 7.5 hours of sleep each night this week.');
-  if(wkDist<10&&runs.length>2)recs.push('Your volume is low — consider adding one more easy run to build base mileage.');
-  if(activeInjuries>0)recs.push('Complete all prescribed rehab exercises before adding intensity.');
-  if(readiness>=80)recs.push('Green light for a quality session — intervals or tempo work.');
-  recs.push('Do your daily mobility routine — 10 minutes minimum.');
-  if(recs.length>4)recs=recs.slice(0,4);
-  content+=recs.map(function(r){return r}).join('<br>');
-  content+='</p>';
-
-  var report={id:uuid(),date:new Date().toISOString(),content:content};
-  var insights=load('insights',[]);
-  insights.push(report);
-  save('insights',insights);
-
-  document.getElementById('coach-report').innerHTML='<div class="card coach-report">'+content+'</div>';
-  renderCoachHistory();
+  }else{h+='<div class="card"><div class="empty-state"><p>No reports generated yet \u2014 click Generate Report</p></div></div>';}
+  return h;
 }
 
-function renderCoachHistory(){
-  var insights=load('insights',[]);
-  var el=document.getElementById('coach-history');
-  if(insights.length===0){el.innerHTML='<div class="empty-state"><div class="empty-icon">🧠</div>No reports generated yet</div>';return}
-  insights.sort(function(a,b){return new Date(b.date)-new Date(a.date)});
-  var html='';
-  insights.forEach(function(ins,i){
-    html+='<div class="history-item" data-idx="'+i+'"><div class="hi-header"><span><strong>'+formatDate(ins.date)+'</strong> — Coaching Report</span><span style="font-size:12px;color:var(--text-dim)">▾</span></div><div class="hi-body"><div class="coach-report">'+ins.content+'</div></div></div>';
-  });
-  el.innerHTML=html;
-  el.querySelectorAll('.history-item').forEach(function(item){
-    item.addEventListener('click',function(){item.classList.toggle('open')});
-  });
+function bindCoach(){
+  const gb=document.getElementById('coach-gen');if(gb)gb.addEventListener('click',generateReport);
+  $$('.exp-sum').forEach(r=>{r.addEventListener('click',function(){
+    const d=document.getElementById('rpd-'+this.dataset.rpi);if(d)d.classList.toggle('open')})});
 }
 
-document.getElementById('gen-coach-btn').addEventListener('click',function(){generateCoachReport();showToast('Report generated!')});
-
-// --- Navigation bindings ---
-function bindNav(el){
-  el.querySelectorAll('[data-view]').forEach(function(link){
-    link.addEventListener('click',function(){showView(link.dataset.view)});
-  });
+function generateReport(){
+  const d={checkins:load('checkins',[]),runs:load('runs',[]),workouts:load('workouts',[]),injuries:load('injuries',[])};
+  if(!d.checkins.length&&!d.runs.length&&!d.workouts.length){alert('Log some data first \u2014 at least one check-in, run, or workout is needed.');return}
+  const rep=generateCoachReport(d);const reps=load('reports',[]);reps.push(rep);save('reports',reps);showView('coach');
 }
-bindNav(document.getElementById('sidebar'));
-bindNav(document.getElementById('mobile-nav'));
-bindNav(document.getElementById('mobile-sheet'));
 
-document.getElementById('more-tab').addEventListener('click',function(e){
-  e.stopPropagation();
-  var sheet=document.getElementById('mobile-sheet');
-  var overlay=document.getElementById('overlay');
-  if(sheet.style.display==='block'){sheet.style.display='none';overlay.style.display='none'}
-  else{sheet.style.display='block';overlay.style.display='block'}
+// ======================== INIT ========================
+document.addEventListener('DOMContentLoaded',()=>{
+  renderView('dashboard');
+  $$('#sidebar nav a, #bottom-nav .bni[data-view], #more-menu .mmi').forEach(el=>{el.addEventListener('click',function(e){e.preventDefault();if(this.dataset.view)showView(this.dataset.view);document.getElementById('more-menu').classList.remove('open')})});
+  document.getElementById('more-btn').addEventListener('click',function(e){e.preventDefault();document.getElementById('more-menu').classList.toggle('open')});
+  document.addEventListener('click',function(e){const m=document.getElementById('more-menu');if(m&&m.classList.contains('open')&&!e.target.closest('#bottom-nav'))m.classList.remove('open')});
+  document.getElementById('confirm-no').addEventListener('click',()=>{document.getElementById('confirm-overlay').classList.remove('open');window._confirmCb=null});
+  document.getElementById('confirm-yes').addEventListener('click',()=>{document.getElementById('confirm-overlay').classList.remove('open');if(window._confirmCb){window._confirmCb();window._confirmCb=null}});
 });
-document.getElementById('overlay').addEventListener('click',function(){
-  document.getElementById('mobile-sheet').style.display='none';
-  document.getElementById('overlay').style.display='none';
-});
-
-// --- Range input display update ---
-document.querySelectorAll('input[type=range]').forEach(function(r){
-  var id=r.id;if(!id)return;
-  var v=document.getElementById(id+'-val');
-  if(v)r.addEventListener('input',function(){v.textContent=r.value});
-});
-
-// --- Initial render ---
-initPainSliders();
-renderDashboard();
-renderRuns();
-renderWorkouts();
-renderInjuries();
-renderCoachHistory();
-})();
 </script>
 </body>
 </html>
