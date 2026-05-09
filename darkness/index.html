@@ -2,169 +2,275 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Void — Attri</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Void — Admiration &amp; Gratitude</title>
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#020108;--surface:#0a0a18;--border:#161630;
-  --accent:#a78bfa;--accent-glow:rgba(167,139,250,0.12);
-  --text:#c4b5fd;--text-secondary:#7c6ba5;--text-dim:#3d3360;
-}
-html{scroll-behavior:smooth}
-body{
-  background:var(--bg);color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  min-height:100vh;line-height:1.7;overflow-x:hidden;
-  display:flex;justify-content:center;
-}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-.stars-bg{position:fixed;inset:0;pointer-events:none;z-index:0}
-.star-dot{position:absolute;width:1px;height:1px;background:var(--accent);border-radius:50%;animation:pulse var(--d) ease-in-out infinite;animation-delay:var(--del);opacity:var(--op)}
-@keyframes pulse{0%,100%{opacity:var(--op)}50%{opacity:calc(var(--op)*2.5)}}
+  :root {
+    --bg: #010108;
+    --text: #c4b5fd;
+    --accent: #a78bfa;
+    --dim: #3b1f6e;
+    --surface: rgba(18, 10, 40, 0.5);
+    --border: rgba(167, 139, 250, 0.07);
+  }
 
-.container{position:relative;z-index:1;width:100%;max-width:620px;padding:2.5rem 1.5rem 4rem}
+  html { scroll-behavior: smooth; }
 
-.back-link{
-  display:inline-flex;align-items:center;gap:0.4rem;
-  color:var(--text-dim);text-decoration:none;
-  font-size:0.78rem;font-weight:500;letter-spacing:0.06em;
-  margin-bottom:3rem;transition:color 0.3s,text-shadow 0.3s;
-  text-transform:uppercase;
-}
-.back-link:hover{color:var(--accent);text-shadow:0 0 16px var(--accent-glow)}
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+  }
 
-.hero{margin-bottom:3.5rem}
-.hero h1{
-  font-size:clamp(2.6rem,8vw,4rem);font-weight:800;
-  letter-spacing:-0.02em;line-height:1.1;
-  color:#e0d9ff;text-shadow:0 0 50px var(--accent-glow);
-}
-.hero .subtitle{
-  font-size:0.92rem;color:var(--text-secondary);
-  margin-top:0.5rem;letter-spacing:0.05em;font-style:italic;
-}
-.hero .accent-rule{
-  width:48px;height:1px;background:var(--accent);
-  margin-top:1.25rem;opacity:0.6;
-}
+  canvas#void-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
 
-.section{margin-bottom:3rem}
-.section h2{
-  font-size:0.62rem;font-weight:700;text-transform:uppercase;
-  letter-spacing:0.2em;color:var(--accent);
-  margin-bottom:1.25rem;opacity:0.8;
-}
+  .back-link {
+    position: fixed;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 100;
+  }
 
-.admire-list{display:flex;flex-direction:column;gap:0.3rem}
-.admire-list .admire-item{
-  font-size:0.86rem;padding:0.7rem 0;
-  border-bottom:1px solid rgba(167,139,250,0.06);
-  transition:color 0.3s,padding-left 0.3s,border-color 0.3s;
-  color:var(--text-secondary);
-}
-.admire-item .name{color:var(--text);font-weight:600}
-.admire-item .reason{font-style:italic;font-size:0.78rem;display:block;margin-top:0.15rem;color:var(--text-dim)}
-.admire-item:hover{
-  color:var(--text);padding-left:0.5rem;
-  border-bottom-color:rgba(167,139,250,0.18);
-}
+  .back-link a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.4s, text-shadow 0.4s;
+    opacity: 0.6;
+  }
 
-.gratitude-block{
-  font-size:0.92rem;line-height:1.85;color:var(--text);
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:12px;padding:1.5rem;
-  font-style:italic;
-}
-.gratitude-block p{
-  margin-bottom:0.8rem;
-}
-.gratitude-block p:last-child{margin-bottom:0}
+  .back-link a:hover {
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(167, 139, 250, 0.5);
+    opacity: 1;
+  }
 
-.regards-block{
-  font-size:0.88rem;line-height:1.8;color:var(--text-secondary);
-  border-left:2px solid rgba(167,139,250,0.25);
-  padding-left:1rem;
-}
-.regards-block p{margin-bottom:0.6rem}
-.regards-block p:last-child{margin-bottom:0}
+  .container {
+    max-width: 660px;
+    width: 100%;
+    padding: 6rem 1.5rem 4rem;
+    position: relative;
+    z-index: 1;
+  }
 
-.quote-footer{
-  margin-top:4.5rem;padding-top:1.5rem;
-  border-top:1px solid rgba(167,139,250,0.1);
-  text-align:center;
-}
-.quote-footer blockquote{
-  font-size:0.82rem;font-style:italic;color:var(--text-dim);
-  line-height:1.7;
-}
-.quote-footer cite{
-  display:block;margin-top:0.5rem;
-  font-size:0.68rem;font-style:normal;color:var(--accent);
-  letter-spacing:0.08em;opacity:0.7;
-}
+  /* ——— HEADER ——— */
+  header.hero {
+    text-align: center;
+    margin-bottom: 4.5rem;
+  }
 
-@media(max-width:520px){
-  .container{padding:1.5rem 1rem 3rem}
-  .hero h1{font-size:2.2rem}
-  .gratitude-block{padding:1.1rem}
-}
+  header.hero h1 {
+    font-size: clamp(3.2rem, 8vw, 5.5rem);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: #ede9fe;
+    text-shadow: 0 0 50px rgba(167, 139, 250, 0.3), 0 0 100px rgba(167, 139, 250, 0.08);
+    animation: voidGlow 6s ease-in-out infinite;
+  }
+
+  @keyframes voidGlow {
+    0%, 100% { text-shadow: 0 0 35px rgba(167, 139, 250, 0.25), 0 0 70px rgba(167, 139, 250, 0.06); }
+    50% { text-shadow: 0 0 60px rgba(167, 139, 250, 0.45), 0 0 120px rgba(167, 139, 250, 0.12); }
+  }
+
+  header.hero .subtitle {
+    font-size: 1rem;
+    color: var(--accent);
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    margin-top: 0.6rem;
+    opacity: 0.75;
+    font-style: italic;
+  }
+
+  header.hero .rule {
+    width: 64px;
+    height: 1px;
+    background: var(--accent);
+    margin: 1.5rem auto 0;
+    opacity: 0.5;
+    box-shadow: 0 0 16px rgba(167, 139, 250, 0.4);
+  }
+
+  /* ——— SECTIONS ——— */
+  section {
+    margin-bottom: 4rem;
+  }
+
+  section h2 {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+    opacity: 0.75;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  section h2::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--accent), transparent);
+    opacity: 0.25;
+  }
+
+  /* ——— ADMIRE LIST ——— */
+  .admire-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .admire-item {
+    font-size: 0.9rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(167, 139, 250, 0.06);
+    color: var(--text);
+    transition: color 0.4s, padding-left 0.35s, border-color 0.4s;
+    line-height: 1.5;
+    opacity: 0.85;
+  }
+
+  .admire-item:hover {
+    color: #ede9fe;
+    padding-left: 0.6rem;
+    border-bottom-color: rgba(167, 139, 250, 0.18);
+    opacity: 1;
+  }
+
+  /* ——— GRATITUDE BLOCK ——— */
+  .gratitude-block {
+    font-size: 0.95rem;
+    line-height: 1.85;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.6rem;
+    font-style: italic;
+    transition: border-color 0.4s, box-shadow 0.4s;
+  }
+
+  .gratitude-block:hover {
+    border-color: rgba(167, 139, 250, 0.15);
+    box-shadow: 0 0 40px rgba(167, 139, 250, 0.04);
+  }
+
+  /* ——— REGARDS BLOCK ——— */
+  .regards-block {
+    font-size: 0.9rem;
+    line-height: 1.85;
+    color: var(--text);
+    opacity: 0.82;
+    border-left: 2px solid rgba(167, 139, 250, 0.2);
+    padding-left: 1.25rem;
+    transition: border-color 0.4s, opacity 0.4s;
+  }
+
+  .regards-block:hover {
+    border-left-color: var(--accent);
+    opacity: 1;
+  }
+
+  /* ——— QUOTE FOOTER ——— */
+  .quote-footer {
+    margin-top: 5rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(167, 139, 250, 0.08);
+    text-align: center;
+  }
+
+  .quote-footer blockquote {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--text);
+    opacity: 0.6;
+    line-height: 1.8;
+    transition: opacity 0.5s;
+  }
+
+  .quote-footer:hover blockquote {
+    opacity: 0.9;
+  }
+
+  .quote-footer cite {
+    display: block;
+    margin-top: 0.6rem;
+    font-size: 0.7rem;
+    font-style: normal;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    opacity: 0.55;
+    text-transform: uppercase;
+  }
+
+  /* ——— RESPONSIVE ——— */
+  @media (max-width: 600px) {
+    .container { padding: 4.5rem 1rem 3rem; }
+    .back-link { top: 1rem; left: 1rem; }
+    .gratitude-block { padding: 1.2rem; font-size: 0.88rem; }
+  }
 </style>
 </head>
 <body>
 
-<div class="stars-bg" id="stars"></div>
+<canvas id="void-canvas"></canvas>
+
+<div class="back-link">
+  <a href="/">&larr; realms</a>
+</div>
 
 <div class="container">
-
-  <a href="/" class="back-link">← realms</a>
 
   <header class="hero">
     <h1>Void</h1>
     <p class="subtitle">Admiration. Gratitude. Acknowledgments.</p>
-    <div class="accent-rule"></div>
+    <div class="rule"></div>
   </header>
 
-  <section class="section">
+  <section>
     <h2>People I Admire</h2>
     <div class="admire-list">
-      <div class="admire-item">
-        <span class="name">Dostoevsky</span>
-        <span class="reason">for showing that the human soul is worth examining</span>
-      </div>
-      <div class="admire-item">
-        <span class="name">David Goggins</span>
-        <span class="reason">for proving the mind sets the limit</span>
-      </div>
-      <div class="admire-item">
-        <span class="name">Casey Neistat</span>
-        <span class="reason">for making creation look like breathing</span>
-      </div>
-      <div class="admire-item">
-        <span class="name">Kipchoge</span>
-        <span class="reason">for showing what discipline looks like</span>
-      </div>
-      <div class="admire-item">
-        <span class="name">The open-source developers</span>
-        <span class="reason">who build in silence</span>
-      </div>
-      <div class="admire-item">
-        <span class="name">Every runner who shows up at 5am</span>
-      </div>
+      <div class="admire-item">Dostoevsky — for showing the human soul is worth examining</div>
+      <div class="admire-item">David Goggins — for proving the mind sets the limit</div>
+      <div class="admire-item">Casey Neistat — for making creation look like breathing</div>
+      <div class="admire-item">Kipchoge — for showing what discipline looks like</div>
+      <div class="admire-item">The open-source developers who build in silence</div>
+      <div class="admire-item">Every runner who shows up at 5am</div>
     </div>
   </section>
 
-  <section class="section">
+  <section>
     <h2>Gratitude</h2>
     <div class="gratitude-block">
-      <p>Thank you to everyone who took a chance on me. To the people who answered my questions. To the strangers whose code I read at 2am. To my parents for letting me build. To the internet for making all of this possible.</p>
+      Thank you to everyone who took a chance on me. To the people who answered my questions. To the strangers whose code I read at 2am. To my parents for letting me build. To the internet for making all of this possible.
     </div>
   </section>
 
-  <section class="section">
+  <section>
     <h2>Regards</h2>
     <div class="regards-block">
-      <p>I build for the people who are obsessed with getting better. For the athletes who track every rep. For the learners who stay up late. For the ones who know they're not there yet but keep showing up.</p>
+      I build for the people who are obsessed with getting better. For the athletes who track every rep. For the learners who stay up late. For the ones who know they're not there yet but keep showing up.
     </div>
   </section>
 
@@ -179,18 +285,63 @@ body{
 
 <script>
 (function(){
-  var s=document.getElementById('stars');
-  var h='';
-  for(var i=0;i<180;i++){
-    var x=Math.random()*100;
-    var y=Math.random()*100;
-    var d=2+Math.random()*5;
-    var del=Math.random()*4;
-    var op=0.15+Math.random()*0.45;
-    h+='<div class="star-dot" style="left:'+x+'%;top:'+y+'%;--d:'+d+'s;--del:'+del+'s;--op:'+op+'"></div>';
+  var canvas = document.getElementById('void-canvas');
+  var ctx = canvas.getContext('2d');
+  var W, H;
+  var stars = [];
+  var STAR_COUNT = 50;
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
   }
-  s.innerHTML=h;
+  window.addEventListener('resize', resize);
+  resize();
+
+  for (var i = 0; i < STAR_COUNT; i++) {
+    stars.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 2 + 0.5,
+      baseAlpha: Math.random() * 0.25 + 0.08,
+      alpha: 0,
+      pulseSpeed: Math.random() * 0.004 + 0.002,
+      pulseOffset: Math.random() * Math.PI * 2
+    });
+  }
+
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H);
+
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      var pulse = Math.sin(t * s.pulseSpeed + s.pulseOffset);
+      s.alpha = s.baseAlpha + pulse * s.baseAlpha * 1.2;
+      s.alpha = Math.max(0.03, Math.min(0.55, s.alpha));
+
+      // Glow
+      var g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 4);
+      g.addColorStop(0, 'rgba(167, 139, 250, ' + (s.alpha * 1.1) + ')');
+      g.addColorStop(0.3, 'rgba(167, 139, 250, ' + (s.alpha * 0.35) + ')');
+      g.addColorStop(1, 'rgba(167, 139, 250, 0)');
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r * 4, 0, Math.PI * 2);
+      ctx.fillStyle = g;
+      ctx.fill();
+
+      // Core
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(196, 181, 253, ' + (s.alpha + 0.1) + ')';
+      ctx.fill();
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  requestAnimationFrame(draw);
 })();
 </script>
+
 </body>
 </html>

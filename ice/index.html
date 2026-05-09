@@ -7,15 +7,33 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  :root {
+    --bg: #010b16;
+    --text: #e0f2fe;
+    --accent: #bae6fd;
+    --dim: #475569;
+    --surface: rgba(15, 30, 55, 0.45);
+    --border: rgba(186, 230, 253, 0.08);
+  }
+
+  html { scroll-behavior: smooth; }
+
   body {
     font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-    background: #050b14;
-    color: #bae6fd;
+    background: var(--bg);
+    color: var(--text);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     overflow-x: hidden;
+  }
+
+  canvas#frost-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
   }
 
   .back-link {
@@ -26,248 +44,289 @@
   }
 
   .back-link a {
-    color: #e0f2fe;
+    color: var(--text);
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: 0.82rem;
     font-weight: 500;
-    letter-spacing: 0.02em;
-    transition: color 0.3s;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.4s, text-shadow 0.4s;
   }
 
-  .back-link a:hover { color: #38bdf8; }
+  .back-link a:hover {
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(186, 230, 253, 0.5);
+  }
 
   .container {
     max-width: 720px;
     width: 100%;
     padding: 6rem 1.5rem 4rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     position: relative;
     z-index: 1;
   }
 
-  h1 {
-    font-size: clamp(3rem, 8vw, 5rem);
-    font-weight: 800;
+  /* ——— HEADER ——— */
+  header.hero {
+    text-align: center;
+    margin-bottom: 4.5rem;
+  }
+
+  header.hero h1 {
+    font-size: clamp(3.2rem, 8vw, 5.5rem);
+    font-weight: 900;
     letter-spacing: -0.03em;
-    color: #e0f2fe;
-    text-align: center;
     line-height: 1;
-    margin-bottom: 0.5rem;
+    color: #fff;
+    text-shadow: 0 0 40px rgba(186, 230, 253, 0.25), 0 0 80px rgba(186, 230, 253, 0.08);
+    animation: titleGlow 5s ease-in-out infinite;
   }
 
-  .subtitle {
-    font-size: 1.1rem;
-    color: #7dd3fc;
+  @keyframes titleGlow {
+    0%, 100% { text-shadow: 0 0 30px rgba(186, 230, 253, 0.2), 0 0 60px rgba(186, 230, 253, 0.06); }
+    50% { text-shadow: 0 0 50px rgba(186, 230, 253, 0.4), 0 0 100px rgba(186, 230, 253, 0.12); }
+  }
+
+  header.hero .subtitle {
+    font-size: 1rem;
+    color: var(--accent);
     font-weight: 400;
-    letter-spacing: 0.04em;
-    text-align: center;
-    margin-bottom: 4rem;
-    opacity: 0.8;
+    letter-spacing: 0.08em;
+    margin-top: 0.6rem;
+    opacity: 0.75;
   }
 
+  header.hero .rule {
+    width: 64px;
+    height: 1px;
+    background: var(--accent);
+    margin: 1.5rem auto 0;
+    opacity: 0.35;
+    box-shadow: 0 0 12px rgba(186, 230, 253, 0.3);
+  }
+
+  /* ——— SECTIONS ——— */
   section {
-    width: 100%;
-    margin-bottom: 3.5rem;
+    margin-bottom: 4rem;
   }
 
   section h2 {
-    font-size: 0.75rem;
+    font-size: 0.68rem;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: #e0f2fe;
-    margin-bottom: 1.25rem;
-    font-weight: 600;
-  }
-
-  section p {
-    font-size: 1.05rem;
-    line-height: 1.75;
-    color: #bae6fd;
-    opacity: 0.85;
-    margin-bottom: 1rem;
-  }
-
-  .poetry-line {
-    font-style: italic;
-    padding-left: 1rem;
-    border-left: 2px solid #e0f2fe44;
-    margin-bottom: 1rem;
-    font-size: 1.05rem;
-    line-height: 1.75;
-    color: #bae6fd;
-  }
-
-  .qa {
-    margin-bottom: 1rem;
-  }
-
-  .qa .q {
-    font-weight: 600;
-    color: #e0f2fe;
-    margin-bottom: 0.25rem;
-  }
-
-  .qa .a {
-    color: #7dd3fc;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
     opacity: 0.75;
-    font-size: 0.95rem;
-    line-height: 1.65;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
   }
 
-  .beliefs {
+  section h2::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--accent), transparent);
+    opacity: 0.3;
+  }
+
+  /* ——— POETRY ——— */
+  .poetry-item {
+    font-style: italic;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text);
+    opacity: 0.9;
+    padding: 1rem 1.25rem;
+    border-left: 2px solid rgba(186, 230, 253, 0.2);
+    background: var(--surface);
+    border-radius: 0 10px 10px 0;
+    transition: border-color 0.4s, background 0.4s, transform 0.3s;
+  }
+
+  .poetry-item:hover {
+    border-left-color: var(--accent);
+    background: rgba(20, 45, 75, 0.55);
+    transform: translateX(4px);
+  }
+
+  .frosty-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, var(--border), rgba(186, 230, 253, 0.12), var(--border));
+    margin: 0.25rem 0;
+  }
+
+  /* ——— Q&A ——— */
+  .qa-item {
+    padding: 1.25rem;
+    margin-bottom: 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: border-color 0.4s, box-shadow 0.4s;
+  }
+
+  .qa-item:hover {
+    border-color: rgba(186, 230, 253, 0.2);
+    box-shadow: 0 0 30px rgba(186, 230, 253, 0.04), inset 0 1px 0 rgba(186, 230, 253, 0.05);
+  }
+
+  .qa-item .q {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.01em;
+  }
+
+  .qa-item .a {
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: var(--text);
+    opacity: 0.75;
+  }
+
+  /* ——— BELIEFS ——— */
+  .beliefs-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.5rem;
   }
 
-  .beliefs li {
-    position: relative;
-    padding-left: 1.25rem;
-    font-size: 1rem;
+  .beliefs-list li {
+    font-size: 0.95rem;
     line-height: 1.6;
-    color: #bae6fd;
+    color: var(--text);
     opacity: 0.85;
+    padding: 0.65rem 1rem 0.65rem 1.6rem;
+    position: relative;
+    transition: opacity 0.3s, padding-left 0.3s;
   }
 
-  .beliefs li::before {
-    content: "❆";
+  .beliefs-list li::before {
+    content: '❆';
     position: absolute;
-    left: 0;
-    color: #e0f2fe;
-    font-size: 0.75rem;
-    top: 0.2rem;
-    opacity: 0.6;
+    left: 0.15rem;
+    top: 0.55rem;
+    font-size: 0.65rem;
+    color: var(--accent);
+    opacity: 0.5;
   }
 
+  .beliefs-list li:hover {
+    opacity: 1;
+    padding-left: 2rem;
+  }
+
+  /* ——— FAVORITES ——— */
   .favorites-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: 0.85rem;
   }
 
-  .fav {
-    background: #0a1224;
-    border: 1px solid #1e2a44;
-    border-radius: 10px;
-    padding: 1rem;
+  .fav-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    transition: border-color 0.4s, box-shadow 0.4s, transform 0.3s cubic-bezier(.16, 1, .3, 1);
   }
 
-  .fav .label {
-    font-size: 0.65rem;
+  .fav-card:hover {
+    border-color: rgba(186, 230, 253, 0.25);
+    box-shadow: 0 4px 30px rgba(186, 230, 253, 0.06);
+    transform: translateY(-2px);
+  }
+
+  .fav-card .label {
+    font-size: 0.6rem;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: #7dd3fc;
-    opacity: 0.6;
-    margin-bottom: 0.5rem;
+    letter-spacing: 0.15em;
+    color: var(--dim);
+    margin-bottom: 0.6rem;
+    font-weight: 600;
   }
 
-  .fav .value {
+  .fav-card .value {
     font-size: 0.95rem;
-    line-height: 1.5;
-    color: #e0f2fe;
+    line-height: 1.55;
+    color: var(--text);
   }
 
-  .fav .value a {
-    color: #38bdf8;
+  /* ——— SOCIALS ——— */
+  .socials-row {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .socials-row a {
+    color: var(--accent);
     text-decoration: none;
-    transition: color 0.3s;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    padding: 0.45rem 0;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s, opacity 0.3s, text-shadow 0.3s;
+    opacity: 0.75;
   }
 
-  .fav .value a:hover { color: #e0f2fe; }
-
-  /* Frost particles */
-  .frost {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
-    overflow: hidden;
+  .socials-row a:hover {
+    border-bottom-color: var(--accent);
+    opacity: 1;
+    text-shadow: 0 0 16px rgba(186, 230, 253, 0.35);
   }
 
-  .frost-dot {
-    position: absolute;
-    width: 3px;
-    height: 3px;
-    background: #e0f2fe;
-    border-radius: 50%;
-    opacity: 0;
-    animation: drift var(--dur) linear infinite;
-    animation-delay: var(--delay);
-    left: var(--x);
-    box-shadow: 0 0 4px #e0f2fe, 0 0 8px #38bdf830;
-  }
-
-  @keyframes drift {
-    0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
-    10% { opacity: 0.5; }
-    50% { opacity: 0.25; }
-    100% { transform: translateY(-100vh) translateX(var(--dx)) scale(0.5); opacity: 0; }
-  }
-
-  /* Heading cool glow */
-  @keyframes frostopulse {
-    0%, 100% { text-shadow: 0 0 20px #e0f2fe30, 0 0 40px #38bdf818; }
-    50% { text-shadow: 0 0 30px #e0f2fe55, 0 0 60px #38bdf830; }
-  }
-
-  h1 { animation: frostopulse 5s ease-in-out infinite; }
-
+  /* ——— RESPONSIVE ——— */
   @media (max-width: 600px) {
-    .container { padding: 5rem 1rem 3rem; }
-    section p, .poetry-line { font-size: 0.95rem; }
+    .container { padding: 4.5rem 1rem 3rem; }
+    .poetry-item { font-size: 0.95rem; }
     .favorites-grid { grid-template-columns: 1fr; }
+    .back-link { top: 1rem; left: 1rem; }
   }
 </style>
 </head>
 <body>
 
-<div class="frost">
-  <div class="frost-dot" style="--x:5%;--delay:0s;--dur:7s;--dx:-30px;"></div>
-  <div class="frost-dot" style="--x:14%;--delay:2.5s;--dur:8s;--dx:20px;"></div>
-  <div class="frost-dot" style="--x:23%;--delay:5s;--dur:6.5s;--dx:-15px;"></div>
-  <div class="frost-dot" style="--x:32%;--delay:1.2s;--dur:7.5s;--dx:25px;"></div>
-  <div class="frost-dot" style="--x:41%;--delay:3.8s;--dur:8.2s;--dx:-20px;"></div>
-  <div class="frost-dot" style="--x:50%;--delay:0.8s;--dur:7s;--dx:10px;"></div>
-  <div class="frost-dot" style="--x:59%;--delay:4.2s;--dur:7.8s;--dx:-25px;"></div>
-  <div class="frost-dot" style="--x:68%;--delay:2s;--dur:6s;--dx:15px;"></div>
-  <div class="frost-dot" style="--x:77%;--delay:5.5s;--dur:7.5s;--dx:-30px;"></div>
-  <div class="frost-dot" style="--x:86%;--delay:1.5s;--dur:8.5s;--dx:22px;"></div>
-  <div class="frost-dot" style="--x:92%;--delay:3s;--dur:6.8s;--dx:-18px;"></div>
-  <div class="frost-dot" style="--x:38%;--delay:6s;--dur:7.2s;--dx:12px;"></div>
-</div>
+<canvas id="frost-canvas"></canvas>
 
 <div class="back-link">
-  <a href="/">← realms</a>
+  <a href="/">&larr; realms</a>
 </div>
 
 <div class="container">
-  <h1>Ice</h1>
-  <p class="subtitle">Creativity. Vent. Raw thoughts.</p>
+
+  <header class="hero">
+    <h1>Ice</h1>
+    <p class="subtitle">Creativity. Vent. Raw thoughts.</p>
+    <div class="rule"></div>
+  </header>
 
   <section>
     <h2>Poetry</h2>
-    <div class="poetry-line">my eyes are where your eyes is — you blinked and i rewired.</div>
-    <div class="poetry-line">i want to be consumed by you completely to the point where i forget that i ever existed without you.</div>
-    <div class="poetry-line">i don't believe in god but i prayed when you held me.</div>
+    <div class="poetry-item">my eyes are where your eyes is — you blinked and i rewired.</div>
+    <div class="frosty-divider"></div>
+    <div class="poetry-item">i want to be consumed by you completely to the point where i forget that i ever existed without you.</div>
+    <div class="frosty-divider"></div>
+    <div class="poetry-item">i don't believe in god but i prayed when you held me.</div>
   </section>
 
   <section>
     <h2>Questions I Sit With</h2>
-    <div class="qa">
+    <div class="qa-item">
       <p class="q">What is the meaning of life?</p>
       <p class="a">The meaning is emotion. The highest highs, the lowest lows — that's why we're here. To feel everything. Joy, grief, love, heartbreak, adrenaline, stillness. The full spectrum. If you die having felt it all, you lived right.</p>
     </div>
-    <div class="qa">
+    <div class="qa-item">
       <p class="q">When did we stop asking questions?</p>
       <p class="a">When asking stopped being rewarded. School teaches answers, not curiosity. Society likes boxes. But the best things come from people who never stopped asking why.</p>
     </div>
-    <div class="qa">
+    <div class="qa-item">
       <p class="q">Why does being drunk make us happy?</p>
       <p class="a">Because it quiets the voice. The one that worries about tomorrow, judges every move, keeps us small. Being drunk isn't happiness — it's relief from self-awareness. The real question is: why do we need relief from ourselves?</p>
     </div>
@@ -275,35 +334,122 @@
 
   <section>
     <h2>Things I Believe</h2>
-    <ul class="beliefs">
+    <ul class="beliefs-list">
       <li>Hard work beats talent when talent doesn't work hard.</li>
       <li>Everything worth doing is on the other side of discomfort.</li>
       <li>People remember how you made them feel, not what you said.</li>
+      <li>The best stories are the ones you're scared to tell.</li>
     </ul>
   </section>
 
   <section>
     <h2>Favorites</h2>
     <div class="favorites-grid">
-      <div class="fav">
+      <div class="fav-card">
         <div class="label">Books</div>
         <div class="value">The Old Man of the Moon</div>
       </div>
-      <div class="fav">
+      <div class="fav-card">
         <div class="label">Anime</div>
-        <div class="value">One Piece<br>Your Lie in April</div>
+        <div class="value">One Piece, Your Lie in April</div>
       </div>
-      <div class="fav">
+      <div class="fav-card">
         <div class="label">Music</div>
         <div class="value">Radiohead — OK Computer</div>
       </div>
-      <div class="fav">
+      <div class="fav-card">
         <div class="label">Place</div>
         <div class="value">Tolka, Nepal</div>
       </div>
     </div>
   </section>
+
+  <section>
+    <h2>Socials</h2>
+    <div class="socials-row">
+      <a href="https://x.com/" target="_blank" rel="noopener">X</a>
+      <a href="https://instagram.com/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://youtube.com/" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://anilist.co/" target="_blank" rel="noopener">AniList</a>
+    </div>
+  </section>
+
 </div>
+
+<script>
+(function(){
+  var canvas = document.getElementById('frost-canvas');
+  var ctx = canvas.getContext('2d');
+  var W, H;
+  var flakes = [];
+  var FLAKE_COUNT = 72;
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function createFlake() {
+    return {
+      x: Math.random() * W,
+      y: Math.random() * -H,
+      r: Math.random() * 2.2 + 0.6,
+      speed: Math.random() * 0.5 + 0.2,
+      wind: (Math.random() - 0.5) * 0.35,
+      alpha: Math.random() * 0.5 + 0.25,
+      pulse: Math.random() * Math.PI * 2,
+      wobble: Math.random() * 0.6 + 0.2,
+      wobbleSpeed: Math.random() * 0.015 + 0.005
+    };
+  }
+
+  for (var i = 0; i < FLAKE_COUNT; i++) {
+    var f = createFlake();
+    f.y = Math.random() * H; // scatter across screen
+    flakes.push(f);
+  }
+
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H);
+
+    for (var i = 0; i < flakes.length; i++) {
+      var f = flakes[i];
+      var wobX = Math.sin(t * f.wobbleSpeed + f.pulse) * f.wobble;
+      f.y += f.speed;
+      f.x += f.wind + wobX * 0.03;
+
+      if (f.y > H + 10) { f.y = -10; f.x = Math.random() * W; }
+      if (f.x < -10) f.x = W + 10;
+      if (f.x > W + 10) f.x = -10;
+
+      var alpha = f.alpha + 0.08 * Math.sin(t * 0.002 + f.pulse);
+      alpha = Math.max(0.1, Math.min(0.7, alpha));
+
+      // Glow
+      var g = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r * 3);
+      g.addColorStop(0, 'rgba(224, 242, 254, ' + (alpha * 0.9) + ')');
+      g.addColorStop(0.4, 'rgba(186, 230, 253, ' + (alpha * 0.35) + ')');
+      g.addColorStop(1, 'rgba(186, 230, 253, 0)');
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r * 3, 0, Math.PI * 2);
+      ctx.fillStyle = g;
+      ctx.fill();
+
+      // Core
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(224, 242, 254, ' + alpha + ')';
+      ctx.fill();
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  requestAnimationFrame(draw);
+})();
+</script>
 
 </body>
 </html>
