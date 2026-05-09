@@ -6,109 +6,323 @@
 <title>attridevv</title>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#020208}
-body{background:var(--bg);color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
 
-.cosmos{position:fixed;inset:0;pointer-events:none}
-.star{position:absolute;width:1px;height:1px;background:#fff;border-radius:50%;animation:twinkle var(--d) ease-in-out infinite;animation-delay:var(--del);opacity:var(--op)}
-@keyframes twinkle{0%,100%{opacity:var(--op)}50%{opacity:calc(var(--op)*3)}}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+:root{
+  --bg:#010106;
+  --fire:#f97316;--fire-glow:rgba(249,115,22,.5);--fire-deep:#431407;
+  --water:#38bdf8;--water-glow:rgba(56,189,248,.5);--water-deep:#0c1929;
+  --ice:#e0f2fe;--ice-glow:rgba(224,242,254,.45);--ice-deep:#1e293b;
+  --thunder:#facc15;--thunder-glow:rgba(250,204,21,.55);--thunder-deep:#3b2f0a;
+  --void:#a78bfa;--void-glow:rgba(167,139,250,.4);--void-deep:#1a1030;
+}
 
-.realms{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:2rem;justify-content:center;align-items:center;padding:2rem;max-width:900px}
-.realm{display:flex;flex-direction:column;align-items:center;gap:1rem;text-decoration:none;cursor:pointer;transition:transform .4s cubic-bezier(.16,1,.3,1),filter .4s;animation:float var(--ft,6s) ease-in-out infinite;animation-delay:var(--fd,0s);filter:grayscale(0.4)}
-.realm:hover{transform:scale(1.12);filter:grayscale(0);z-index:5}
-.realm:active{transform:scale(0.97)}
+body{
+  background:var(--bg);color:#e2e8f0;
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  min-height:100vh;overflow-x:hidden;
+}
 
-.realm-orb{width:90px;height:90px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;position:relative;transition:box-shadow .4s}
-.realm:hover .realm-orb{box-shadow:var(--glow)}
+/* Canvas background */
+canvas#bg{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-.fire .realm-orb{background:radial-gradient(circle at 40% 40%,#f97316,#7c2d12);--glow:0 0 60px rgba(249,115,22,.5),0 0 120px rgba(249,115,22,.2)}
-.water .realm-orb{background:radial-gradient(circle at 40% 40%,#38bdf8,#1e3a5f);--glow:0 0 60px rgba(56,189,248,.5),0 0 120px rgba(56,189,248,.2)}
-.ice .realm-orb{background:radial-gradient(circle at 40% 40%,#e0f2fe,#64748b);--glow:0 0 60px rgba(224,242,254,.5),0 0 120px rgba(224,242,254,.2)}
-.lightning .realm-orb{background:radial-gradient(circle at 40% 40%,#facc15,#854d0e);--glow:0 0 60px rgba(250,204,21,.5),0 0 120px rgba(250,204,21,.2)}
-.void .realm-orb{background:radial-gradient(circle at 40% 40%,#a78bfa,#1e1b4b);--glow:0 0 60px rgba(167,139,250,.4),0 0 120px rgba(167,139,250,.15)}
+/* Container */
+.main{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
 
-.realm-orb::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1px solid transparent;transition:border-color .4s}
-.realm:hover .realm-orb::after{border-color:rgba(255,255,255,.2)}
+.cosmos-map{display:flex;flex-wrap:wrap;gap:2.5rem;justify-content:center;align-items:center;max-width:1000px;width:100%}
 
-.realm-label{font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;transition:color .3s}
-.fire .realm-label{color:#fb923c}
-.water .realm-label{color:#38bdf8}
-.ice .realm-label{color:#e0f2fe}
-.lightning .realm-label{color:#facc15}
-.void .realm-label{color:#a78bfa}
+/* World */
+.world{position:relative;width:170px;height:170px;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.world:hover{transform:scale(1.15);z-index:5}
+.world:active{transform:scale(.95)}
 
-.realm-name{font-size:1.1rem;font-weight:700;letter-spacing:.06em;transition:color .3s,text-shadow .3s}
-.fire .realm-name{color:#ea580c}
-.water .realm-name{color:#0ea5e9}
-.ice .realm-name{color:#bae6fd}
-.lightning .realm-name{color:#eab308}
-.void .realm-name{color:#7c3aed}
+/* Orbiting ring */
+.world-ring{position:absolute;inset:-12px;border-radius:50%;border:1.5px solid transparent;transition:all .5s cubic-bezier(.16,1,.3,1);animation:orbitSpin 20s linear infinite}
+.world:hover .world-ring{border-color:rgba(255,255,255,.15);animation-duration:8s}
+.fire .world-ring{border-color:rgba(249,115,22,.2)}
+.water .world-ring{border-color:rgba(56,189,248,.2)}
+.ice .world-ring{border-color:rgba(224,242,254,.15)}
+.thunder .world-ring{border-color:rgba(250,204,21,.2)}
+.void .world-ring{border-color:rgba(167,139,250,.15)}
 
-.realm:hover .realm-name{text-shadow:0 0 20px currentColor}
+.world-ring2{position:absolute;inset:-22px;border-radius:50%;border:1px solid transparent;animation:orbitSpin 28s linear infinite reverse;transition:all .5s}
+.world:hover .world-ring2{border-color:rgba(255,255,255,.06);animation-duration:10s}
 
-.realm-sub{font-size:.6rem;color:#52525b;letter-spacing:.08em;text-align:center;max-width:110px;transition:color .3s}
-.realm:hover .realm-sub{color:#a1a1aa}
+@keyframes orbitSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-.tag{position:fixed;bottom:2rem;left:0;right:0;text-align:center;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:#27272a;z-index:1}
+/* World sphere */
+.world-sphere{width:130px;height:130px;border-radius:50%;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:box-shadow .5s}
+.world-sphere::before{content:'';position:absolute;inset:0;border-radius:50%;opacity:.6;transition:opacity .5s}
+.world:hover .world-sphere::before{opacity:.8}
 
-@media(max-width:600px){
-  .realms{gap:1.25rem;padding:1rem}
-  .realm-orb{width:64px;height:64px;font-size:1.4rem}
-  .realm-name{font-size:.9rem}
-  .realm-label{font-size:.6rem}
+/* Fire sphere */
+.fire .world-sphere{background:radial-gradient(circle at 45% 40%,#f97316,#c2410c 35%,#7c2d12 60%,#431407)}
+.fire .world-sphere::before{background:radial-gradient(circle at 55% 30%,rgba(251,191,36,.4),transparent 70%);animation:flicker 3s ease-in-out infinite}
+.fire .world-sphere::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 70%,rgba(239,68,68,.3),transparent 50%);animation:flicker 2.5s ease-in-out infinite alternate}
+.fire:hover .world-sphere{box-shadow:0 0 80px rgba(249,115,22,.5),0 0 160px rgba(249,115,22,.2),inset 0 0 60px rgba(251,191,36,.2)}
+
+@keyframes flicker{0%,100%{opacity:.5}50%{opacity:.8}}
+
+/* Water sphere */
+.water .world-sphere{background:radial-gradient(circle at 40% 35%,#7dd3fc,#38bdf8 30%,#0ea5e9 55%,#0c4a6e)}
+.water .world-sphere::before{background:radial-gradient(ellipse at 60% 25%,rgba(255,255,255,.3),transparent 55%);animation:wave 4s ease-in-out infinite}
+.water .world-sphere::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 60%,rgba(56,189,248,.4),transparent 45%);animation:wave 3.5s ease-in-out infinite alternate}
+.water:hover .world-sphere{box-shadow:0 0 80px rgba(56,189,248,.5),0 0 160px rgba(56,189,248,.2),inset 0 0 60px rgba(125,211,252,.2)}
+
+@keyframes wave{0%,100%{transform:translateX(-2%)scale(1.02)}50%{transform:translateX(3%)scale(.98)}}
+
+/* Ice sphere */
+.ice .world-sphere{background:radial-gradient(circle at 45% 35%,#f0f9ff,#bae6fd 25%,#7dd3fc 50%,#475569)}
+.ice .world-sphere::before{background:radial-gradient(circle at 50% 20%,rgba(255,255,255,.5),transparent 50%);animation:shimmer 4s ease-in-out infinite}
+.ice .world-sphere::after{content:'';position:absolute;inset:0;border-radius:50%;box-shadow:inset 0 0 30px rgba(224,242,254,.15);animation:shimmer 3s ease-in-out infinite alternate}
+.ice:hover .world-sphere{box-shadow:0 0 70px rgba(224,242,254,.45),0 0 140px rgba(148,163,184,.2),inset 0 0 50px rgba(255,255,255,.15)}
+
+@keyframes shimmer{0%,100%{opacity:.4}50%{opacity:.7}}
+
+/* Thunder sphere */
+.thunder .world-sphere{background:radial-gradient(circle at 40% 30%,#fef08a,#eab308 30%,#a16207 55%,#422006)}
+.thunder .world-sphere::before{background:radial-gradient(circle at 60% 40%,rgba(255,255,255,.5),transparent 40%);animation:strike 2s ease-in-out infinite}
+.thunder .world-sphere::after{content:'';position:absolute;inset:0;background:conic-gradient(from 0deg,transparent,rgba(250,204,21,.15),transparent 30%,transparent 70%,rgba(255,255,255,.1),transparent);animation:strikeSpin 6s linear infinite}
+.thunder:hover .world-sphere{box-shadow:0 0 90px rgba(250,204,21,.55),0 0 180px rgba(250,204,21,.2),inset 0 0 70px rgba(254,240,138,.2)}
+
+@keyframes strike{0%,95%,100%{opacity:.3}50%{opacity:.85}52%{opacity:.3}54%{opacity:.65}}
+@keyframes strikeSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+/* Void sphere */
+.void .world-sphere{background:radial-gradient(circle at 45% 35%,#c4b5fd,#8b5cf6 30%,#5b21b6 55%,#1e1b4b)}
+.void .world-sphere::before{background:radial-gradient(circle at 50% 50%,rgba(167,139,250,.3),transparent 60%);animation:voidPulse 5s ease-in-out infinite}
+.void .world-sphere::after{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 40% 40%,rgba(255,255,255,.05) 0%,transparent 40%);animation:voidPulse 4s ease-in-out infinite alternate}
+.void:hover .world-sphere{box-shadow:0 0 70px rgba(167,139,250,.4),0 0 140px rgba(139,92,246,.15),inset 0 0 60px rgba(196,181,253,.1)}
+
+@keyframes voidPulse{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.6;transform:scale(1.03)}}
+
+/* Mini particles inside each world */
+.world-particles{position:absolute;inset:0;border-radius:50%;overflow:hidden;pointer-events:none}
+.wp{position:absolute;border-radius:50%;animation:particleDrift var(--dur) ease-in-out infinite;animation-delay:var(--del)}
+.fire .wp{background:rgba(251,191,36,.8);width:3px;height:3px}
+.water .wp{background:rgba(255,255,255,.6);width:2px;height:4px;border-radius:40%}
+.ice .wp{background:rgba(255,255,255,.7);width:2px;height:2px}
+.thunder .wp{background:rgba(255,255,255,.9);width:1.5px;height:4px}
+.void .wp{background:rgba(196,181,253,.5);width:2px;height:2px}
+
+@keyframes particleDrift{0%{transform:translate(0,0);opacity:var(--op)}50%{transform:translate(var(--dx),var(--dy));opacity:0}100%{transform:translate(0,0);opacity:var(--op)}}
+
+/* World label */
+.world-label-wrap{position:absolute;bottom:-55px;left:50%;transform:translateX(-50%);text-align:center;transition:transform .4s}
+.world:hover .world-label-wrap{transform:translateX(-50%) translateY(-4px)}
+
+.world-number{font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:.3rem;font-weight:600}
+.fire .world-number{color:#fb923c}.water .world-number{color:#38bdf8}
+.ice .world-number{color:#bae6fd}.thunder .world-number{color:#facc15}
+.void .world-number{color:#a78bfa}
+
+.world-name{font-size:1.15rem;font-weight:800;letter-spacing:.08em;display:block;transition:text-shadow .4s}
+.fire .world-name{color:#ea580c}.water .world-name{color:#0ea5e9}
+.ice .world-name{color:#e0f2fe}.thunder .world-name{color:#eab308}
+.void .world-name{color:#7c3aed}
+.world:hover .world-name{text-shadow:0 0 30px currentColor}
+
+.world-sub{font-size:.55rem;color:#52525b;letter-spacing:.06em;display:block;margin-top:.2rem;transition:color .4s}
+.world:hover .world-sub{color:#a1a1aa}
+
+/* Navigation hint at top */
+.nav-hint{position:fixed;top:1.5rem;left:50%;transform:translateX(-50%);z-index:10;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:#27272a;transition:color 4s}
+.nav-hint.visible{color:#52525b}
+
+/* Center glow */
+.center-glow{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(100,100,255,.03),transparent 70%);pointer-events:none;z-index:0}
+
+@media(max-width:700px){
+  .cosmos-map{gap:1.5rem}
+  .world{width:120px;height:120px}
+  .world-sphere{width:90px;height:90px}
+  .world-ring{inset:-8px}.world-ring2{inset:-15px}
+  .world-name{font-size:.9rem}
+  .world-label-wrap{bottom:-45px}
 }
 </style>
 </head>
 <body>
+<canvas id="bg"></canvas>
+<div class="center-glow"></div>
+<div class="nav-hint" id="hint">choose a world</div>
 
-<div class="cosmos" id="stars"></div>
+<main class="main">
+<div class="cosmos-map">
 
-<div class="realms">
-
-  <a href="/fire" class="realm fire" style="--fd:0s;--ft:5.5s">
-    <div class="realm-orb">&#x1F525;</div>
-    <span class="realm-label">Element I</span>
-    <span class="realm-name">Fire</span>
-    <span class="realm-sub">Leo · About me · Introduction</span>
+  <!-- FIRE -->
+  <a href="/fire" class="world fire">
+    <div class="world-ring"></div><div class="world-ring2"></div>
+    <div class="world-sphere">
+      <div class="world-particles" id="fp"></div>
+    </div>
+    <div class="world-label-wrap">
+      <span class="world-number">Realm I</span>
+      <span class="world-name">Fire</span>
+      <span class="world-sub">Leo · About Me</span>
+    </div>
   </a>
 
-  <a href="/water" class="realm water" style="--fd:0.8s;--ft:6s">
-    <div class="realm-orb">&#x1F4A7;</div>
-    <span class="realm-label">Element II</span>
-    <span class="realm-name">Water</span>
-    <span class="realm-sub">My tools · What I've built</span>
+  <!-- WATER -->
+  <a href="/water" class="world water">
+    <div class="world-ring"></div><div class="world-ring2"></div>
+    <div class="world-sphere">
+      <div class="world-particles" id="wp"></div>
+    </div>
+    <div class="world-label-wrap">
+      <span class="world-number">Realm II</span>
+      <span class="world-name">Water</span>
+      <span class="world-sub">Tools · My Work</span>
+    </div>
   </a>
 
-  <a href="/ice" class="realm ice" style="--fd:1.6s;--ft:5.8s">
-    <div class="realm-orb">&#x2744;</div>
-    <span class="realm-label">Element III</span>
-    <span class="realm-name">Ice</span>
-    <span class="realm-sub">Creativity · Vent · Raw thoughts</span>
+  <!-- ICE -->
+  <a href="/ice" class="world ice">
+    <div class="world-ring"></div><div class="world-ring2"></div>
+    <div class="world-sphere">
+      <div class="world-particles" id="ip"></div>
+    </div>
+    <div class="world-label-wrap">
+      <span class="world-number">Realm III</span>
+      <span class="world-name">Ice</span>
+      <span class="world-sub">Creativity · Vent</span>
+    </div>
   </a>
 
-  <a href="/lightning" class="realm lightning" style="--fd:2.4s;--ft:6.2s">
-    <div class="realm-orb">&#x26A1;</div>
-    <span class="realm-label">Element IV</span>
-    <span class="realm-name">Thunder</span>
-    <span class="realm-sub">Ambitions · Goals · Current</span>
+  <!-- THUNDER -->
+  <a href="/lightning" class="world thunder">
+    <div class="world-ring"></div><div class="world-ring2"></div>
+    <div class="world-sphere">
+      <div class="world-particles" id="tp"></div>
+    </div>
+    <div class="world-label-wrap">
+      <span class="world-number">Realm IV</span>
+      <span class="world-name">Thunder</span>
+      <span class="world-sub">Goals · Ambition</span>
+    </div>
   </a>
 
-  <a href="/darkness" class="realm void" style="--fd:3.2s;--ft:5.7s">
-    <div class="realm-orb">&#x1F319;</div>
-    <span class="realm-label">Element V</span>
-    <span class="realm-name">Void</span>
-    <span class="realm-sub">Admiration · Thanks · Regards</span>
+  <!-- VOID -->
+  <a href="/darkness" class="world void">
+    <div class="world-ring"></div><div class="world-ring2"></div>
+    <div class="world-sphere">
+      <div class="world-particles" id="vp"></div>
+    </div>
+    <div class="world-label-wrap">
+      <span class="world-number">Realm V</span>
+      <span class="world-name">Void</span>
+      <span class="world-sub">Admiration · Thanks</span>
+    </div>
   </a>
 
 </div>
-
-<span class="tag">choose your element</span>
+</main>
 
 <script>
-// Stars
-(function(){var s=document.getElementById('stars');var h='';for(var i=0;i<200;i++){var x=Math.random()*100;var y=Math.random()*100;var d=2+Math.random()*4;var del=Math.random()*5;var op=.2+Math.random()*.5;h+='<div class="star" style="left:'+x+'%;top:'+y+'%;--d:'+d+'s;--del:'+del+'s;--op:'+op+'"></div>'}s.innerHTML=h})();
-</script>
+// Cosmic particle canvas
+(function(){
+var c=document.getElementById('bg'),ctx=c.getContext('2d'),w,h,pts=[];
+function resize(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}
+resize();window.addEventListener('resize',resize);
 
+for(var i=0;i<250;i++)pts.push({
+  x:Math.random()*w,y:Math.random()*h,
+  vx:(Math.random()-.5)*.15,vy:(Math.random()-.5)*.15,
+  r:Math.random()*1.2+.3,o:Math.random()*.6+.2,
+  pulse:Math.random()*Math.PI*2
+});
+
+function draw(){
+ctx.clearRect(0,0,w,h);
+var t=Date.now()*.001;
+pts.forEach(function(p){
+p.x+=p.vx;p.y+=p.vy;
+if(p.x<0)p.x=w;if(p.x>w)p.x=0;if(p.y<0)p.y=h;if(p.y>h)p.y=0;
+var o=p.o+.15*Math.sin(t*2+p.pulse);
+ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+ctx.fillStyle='rgba(255,255,255,'+o+')';ctx.fill();
+});
+// Occasional line connections
+for(var j=0;j<pts.length;j+=15){
+  var a=pts[j];if(!a)continue;
+  for(var k=j+5;k<pts.length;k+=12){
+    var b=pts[k];if(!b)continue;
+    var dx=a.x-b.x,dy=a.y-b.y,dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<100){
+      ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+      ctx.strokeStyle='rgba(255,255,255,'+(.03*(1-dist/100))+')';
+      ctx.stroke();
+    }
+  }
+}
+requestAnimationFrame(draw);
+}
+draw();
+})();
+
+// World internal particles
+(function genParticles(id,count,color){
+var el=document.getElementById(id);if(!el)return;
+var h='';
+for(var i=0;i<count;i++){
+  var x=20+Math.random()*20,y=30+Math.random()*20;
+  var dx=10+Math.random()*20*(Math.random()>.5?1:-1);
+  var dy=10+Math.random()*20*(Math.random()>.5?1:-1);
+  var dur=2+Math.random()*4,del=Math.random()*3,op=.3+Math.random()*.7;
+  h+='<div class="wp" style="left:'+x+'%;top:'+y+'%;--dx:'+dx+'px;--dy:'+dy+'px;--dur:'+dur+'s;--del:'+del+'s;--op:'+op+'"></div>';
+}
+el.innerHTML=h;
+})('fp',18,'#fbbf24');
+(function genParticles(id,count,color){
+var el=document.getElementById(id);if(!el)return;
+var h='';
+for(var i=0;i<count;i++){
+  var x=20+Math.random()*30,y=30+Math.random()*25;
+  var dx=8+Math.random()*15*(Math.random()>.5?1:-1);
+  var dy=8+Math.random()*15*(Math.random()>.5?1:-1);
+  var dur=3+Math.random()*5,del=Math.random()*4,op=.3+Math.random()*.6;
+  h+='<div class="wp" style="left:'+x+'%;top:'+y+'%;--dx:'+dx+'px;--dy:'+dy+'px;--dur:'+dur+'s;--del:'+del+'s;--op:'+op+'"></div>';
+}
+el.innerHTML=h;
+})('wp',15);
+(function genParticles(id,count,color){
+var el=document.getElementById(id);if(!el)return;
+var h='';
+for(var i=0;i<count;i++){
+  var x=20+Math.random()*30,y=30+Math.random()*25;
+  var dx=8+Math.random()*15*(Math.random()>.5?1:-1);
+  var dy=8+Math.random()*15*(Math.random()>.5?1:-1);
+  var dur=3+Math.random()*5,del=Math.random()*4,op=.3+Math.random()*.6;
+  h+='<div class="wp" style="left:'+x+'%;top:'+y+'%;--dx:'+dx+'px;--dy:'+dy+'px;--dur:'+dur+'s;--del:'+del+'s;--op:'+op+'"></div>';
+}
+el.innerHTML=h;
+})('ip',20);
+(function genParticles(id,count,color){
+var el=document.getElementById(id);if(!el)return;
+var h='';
+for(var i=0;i<count;i++){
+  var x=20+Math.random()*30,y=30+Math.random()*25;
+  var dx=8+Math.random()*15*(Math.random()>.5?1:-1);
+  var dy=8+Math.random()*15*(Math.random()>.5?1:-1);
+  var dur=3+Math.random()*5,del=Math.random()*4,op=.3+Math.random()*.6;
+  h+='<div class="wp" style="left:'+x+'%;top:'+y+'%;--dx:'+dx+'px;--dy:'+dy+'px;--dur:'+dur+'s;--del:'+del+'s;--op:'+op+'"></div>';
+}
+el.innerHTML=h;
+})('tp',16);
+(function genParticles(id,count,color){
+var el=document.getElementById(id);if(!el)return;
+var h='';
+for(var i=0;i<count;i++){
+  var x=20+Math.random()*30,y=30+Math.random()*25;
+  var dx=8+Math.random()*15*(Math.random()>.5?1:-1);
+  var dy=8+Math.random()*15*(Math.random()>.5?1:-1);
+  var dur=3+Math.random()*5,del=Math.random()*4,op=.3+Math.random()*.6;
+  h+='<div class="wp" style="left:'+x+'%;top:'+y+'%;--dx:'+dx+'px;--dy:'+dy+'px;--dur:'+dur+'s;--del:'+del+'s;--op:'+op+'"></div>';
+}
+el.innerHTML=h;
+})('vp',12);
+
+// Hint fade
+setTimeout(function(){document.getElementById('hint').classList.add('visible')},2000);
+</script>
 </body>
 </html>
