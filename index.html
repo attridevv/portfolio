@@ -6,212 +6,319 @@
 <title>attridevv</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
+body{background:#070510;overflow:hidden;width:100vw;height:100vh;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif}
 
-:root{
-  --pink:#ec4899;--pink-soft:#f9a8d4;--pink-glow:rgba(236,72,153,.15);
-  --blue:#3b82f6;--blue-soft:#93c5fd;--blue-glow:rgba(59,130,246,.12);
-  --gold:#fbbf24;
-}
+.scene{position:fixed;inset:0}
 
-body{
-  background:#0a0810;color:#e2e8f0;
-  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  width:100vw;height:100vh;overflow:hidden;
-}
+/* ===== TREE ===== */
+.tree{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:min(600px,90%);height:85%;z-index:5}
+.tree svg{width:100%;height:100%}
 
-/* ===== LAYERS ===== */
-.stars-canvas{position:fixed;inset:0;z-index:0}
-.ground-mist{position:fixed;bottom:0;left:0;right:0;height:40%;z-index:2;pointer-events:none;
-  background:linear-gradient(to top,rgba(10,8,16,.9),transparent);}
-.ground-mist::before{content:'';position:absolute;left:0;bottom:0;width:45%;height:100%;
-  background:radial-gradient(ellipse at 50% 100%,var(--pink-glow),transparent 70%);}
-.ground-mist::after{content:'';position:absolute;right:0;bottom:0;width:45%;height:100%;
-  background:radial-gradient(ellipse at 50% 100%,var(--blue-glow),transparent 70%);}
+/* ===== CONSCIOUSNESS ORBS ===== */
+.orb{position:absolute;z-index:4;width:60px;height:60px;border-radius:50%;animation:orbFloat 6s ease-in-out infinite}
+.orb-l{left:15%;top:35%;animation-delay:0s}
+.orb-r{right:15%;top:35%;animation-delay:3s}
+@keyframes orbFloat{0%,100%{transform:translateY(0)}25%{transform:translateY(-15px)}50%{transform:translateY(-5px)}75%{transform:translateY(-20px)}}
 
-/* ===== SCENE ===== */
-.scene{position:fixed;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;pointer-events:none}
-.scene>*{pointer-events:auto}
+.orb-core{position:absolute;inset:0;border-radius:50%}
+.orb-l .orb-core{background:radial-gradient(circle at 40% 40%,#fbcfe8,#ec4899 40%,#9d174d 80%);box-shadow:0 0 40px rgba(236,72,153,.4),0 0 80px rgba(236,72,153,.15),inset 0 0 30px rgba(251,207,232,.2)}
+.orb-r .orb-core{background:radial-gradient(circle at 40% 40%,#bfdbfe,#3b82f6 40%,#1e3a8a 80%);box-shadow:0 0 40px rgba(59,130,246,.4),0 0 80px rgba(59,130,246,.15),inset 0 0 30px rgba(191,219,254,.2)}
 
-/* ===== FIGURES ===== */
-.figure{position:absolute;bottom:22%;width:120px;height:200px;transition:all .6s}
-.figure-left{left:22%}.figure-right{right:22%}
+.orb-ring{position:absolute;inset:-15px;border-radius:50%;border:1px solid transparent;animation:ringSpin 8s linear infinite}
+.orb-l .orb-ring{border-color:rgba(236,72,153,.2);animation-duration:8s}
+.orb-r .orb-ring{border-color:rgba(59,130,246,.2);animation-duration:10s;animation-direction:reverse}
+@keyframes ringSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-.figure-glow{position:absolute;inset:-40px;border-radius:50%;opacity:.5;transition:opacity .6s}
-.figure-left .figure-glow{background:radial-gradient(ellipse at 50% 60%,var(--pink-glow),transparent 70%)}
-.figure-right .figure-glow{background:radial-gradient(ellipse at 50% 60%,var(--blue-glow),transparent 70%)}
+.orb-ring2{position:absolute;inset:-25px;border-radius:50%;border:1px solid transparent;animation:ringSpin 12s linear infinite}
+.orb-l .orb-ring2{border-color:rgba(236,72,153,.1);animation-direction:reverse}
+.orb-r .orb-ring2{border-color:rgba(59,130,246,.1)}
 
-.figure-silhouette{position:relative;width:100%;height:100%}
+/* ===== ENERGY STREAMS FROM ORBS TO TREE ===== */
+.stream{position:absolute;z-index:3;pointer-events:none}
+.stream svg{width:100%;height:100%}
 
-/* ===== ZERO TWO silhouette ===== */
-.zt-head{position:absolute;top:0;left:50%;transform:translateX(-50%);width:28px;height:32px;background:rgba(236,72,153,.08);border-radius:50% 50% 45% 45%}
-.zt-horns{position:absolute;top:-8px;left:50%;transform:translateX(-50%)}
-.zt-horn{position:absolute;width:2px;height:18px;background:linear-gradient(to top,rgba(236,72,153,.4),rgba(236,72,153,.15));border-radius:1px}
-.zt-horn-l{left:-8px;transform:rotate(-15deg)}.zt-horn-r{right:-8px;transform:rotate(15deg)}
-
-.zt-body{position:absolute;top:30px;left:50%;transform:translateX(-50%);width:34px;height:80px;background:rgba(236,72,153,.05);border-radius:12px 12px 8px 8px}
-.zt-dress{position:absolute;top:90px;left:50%;transform:translateX(-50%);width:50px;height:70px;background:rgba(236,72,153,.04);border-radius:50% 50% 10% 10%}
-
-.zt-arm-l{position:absolute;top:38px;left:14px;width:2px;height:45px;background:rgba(236,72,153,.12);border-radius:1px;transform:rotate(15deg)}
-.zt-arm-r{position:absolute;top:38px;right:14px;width:2px;height:45px;background:rgba(236,72,153,.12);border-radius:1px;transform:rotate(-15deg)}
-
-/* ===== HIRO silhouette ===== */
-.h-head{position:absolute;top:0;left:50%;transform:translateX(-50%);width:28px;height:32px;background:rgba(59,130,246,.08);border-radius:50% 50% 45% 45%}
-
-.h-body{position:absolute;top:30px;left:50%;transform:translateX(-50%);width:36px;height:90px;background:rgba(59,130,246,.05);border-radius:10px 10px 6px 6px}
-.h-collar{position:absolute;top:30px;left:50%;transform:translateX(-50%);width:38px;height:6px;background:rgba(59,130,246,.08);border-radius:2px}
-
-.h-arm-l{position:absolute;top:38px;left:14px;width:2px;height:48px;background:rgba(59,130,246,.12);border-radius:1px;transform:rotate(12deg)}
-.h-arm-r{position:absolute;top:38px;right:14px;width:2px;height:48px;background:rgba(59,130,246,.12);border-radius:1px;transform:rotate(-12deg)}
-
-/* ===== RED THREAD OF FATE ===== */
-.thread-container{position:absolute;top:0;left:0;right:0;bottom:0;z-index:4;pointer-events:none}
-.thread-glow{animation:threadPulse 3s ease-in-out infinite}
-@keyframes threadPulse{0%,100%{opacity:.6}50%{opacity:1}}
+/* ===== PARTICLES FROM ORBS ===== */
+.orb-particles{position:absolute;inset:-30px;pointer-events:none}
+.op{position:absolute;border-radius:50%;animation:opFloat var(--d) ease-out infinite;animation-delay:var(--del);opacity:0}
+.orb-l .op{background:#f9a8d4;width:2px;height:2px}
+.orb-r .op{background:#93c5fd;width:2px;height:2px}
+@keyframes opFloat{0%{opacity:.8;transform:translate(0,0)}100%{opacity:0;transform:translate(var(--tx),var(--ty))}}
 
 /* ===== PETALS ===== */
-.petals-layer{position:fixed;inset:0;z-index:8;pointer-events:none}
-.petal{position:absolute;width:6px;height:10px;background:radial-gradient(ellipse at 30% 30%,var(--pink-soft),rgba(236,72,153,.4));border-radius:50% 0 50% 0;opacity:0;
-  animation:petalDrift var(--dur) ease-in-out infinite;animation-delay:var(--del);left:var(--x)}
-@keyframes petalDrift{0%{opacity:.7;transform:translate(0,0)rotate(0deg)}25%{transform:translate(var(--drift),25vh)rotate(90deg)}50%{opacity:.5;transform:translate(calc(var(--drift)*-.4),50vh)rotate(180deg)}75%{transform:translate(calc(var(--drift)*.2),75vh)rotate(270deg)}100%{opacity:0;transform:translate(var(--drift),100vh)rotate(360deg)}}
+.petals{position:fixed;inset:0;z-index:8;pointer-events:none}
+.petal{position:absolute;width:7px;height:11px;border-radius:50% 0 50% 0;opacity:0;animation:petalFall var(--dur) ease-in-out infinite;animation-delay:var(--del);left:var(--x)}
+.petal.pink{background:radial-gradient(ellipse at 30% 30%,#fce7f3,#f9a8d4)}
+.petal.white{background:radial-gradient(ellipse at 30% 30%,#fff,#fce7f3);width:5px;height:8px}
+@keyframes petalFall{0%{opacity:.7;transform:translate(0,0)rotate(0deg)}25%{transform:translate(var(--drift),25vh)rotate(90deg)}50%{opacity:.5;transform:translate(calc(var(--drift)*-.2),50vh)rotate(180deg)}75%{transform:translate(calc(var(--drift)*.3),75vh)rotate(270deg)}100%{opacity:0;transform:translate(var(--drift),100vh)rotate(360deg)}}
+
+/* ===== GROUND ===== */
+.ground{position:absolute;bottom:0;left:0;right:0;height:25%;z-index:2;pointer-events:none;
+  background:linear-gradient(to top,rgba(7,5,16,1),transparent)}
+.ground::before{content:'';position:absolute;left:0;bottom:0;width:50%;height:100%;
+  background:radial-gradient(ellipse at 30% 100%,rgba(236,72,153,.04),transparent 60%)}
+.ground::after{content:'';position:absolute;right:0;bottom:0;width:50%;height:100%;
+  background:radial-gradient(ellipse at 70% 100%,rgba(59,130,246,.04),transparent 60%)}
+
+/* ===== FALLEN PETALS ON GROUND ===== */
+.fallen{position:absolute;bottom:8%;left:30%;right:30%;height:5%;z-index:3;pointer-events:none}
+.fp{position:absolute;width:5px;height:8px;background:rgba(249,168,212,.3);border-radius:50% 0 50% 0}
 
 /* ===== OVERLAY ===== */
 .overlay{position:fixed;inset:0;z-index:20;pointer-events:none;display:flex}
 .choice{flex:1;cursor:pointer;pointer-events:auto;position:relative;text-decoration:none;transition:background .6s}
 .choice:hover .choice-hint{opacity:1;transform:translateX(-50%)translateY(-6px)}
-.choice-l:hover{background:radial-gradient(ellipse at 20% 55%,rgba(236,72,153,.03),transparent 55%)}
-.choice-r:hover{background:radial-gradient(ellipse at 80% 55%,rgba(59,130,246,.03),transparent 55%)}
+.choice-l:hover{background:radial-gradient(ellipse at 20% 50%,rgba(236,72,153,.025),transparent 55%)}
+.choice-r:hover{background:radial-gradient(ellipse at 80% 50%,rgba(59,130,246,.025),transparent 55%)}
 
-.choice-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);text-align:center;opacity:0;transition:all .6s}
-.choice-l .choice-hint{color:var(--pink-soft)}.choice-r .choice-hint{color:var(--blue-soft)}
-.choice-hint .l1{display:block;font-size:.45rem;letter-spacing:.28em;text-transform:uppercase;font-weight:800;margin-bottom:.08rem;opacity:.6}
-.choice-hint .l2{display:block;font-size:.75rem;font-weight:900;letter-spacing:.06em}
-.choice-hint .l3{display:block;font-size:.34rem;letter-spacing:.16em;margin-top:.08rem;opacity:.3}
-
-/* ===== PARTICLES AROUND FIGURES ===== */
-.spark{position:absolute;border-radius:50%;pointer-events:none;animation:sparkFloat var(--d) ease-in-out infinite;animation-delay:var(--del);opacity:0}
-@keyframes sparkFloat{0%{opacity:.6;transform:translate(0,0)}100%{opacity:0;transform:translate(var(--sx),var(--sy))}}
-.pink-spark{background:var(--pink-soft);width:2px;height:2px}
-.blue-spark{background:var(--blue-soft);width:2px;height:2px}
+.choice-hint{position:absolute;bottom:1.8rem;left:50%;transform:translateX(-50%);text-align:center;opacity:0;transition:all .6s}
+.choice-l .choice-hint{color:#f9a8d4}.choice-r .choice-hint{color:#93c5fd}
+.choice-hint .c1{display:block;font-size:.44rem;letter-spacing:.28em;text-transform:uppercase;font-weight:800;margin-bottom:.08rem;opacity:.5}
+.choice-hint .c2{display:block;font-size:.72rem;font-weight:900;letter-spacing:.06em}
+.choice-hint .c3{display:block;font-size:.32rem;letter-spacing:.16em;margin-top:.06rem;opacity:.3}
 
 @media(max-width:768px){
-  .figure{width:80px;height:150px;bottom:25%}
-  .figure-left{left:10%}.figure-right{right:10%}
-  .zt-head,.h-head{width:22px;height:26px}
-  .zt-body{width:26px;height:60px;top:24px}
-  .zt-dress{width:38px;height:55px;top:70px}
-  .h-body{width:28px;height:70px;top:24px}
+  .orb{width:40px;height:40px}.orb-ring{inset:-10px}.orb-ring2{inset:-18px}
+  .orb-l{left:8%;top:30%}.orb-r{right:8%;top:30%}
 }
 </style>
 </head>
 <body>
 
-<canvas id="stars-canvas" class="stars-canvas"></canvas>
-<div class="ground-mist"></div>
+<canvas id="stars"></canvas>
 
-<!-- THREAD OF FATE -->
-<div class="thread-container">
-  <svg width="100%" height="100%" style="position:absolute;inset:0">
-    <defs>
-      <filter id="threadGlow"><feGaussianBlur stdDeviation="3"/></filter>
-      <linearGradient id="threadGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%" stop-color="#ec4899" stop-opacity="0"/>
-        <stop offset="25%" stop-color="#ec4899" stop-opacity=".7"/>
-        <stop offset="50%" stop-color="#fbbf24" stop-opacity=".9"/>
-        <stop offset="75%" stop-color="#3b82f6" stop-opacity=".7"/>
-        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
-      </linearGradient>
-    </defs>
-    <!-- Main thread -->
-    <path d="M0,200 Q200,120 400,100 Q600,80 800,140 Q1000,200 1200,180" 
-          stroke="url(#threadGrad)" stroke-width="1.5" fill="none" filter="url(#threadGlow)" class="thread-glow"/>
-    <!-- Secondary thread (loose, wrapping) -->
-    <path d="M0,220 Q250,160 450,180 Q650,200 850,150 Q1050,100 1200,170" 
-          stroke="url(#threadGrad)" stroke-width=".8" fill="none" opacity=".4" class="thread-glow" style="animation-delay:.8s"/>
-    <!-- Third delicate thread -->
-    <path d="M0,180 Q180,90 380,80 Q580,70 780,110 Q980,150 1200,160" 
-          stroke="url(#threadGrad)" stroke-width=".6" fill="none" opacity=".3" class="thread-glow" style="animation-delay:1.5s"/>
-  </svg>
-</div>
-
-<!-- SCENE -->
 <div class="scene">
 
-  <!-- ZERO TWO (left) -->
-  <div class="figure figure-left">
-    <div class="figure-glow"></div>
-    <div class="figure-silhouette">
-      <div class="zt-head"><div class="zt-horns"><div class="zt-horn zt-horn-l"></div><div class="zt-horn zt-horn-r"></div></div></div>
-      <div class="zt-body"></div>
-      <div class="zt-arm-l"></div><div class="zt-arm-r"></div>
-      <div class="zt-dress"></div>
-    </div>
+  <!-- GROUND -->
+  <div class="ground"></div>
+
+  <!-- FALLEN PETALS -->
+  <div class="fallen" id="fallen"></div>
+
+  <!-- ZERO TWO CONSCIOUSNESS (left orb) -->
+  <div class="orb orb-l">
+    <div class="orb-core"></div>
+    <div class="orb-ring"></div>
+    <div class="orb-ring2"></div>
+    <div class="orb-particles" id="op-l"></div>
   </div>
 
-  <!-- HIRO (right) -->
-  <div class="figure figure-right">
-    <div class="figure-glow"></div>
-    <div class="figure-silhouette">
-      <div class="h-head"></div>
-      <div class="h-body"><div class="h-collar"></div></div>
-      <div class="h-arm-l"></div><div class="h-arm-r"></div>
-    </div>
+  <!-- HIRO CONSCIOUSNESS (right orb) -->
+  <div class="orb orb-r">
+    <div class="orb-core"></div>
+    <div class="orb-ring"></div>
+    <div class="orb-ring2"></div>
+    <div class="orb-particles" id="op-r"></div>
+  </div>
+
+  <!-- ENERGY STREAMS -->
+  <div class="stream" style="position:absolute;inset:0;z-index:3;pointer-events:none">
+    <svg width="100%" height="100%">
+      <defs>
+        <linearGradient id="streamL" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#ec4899" stop-opacity=".3"/>
+          <stop offset="100%" stop-color="#ec4899" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="streamR" x1="100%" y1="0%" x2="0%" y2="0%">
+          <stop offset="0%" stop-color="#3b82f6" stop-opacity=".3"/>
+          <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+        </linearGradient>
+        <filter id="sGlow"><feGaussianBlur stdDeviation="4"/></filter>
+      </defs>
+      <!-- Left stream to tree -->
+      <path d="M15%,35% Q25%,30% 40%,50% Q45%,55% 48%,60%" stroke="url(#streamL)" stroke-width="2" fill="none" filter="url(#sGlow)" opacity=".6"/>
+      <path d="M15%,38% Q30%,35% 42%,55% Q47%,62% 49%,65%" stroke="url(#streamL)" stroke-width="1" fill="none" opacity=".3"/>
+      <!-- Right stream to tree -->
+      <path d="M85%,35% Q75%,30% 60%,50% Q55%,55% 52%,60%" stroke="url(#streamR)" stroke-width="2" fill="none" filter="url(#sGlow)" opacity=".6"/>
+      <path d="M85%,38% Q70%,35% 58%,55% Q53%,62% 51%,65%" stroke="url(#streamR)" stroke-width="1" fill="none" opacity=".3"/>
+    </svg>
+  </div>
+
+  <!-- SAKURA TREE -->
+  <div class="tree">
+    <svg viewBox="0 0 500 550" preserveAspectRatio="xMidYMax meet">
+      <defs>
+        <radialGradient id="bloom" cx="50%" cy="50%"><stop offset="0%" stop-color="#fdf2f8"/><stop offset="30%" stop-color="#fbcfe8"/><stop offset="70%" stop-color="#f472b6"/><stop offset="100%" stop-color="#be185d" stop-opacity=".4"/></radialGradient>
+        <radialGradient id="bloom2" cx="50%" cy="50%"><stop offset="0%" stop-color="#fff"/><stop offset="25%" stop-color="#fce7f3"/><stop offset="60%" stop-color="#f9a8d4"/><stop offset="100%" stop-color="#db2777" stop-opacity=".35"/></radialGradient>
+        <radialGradient id="bloom3" cx="50%" cy="50%"><stop offset="0%" stop-color="#fef2f2"/><stop offset="40%" stop-color="#fbcfe8"/><stop offset="100%" stop-color="#ec4899" stop-opacity=".5"/></radialGradient>
+        <filter id="treeGlow"><feGaussianBlur stdDeviation="12"/></filter>
+        <linearGradient id="trunkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1a1020"/><stop offset="50%" stop-color="#2d1a30"/><stop offset="100%" stop-color="#1a1025"/>
+        </linearGradient>
+      </defs>
+
+      <!-- ===== TRUNK GLOW ===== -->
+      <path d="M245,530 Q240,380 235,280 Q230,200 240,150 Q245,110 250,80" stroke="rgba(236,72,153,.08)" stroke-width="50" fill="none" filter="url(#treeGlow)"/>
+
+      <!-- ===== MAIN TRUNK ===== -->
+      <path d="M235,550 Q230,450 225,370 Q220,300 230,220 Q235,160 240,110 Q245,70 248,40 L258,40 Q262,70 260,110 Q265,160 270,220 Q280,300 275,370 Q270,450 265,550 Z" fill="url(#trunkGrad)" stroke="#3d1a3a" stroke-width=".8"/>
+
+      <!-- Trunk bark texture -->
+      <path d="M240,480 Q237,400 238,320 Q239,250 242,180" fill="none" stroke="#4a2040" stroke-width="1.2" opacity=".35"/>
+      <path d="M250,500 Q248,420 250,340 Q252,260 250,180" fill="none" stroke="#3d1a35" stroke-width=".8" opacity=".25"/>
+      <path d="M260,480 Q262,400 260,320 Q258,250 258,180" fill="none" stroke="#4a2040" stroke-width="1" opacity=".3"/>
+      <path d="M245,450 Q243,380 246,300" fill="none" stroke="#3d1a35" stroke-width=".6" opacity=".2"/>
+
+      <!-- ===== MAJOR BRANCHES ===== -->
+      <!-- Left main branch -->
+      <path d="M238,280 Q200,240 160,200 Q130,170 100,155 Q80,148 65,150" stroke="url(#trunkGrad)" stroke-width="14" fill="none" stroke-linecap="round"/>
+      <path d="M65,150 Q60,152 55,150" stroke="#2d1a30" stroke-width="6" fill="none"/>
+      <!-- Left branch bark -->
+      <path d="M220,260 Q180,225 140,190" fill="none" stroke="#4a2040" stroke-width=".7" opacity=".3"/>
+
+      <!-- Right main branch -->
+      <path d="M262,280 Q300,240 340,200 Q370,170 400,155 Q420,148 435,150" stroke="url(#trunkGrad)" stroke-width="14" fill="none" stroke-linecap="round"/>
+      <path d="M435,150 Q440,152 445,150" stroke="#2d1a30" stroke-width="6" fill="none"/>
+      <path d="M280,260 Q320,225 360,190" fill="none" stroke="#4a2040" stroke-width=".7" opacity=".3"/>
+
+      <!-- Upper branches -->
+      <path d="M242,200 Q220,160 200,130 Q185,110 175,100" stroke="#2d1a30" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <path d="M258,190 Q280,150 300,125 Q315,108 325,100" stroke="#2d1a30" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <path d="M245,150 Q240,120 235,100" stroke="#2d1a30" stroke-width="8" fill="none"/>
+      <path d="M255,140 Q265,110 270,90" stroke="#2d1a30" stroke-width="8" fill="none"/>
+
+      <!-- Lower secondary branches -->
+      <path d="M232,340 Q195,320 160,330 Q140,338 125,340" stroke="#2d1a30" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <path d="M268,340 Q305,320 340,330 Q360,338 375,340" stroke="#2d1a30" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <path d="M230,400 Q200,390 175,400" stroke="#2d1a30" stroke-width="6" fill="none"/>
+      <path d="M270,400 Q300,390 325,400" stroke="#2d1a30" stroke-width="6" fill="none"/>
+
+      <!-- Extra branch details -->
+      <path d="M180,220 Q160,210 145,215" stroke="#2d1a30" stroke-width="5" fill="none"/>
+      <path d="M320,220 Q340,210 355,215" stroke="#2d1a30" stroke-width="5" fill="none"/>
+      <path d="M200,160 Q188,148 178,150" stroke="#2d1a30" stroke-width="5" fill="none"/>
+      <path d="M300,155 Q312,143 322,145" stroke="#2d1a30" stroke-width="5" fill="none"/>
+
+      <!-- ===== ROOTS ===== -->
+      <path d="M235,540 Q210,555 185,560 Q160,562 140,558" stroke="#2d1a30" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M265,540 Q290,555 315,560 Q340,562 360,558" stroke="#2d1a30" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M240,545 Q220,565 200,568" stroke="#2d1a30" stroke-width="4" fill="none"/>
+      <path d="M260,545 Q280,565 300,568" stroke="#2d1a30" stroke-width="4" fill="none"/>
+
+      <!-- ===== BLOOM CLUSTERS ===== -->
+      <!-- Top crown -->
+      <circle cx="250" cy="75" r="35" fill="url(#bloom)" opacity=".9"/>
+      <circle cx="225" cy="95" r="30" fill="url(#bloom2)" opacity=".85"/>
+      <circle cx="275" cy="90" r="30" fill="url(#bloom3)" opacity=".85"/>
+      <circle cx="250" cy="55" r="25" fill="url(#bloom)" opacity=".88"/>
+      <circle cx="210" cy="110" r="22" fill="url(#bloom3)" opacity=".8"/>
+      <circle cx="290" cy="105" r="22" fill="url(#bloom2)" opacity=".8"/>
+
+      <!-- Left canopy -->
+      <circle cx="160" cy="175" r="30" fill="url(#bloom2)" opacity=".85"/>
+      <circle cx="135" cy="188" r="26" fill="url(#bloom)" opacity=".8"/>
+      <circle cx="180" cy="200" r="22" fill="url(#bloom3)" opacity=".75"/>
+      <circle cx="115" cy="175" r="20" fill="url(#bloom)" opacity=".7"/>
+      <circle cx="150" cy="210" r="18" fill="url(#bloom2)" opacity=".7"/>
+      <circle cx="100" cy="162" r="18" fill="url(#bloom3)" opacity=".65"/>
+      <circle cx="80" cy="155" r="16" fill="url(#bloom)" opacity=".6"/>
+      <circle cx="170" cy="160" r="20" fill="url(#bloom)" opacity=".78"/>
+
+      <!-- Right canopy -->
+      <circle cx="340" cy="175" r="30" fill="url(#bloom3)" opacity=".85"/>
+      <circle cx="365" cy="188" r="26" fill="url(#bloom2)" opacity=".8"/>
+      <circle cx="320" cy="200" r="22" fill="url(#bloom)" opacity=".75"/>
+      <circle cx="385" cy="175" r="20" fill="url(#bloom3)" opacity=".7"/>
+      <circle cx="350" cy="210" r="18" fill="url(#bloom)" opacity=".7"/>
+      <circle cx="400" cy="162" r="18" fill="url(#bloom2)" opacity=".65"/>
+      <circle cx="420" cy="155" r="16" fill="url(#bloom3)" opacity=".6"/>
+      <circle cx="330" cy="160" r="20" fill="url(#bloom2)" opacity=".78"/>
+
+      <!-- Middle fill clusters -->
+      <circle cx="210" cy="150" r="24" fill="url(#bloom)" opacity=".8"/>
+      <circle cx="290" cy="145" r="24" fill="url(#bloom2)" opacity=".8"/>
+      <circle cx="200" cy="180" r="20" fill="url(#bloom3)" opacity=".75"/>
+      <circle cx="300" cy="178" r="20" fill="url(#bloom)" opacity=".75"/>
+      <circle cx="250" cy="120" r="22" fill="url(#bloom2)" opacity=".82"/>
+      <circle cx="235" cy="135" r="18" fill="url(#bloom3)" opacity=".78"/>
+      <circle cx="265" cy="132" r="18" fill="url(#bloom)" opacity=".78"/>
+
+      <!-- Lower canopy -->
+      <circle cx="180" cy="250" r="22" fill="url(#bloom2)" opacity=".7"/>
+      <circle cx="320" cy="250" r="22" fill="url(#bloom3)" opacity=".7"/>
+      <circle cx="150" cy="280" r="18" fill="url(#bloom)" opacity=".6"/>
+      <circle cx="350" cy="280" r="18" fill="url(#bloom2)" opacity=".6"/>
+      <circle cx="210" cy="300" r="16" fill="url(#bloom3)" opacity=".55"/>
+      <circle cx="290" cy="300" r="16" fill="url(#bloom)" opacity=".55"/>
+
+      <!-- Branch-tip blooms -->
+      <circle cx="60" cy="148" r="14" fill="url(#bloom)" opacity=".55"/>
+      <circle cx="440" cy="148" r="14" fill="url(#bloom3)" opacity=".55"/>
+      <circle cx="175" cy="98" r="12" fill="url(#bloom2)" opacity=".65"/>
+      <circle cx="325" cy="98" r="12" fill="url(#bloom3)" opacity=".65"/>
+      <circle cx="140" cy="215" r="10" fill="url(#bloom)" opacity=".5"/>
+      <circle cx="360" cy="215" r="10" fill="url(#bloom2)" opacity=".5"/>
+
+      <!-- Highlight dots within blooms -->
+      <circle cx="248" cy="72" r="4" fill="#fff" opacity=".6"/>
+      <circle cx="160" cy="173" r="3.5" fill="#fff" opacity=".5"/>
+      <circle cx="340" cy="173" r="3.5" fill="#fff" opacity=".5"/>
+      <circle cx="225" cy="93" r="3" fill="#fff" opacity=".55"/>
+      <circle cx="275" cy="88" r="3" fill="#fff" opacity=".55"/>
+      <circle cx="135" cy="186" r="2.5" fill="#fff" opacity=".45"/>
+      <circle cx="365" cy="186" r="2.5" fill="#fff" opacity=".45"/>
+    </svg>
   </div>
 
 </div>
 
 <!-- PETALS -->
-<div class="petals-layer" id="petals"></div>
-
-<!-- SPARKS -->
-<div class="petals-layer" id="sparks"></div>
+<div class="petals" id="petals"></div>
 
 <div class="overlay">
-  <a href="/fire" class="choice choice-l">
-    <div class="choice-hint"><span class="l1">The Self</span><span class="l2">ABOUT</span><span class="l3">Leo · Identity · Fire</span></div>
-  </a>
-  <a href="/water" class="choice choice-r">
-    <div class="choice-hint"><span class="l1">The Work</span><span class="l2">CREATE</span><span class="l3">Tools · Builds · Output</span></div>
-  </a>
+  <a href="/fire" class="choice choice-l"><div class="choice-hint"><span class="c1">The Self</span><span class="c2">ABOUT</span><span class="c3">Leo · Identity · Fire</span></div></a>
+  <a href="/water" class="choice choice-r"><div class="choice-hint"><span class="c1">The Work</span><span class="c2">CREATE</span><span class="c3">Tools · Builds · Output</span></div></a>
 </div>
 
 <script>
 // Stars
 (function(){
-var c=document.getElementById('stars-canvas'),ctx=c.getContext('2d'),w,h;
+var c=document.getElementById('stars'),ctx=c.getContext('2d'),w,h;
 function R(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}
 R();window.addEventListener('resize',R);
 var stars=[];
-for(var i=0;i<60;i++)stars.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*.6+.08,o:Math.random()*.25+.05,p:Math.random()*Math.PI*2});
+for(var i=0;i<50;i++)stars.push({x:Math.random()*w,y:Math.random()*h*.7,r:Math.random()*.6+.06,o:Math.random()*.2+.04,p:Math.random()*Math.PI*2});
 (function D(t){
 if(w!==c.width||h!==c.height)R();
 ctx.clearRect(0,0,w,h);
-stars.forEach(function(s){var b=.4+.6*Math.sin(t*.0012+s.p);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,'+(s.o*b)+')';ctx.fill()});
+stars.forEach(function(s){var b=.5+.5*Math.sin(t*.001+s.p);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,'+(s.o*b)+')';ctx.fill()});
 requestAnimationFrame(D);
 })();
 })();
 
-// Cherry blossom petals
+// Petals
 (function(){
 var p=document.getElementById('petals'),h='';
-for(var i=0;i<40;i++){
-  var x=5+Math.random()*90,dur=7+Math.random()*12,del=Math.random()*14,drift=(Math.random()-.5)*250;
-  h+='<div class="petal" style="--x:'+x+'%;--dur:'+dur+'s;--del:'+del+'s;--drift:'+drift+'px"></div>';
+for(var i=0;i<45;i++){
+  var x=8+Math.random()*84,typ=Math.random()>.3?'pink':'white',dur=8+Math.random()*14,del=Math.random()*15,drift=(Math.random()-.5)*200;
+  h+='<div class="petal '+typ+'" style="--x:'+x+'%;--dur:'+dur+'s;--del:'+del+'s;--drift:'+drift+'px"></div>';
 }
 p.innerHTML=h;
 })();
 
-// Ambient sparks around figures
+// Orb particles
+(function gen(id,count,txMin,txMax,tyMin,tyMax,color){
+var el=document.getElementById(id),h='';
+for(var i=0;i<count;i++){
+  h+='<div class="op" style="left:50%;top:50%;--tx:'+(txMin+Math.random()*(txMax-txMin))+'px;--ty:'+(tyMin+Math.random()*(tyMax-tyMin))+'px;--d:'+(1.5+Math.random()*2.5)+'s;--del:'+(Math.random()*3)+'s"></div>';
+}
+el.innerHTML=h;
+})('op-l',15,-30,30,-30,-5);
+(function gen(id,count,txMin,txMax,tyMin,tyMax,color){
+var el=document.getElementById(id),h='';
+for(var i=0;i<count;i++){
+  h+='<div class="op" style="left:50%;top:50%;--tx:'+(txMin+Math.random()*(txMax-txMin))+'px;--ty:'+(tyMin+Math.random()*(tyMax-tyMin))+'px;--d:'+(1.5+Math.random()*2.5)+'s;--del:'+(Math.random()*3)+'s"></div>';
+}
+el.innerHTML=h;
+})('op-r',15,-30,30,-30,-5);
+
+// Fallen petals on ground
 (function(){
-var s=document.getElementById('sparks'),h='';
-for(var i=0;i<20;i++){
-  var l=15+Math.random()*25,sx=(Math.random()-.5)*40,sy=-10-Math.random()*30,d=2+Math.random()*3,del=Math.random()*3;
-  h+='<div class="spark pink-spark" style="left:'+l+'%;bottom:35%;--sx:'+sx+'px;--sy:'+sy+'px;--d:'+d+'s;--del:'+del+'s"></div>';
+var el=document.getElementById('fallen'),h='';
+for(var i=0;i<25;i++){
+  var x=10+Math.random()*80,y=10+Math.random()*80,r=Math.random()*90;
+  h+='<div class="fp" style="left:'+x+'%;top:'+y+'%;transform:rotate('+r+'deg);opacity:'+(.1+Math.random()*.3)+'"></div>';
 }
-for(var i=0;i<20;i++){
-  var l=65+Math.random()*25,sx=(Math.random()-.5)*40,sy=-10-Math.random()*30,d=2+Math.random()*3,del=Math.random()*3;
-  h+='<div class="spark blue-spark" style="left:'+l+'%;bottom:35%;--sx:'+sx+'px;--sy:'+sy+'px;--d:'+d+'s;--del:'+del+'s"></div>';
-}
-s.innerHTML=h;
+el.innerHTML=h;
 })();
 </script>
 </body>
