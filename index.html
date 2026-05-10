@@ -3,270 +3,274 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Dev Attri</title>
+<title>Dev Attri · 第1話</title>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-  --leather:#1a1410;--leather-dark:#0f0b08;--gold:#c9a050;--gold-dim:rgba(201,160,80,.3);
-  --paper:#f5f0e8;--paper-dark:#e8e0d5;
-  --ink:#1a1a1a;--red:#cc0000;--grey:#555;--light:#999;--rule:#ccc;
+  --paper:#f8f8f6;--ink:#111;--grey:#333;--mid:#777;--light:#bbb;--rule:#ddd;
+  --red:#cc0000;--red-light:rgba(204,0,0,.08);
 }
 
 body{
-  background:#0a0806;color:var(--ink);
+  background:#e8e8e4;color:var(--ink);
   font-family:'Georgia','Times New Roman',serif;
-  width:100vw;height:100vh;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
-  perspective:2500px;perspective-origin:50% 50%;
+  display:flex;justify-content:center;align-items:flex-start;
+  min-height:100vh;padding:1.5rem 1rem;
 }
 
-/* ===== BOOK ===== */
-.book{
-  width:min(900px,95vw);height:min(600px,85vh);
-  position:relative;transform-style:preserve-3d;
-  transition:transform .2s;
+/* ===== MANGA PAGE ===== */
+.page{
+  width:100%;max-width:720px;
+  background:var(--paper);
+  box-shadow:0 1px 8px rgba(0,0,0,.08),0 0 0 1px rgba(0,0,0,.04);
+  padding:1.25rem;
+  position:relative;
 }
 
-/* ===== LEFT PAGE (manga) — always visible behind the flipping page ===== */
-.page-left{
-  position:absolute;left:0;top:0;width:50%;height:100%;
+/* ===== TOP STRIP ===== */
+.top-strip{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  border-bottom:2px solid var(--ink);padding-bottom:.4rem;margin-bottom:1rem;
+}
+.top-strip .magazine{font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--mid);font-family:'Inter',sans-serif}
+.top-strip .chapter{font-size:.7rem;font-weight:900;letter-spacing:.06em}
+.top-strip .issue{font-size:.42rem;color:var(--mid);font-family:'Inter',sans-serif;letter-spacing:.08em}
+
+/* ===== PANEL GRID ===== */
+.panels{display:grid;gap:.5rem}
+
+/* ===== PANEL TYPES ===== */
+.panel{
+  border:2px solid var(--ink);padding:.7rem;position:relative;
   background:var(--paper);overflow:hidden;
-  border:1px solid #d0c8b8;border-right:none;
-  box-shadow:inset -2px 0 8px rgba(0,0,0,.08);
-  display:flex;flex-direction:column;
 }
 
-/* ===== FLIPPING PAGE ===== */
-.page-flip{
-  position:absolute;left:0;top:0;width:50%;height:100%;
-  transform-origin:left center;transform-style:preserve-3d;
-  transition:transform 1.2s cubic-bezier(.4,0,.2,1);
-  cursor:pointer;z-index:10;
+/* Full width */
+.p-full{grid-column:1/-1}
+
+/* Row layouts */
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem}
+.row-2-1{display:grid;grid-template-columns:2fr 1fr;gap:.5rem}
+.row-1-2{display:grid;grid-template-columns:1fr 2fr;gap:.5rem}
+
+/* ===== PANEL STYLES ===== */
+/* Action panel */
+.panel.action{background:var(--paper)}
+.panel.action::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.05;
+  background:repeating-linear-gradient(70deg,transparent,transparent 3px,var(--ink) 3px,var(--ink) 4px)}
+
+/* Dark panel */
+.panel.dark{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.panel.dark .panel-label{color:rgba(255,255,255,.4)}
+.panel.dark p{color:rgba(255,255,255,.8)}
+
+/* Screentone panel */
+.panel.screentone{position:relative}
+.panel.screentone::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.04;
+  background-image:radial-gradient(circle,var(--ink) 1px,transparent 1px);background-size:5px 5px}
+
+/* ===== PANEL ELEMENTS ===== */
+.panel-label{
+  font-size:.42rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);
+  margin-bottom:.25rem;font-family:'Inter',sans-serif;font-weight:700;
 }
-.book.open .page-flip{transform:rotateY(-180deg)}
 
-/* Book spine shadow */
-.page-flip::before{
-  content:'';position:absolute;left:-4px;top:0;bottom:0;width:4px;
-  background:linear-gradient(to right,rgba(0,0,0,.3),transparent);
-  pointer-events:none;z-index:2;
+.panel h3{font-size:.85rem;font-weight:900;letter-spacing:-.01em;line-height:1.1;margin-bottom:.2rem}
+.panel h4{font-size:.6rem;font-weight:700;line-height:1.2;margin-bottom:.15rem}
+.panel p{font-size:.52rem;line-height:1.65;color:var(--grey)}
+.panel .bold{font-weight:700;color:var(--ink)}
+.panel a{color:var(--ink);font-weight:700;text-decoration:none;border-bottom:1.5px solid var(--ink);transition:all .2s}
+.panel a:hover{color:var(--red);border-color:var(--red)}
+
+/* ===== SFX TEXT ===== */
+.sfx{position:absolute;font-weight:900;pointer-events:none;letter-spacing:.08em}
+.sfx-xl{font-size:1.8rem;opacity:.06}
+.sfx-lg{font-size:1.2rem;opacity:.08}
+.sfx-md{font-size:.8rem;opacity:.1}
+.sfx-sm{font-size:.5rem;opacity:.12}
+.sfx-tl{top:.2rem;left:.3rem}
+.sfx-tr{top:.2rem;right:.3rem}
+.sfx-bl{bottom:.2rem;left:.3rem}
+.sfx-br{bottom:.2rem;right:.3rem}
+
+/* ===== SPEECH BUBBLE ===== */
+.bubble{
+  position:relative;padding:.35rem .5rem;border:1.5px solid var(--ink);border-radius:8px;
+  font-size:.45rem;line-height:1.5;margin:.3rem 0;display:inline-block;max-width:85%;
+  font-family:'Inter',sans-serif;
+}
+.bubble::after{content:'';position:absolute;bottom:-6px;left:15px;
+  width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;
+  border-top:6px solid var(--ink)}
+
+/* ===== THOUGHT BUBBLE ===== */
+.thought{position:relative;padding:.35rem .5rem;border-radius:12px;
+  font-size:.42rem;line-height:1.5;margin:.3rem 0;display:inline-block;max-width:80%;
+  font-family:'Inter',sans-serif;font-style:italic;color:var(--grey);
+  background:rgba(0,0,0,.03);border:1px dashed var(--rule);
 }
 
-/* ===== FRONT FACE — COVER ===== */
-.cover{
-  position:absolute;inset:0;backface-visibility:hidden;
-  background:linear-gradient(135deg,var(--leather),var(--leather-dark));
-  border:1px solid #2a2018;
-  display:flex;align-items:center;justify-content:center;
-  overflow:hidden;
+/* ===== IMPACT TEXT ===== */
+.impact{
+  text-align:center;font-size:1rem;font-weight:900;letter-spacing:.15em;
+  padding:.3rem 0;margin:.2rem 0;color:var(--ink);
+  border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);
 }
-/* Leather texture */
-.cover::before{content:'';position:absolute;inset:0;opacity:.04;
-  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.1) 3px,rgba(255,255,255,.1) 4px)}
-/* Gold border */
-.cover::after{content:'';position:absolute;inset:12px;border:1.5px solid var(--gold-dim);pointer-events:none}
 
-.cover-content{text-align:center;position:relative;z-index:1}
-.cover-content .author{font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.75rem}
-.cover-content h1{font-size:2rem;font-weight:400;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:.5rem}
-.cover-content .sub{font-size:.55rem;font-style:italic;color:rgba(201,160,80,.4);letter-spacing:.1em}
-.cover-content .hint{font-size:.4rem;letter-spacing:.18em;color:rgba(255,255,255,.15);margin-top:2rem;animation:coverHint 3s ease-in-out infinite}
-@keyframes coverHint{0%,100%{opacity:.3}50%{opacity:.7}}
+/* ===== TAG ROW ===== */
+.tags{display:flex;flex-wrap:wrap;gap:.25rem}
+.tag{padding:.15rem .35rem;border:1.5px solid var(--ink);font-size:.38rem;font-family:'Inter',sans-serif;
+  font-weight:700;letter-spacing:.04em;text-decoration:none;color:var(--ink);transition:all .2s}
+.tag:hover{background:var(--ink);color:var(--paper)}
 
-/* Ornament */
-.ornament{font-size:.8rem;color:var(--gold-dim);margin:.5rem 0}
+/* ===== PROGRESS BAR ===== */
+.stat-bar{display:flex;align-items:center;gap:.4rem;margin:.2rem 0}
+.stat-bar .stat-label{font-size:.4rem;color:var(--mid);min-width:50px;font-family:'Inter',sans-serif;text-transform:uppercase;letter-spacing:.06em}
+.stat-bar .stat-fill{flex:1;height:8px;background:var(--rule);position:relative}
+.stat-bar .stat-fill::after{content:'';position:absolute;left:0;top:0;bottom:0;background:var(--ink);width:var(--pct)}
+.stat-bar .stat-val{font-size:.4rem;font-weight:700;font-family:'Inter',sans-serif}
 
-/* ===== BACK FACE — NEWSPAPER ===== */
-.spread-right{
-  position:absolute;inset:0;backface-visibility:hidden;
-  transform:rotateY(180deg);
-  background:var(--paper-dark);
-  border:1px solid #d0c8b8;border-left:none;
-  padding:1rem;overflow-y:auto;
-  box-shadow:inset 2px 0 8px rgba(0,0,0,.06);
-}
-.spread-right .news-masthead{
-  border-bottom:2px double var(--ink);padding-bottom:.3rem;margin-bottom:.5rem;text-align:center;
-}
-.spread-right .news-masthead h3{font-size:.6rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase}
-.spread-right .news-masthead .news-date{font-size:.35rem;color:var(--grey);letter-spacing:.12em;text-transform:uppercase;margin-top:.1rem;font-family:'Inter',sans-serif}
-
-.news-article{margin-bottom:.7rem;border-bottom:1px solid var(--rule);padding-bottom:.5rem}
-.news-article h4{font-size:.55rem;font-weight:900;line-height:1.15;margin-bottom:.15rem}
-.news-article .by{font-size:.35rem;color:var(--red);text-transform:uppercase;letter-spacing:.08em;font-family:'Inter',sans-serif;margin-bottom:.25rem}
-.news-article p{font-size:.42rem;line-height:1.55;color:var(--grey);font-family:'Inter',sans-serif}
-.news-article a{color:var(--ink);font-weight:700;text-decoration:none;border-bottom:1px dotted var(--ink)}
-.news-article a:hover{color:var(--red)}
-
-.news-classifieds{border-top:1px solid var(--rule);padding-top:.4rem}
-.news-classifieds h5{font-size:.35rem;text-transform:uppercase;letter-spacing:.15em;color:var(--grey);margin-bottom:.3rem;font-family:'Inter',sans-serif}
-.class-row{display:flex;flex-wrap:wrap;gap:.3rem}
-.class-tag{font-size:.35rem;font-family:'Inter',sans-serif;color:var(--ink);text-decoration:none;border:1px solid var(--rule);padding:.15rem .35rem;transition:all .2s}
-.class-tag:hover{border-color:var(--ink);background:var(--ink);color:var(--paper)}
-
-/* ===== LEFT PAGE — MANGA ===== */
-.manga-page{padding:.6rem;height:100%;overflow-y:auto;font-family:'Inter',-apple-system,sans-serif}
-.manga-page .mp-header{text-align:center;border-bottom:2px solid var(--ink);padding-bottom:.3rem;margin-bottom:.5rem}
-.mp-header .ch{font-size:.35rem;letter-spacing:.2em;color:var(--grey);text-transform:uppercase;margin-bottom:.1rem}
-.mp-header h3{font-size:.65rem;font-weight:900;letter-spacing:.04em}
-
-.mp-panel{border:1.5px solid var(--ink);padding:.4rem;margin-bottom:.4rem;position:relative;background:#fafaf6}
-.mp-panel .sfx{position:absolute;font-size:.5rem;font-weight:900;opacity:.1;pointer-events:none}
-.mp-panel .sfx-tr{top:.1rem;right:.2rem}
-.mp-panel .sfx-bl{bottom:.1rem;left:.2rem}
-.mp-panel .label{font-size:.3rem;letter-spacing:.18em;text-transform:uppercase;color:var(--grey);margin-bottom:.2rem}
-.mp-panel p{font-size:.38rem;line-height:1.55;color:var(--ink)}
-.mp-panel .highlight{font-weight:700}
-
-/* Screentone */
-.mp-screentone{position:absolute;inset:0;pointer-events:none;opacity:.03;
-  background-image:radial-gradient(circle,var(--ink) 1px,transparent 1px);background-size:4px 4px}
-
-/* Speed lines panel */
-.mp-panel.action{position:relative}
-.mp-panel.action::after{content:'';position:absolute;top:0;bottom:0;left:0;right:0;pointer-events:none;opacity:.04;
-  background:repeating-linear-gradient(75deg,transparent,transparent 2px,var(--ink) 2px,var(--ink) 3px)}
-
-/* ===== NAVIGATION ===== */
-.nav-btn{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);z-index:100;
-  font-size:.4rem;letter-spacing:.15em;padding:.4rem 1rem;
-  border:1.5px solid var(--gold-dim);background:rgba(0,0,0,.7);color:var(--gold-dim);
-  cursor:pointer;transition:all .3s;text-transform:uppercase;
-  font-family:'Inter',sans-serif;border-radius:2px;
-}
-.nav-btn:hover{background:var(--leather);border-color:var(--gold);color:var(--gold)}
+/* ===== FOOTER ===== */
+.page-footer{text-align:center;border-top:1.5px solid var(--ink);margin-top:.75rem;padding-top:.5rem;
+  font-size:.42rem;letter-spacing:.15em;color:var(--mid);font-family:'Inter',sans-serif}
+.page-footer a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--ink)}
+.page-footer a:hover{color:var(--red)}
 
 /* ===== RESPONSIVE ===== */
-@media(max-width:700px){
-  .book{height:min(500px,75vh)}
-  .cover-content h1{font-size:1.3rem}
-  .cover-content .author{font-size:.4rem}
-  .mp-header h3{font-size:.5rem}
-  .news-article h4{font-size:.45rem}
-  .news-article p{font-size:.35rem}
+@media(max-width:600px){
+  .page{padding:.75rem}
+  .row-2,.row-3,.row-2-1,.row-1-2{grid-template-columns:1fr}
+  .panel h3{font-size:.7rem}
+  .sfx-xl{font-size:1.2rem}
+  .impact{font-size:.7rem}
 }
 </style>
 </head>
 <body>
 
-<div class="book" id="book">
+<div class="page">
 
-  <!-- LEFT PAGE — Manga (always visible behind the flip) -->
-  <div class="page-left">
-    <div class="manga-page">
+  <!-- TOP STRIP -->
+  <div class="top-strip">
+    <span class="magazine">週刊アトリ · Weekly Attri</span>
+    <span class="chapter">第1話</span>
+    <span class="issue">2026.05 · ¥0</span>
+  </div>
 
-      <div class="mp-header">
-        <div class="ch">第1話 · The Self</div>
-        <h3>DEV ATTRI</h3>
-      </div>
-
-      <div class="mp-panel action">
-        <div class="mp-screentone"></div>
-        <span class="sfx sfx-tr">WHO?</span>
-        <div class="label">IDENTITY</div>
-        <p>I'm figuring it out. Building things, breaking them, learning. Not polished, not finished — just <span class="highlight">obsessed</span> with making things work.</p>
-      </div>
-
-      <div class="mp-panel">
-        <span class="sfx sfx-bl">SWISH</span>
-        <div class="label">PHILOSOPHY</div>
-        <p>Ship first. Refine later. Hard work beats talent that doesn't work. Everything worth doing is on the other side of <span class="highlight">discomfort</span>.</p>
-      </div>
-
-      <div class="mp-panel">
-        <span class="sfx sfx-tr" style="font-size:.35rem">STACK</span>
-        <div class="label">CURRENT FOCUS</div>
-        <p>TypeScript · Next.js · Prisma · APIs · Deep in full-stack architecture. Based in India. <span class="highlight">Learning in public.</span></p>
-      </div>
-
-      <div class="mp-panel">
-        <div class="mp-screentone"></div>
-        <div class="label">POETRY</div>
-        <p style="font-style:italic">"my eyes are where your eyes is — you blinked and i rewired."</p>
-      </div>
-
-      <div class="mp-panel">
-        <span class="sfx sfx-bl">...</span>
-        <div class="label">BELIEFS</div>
-        <p>People remember how you made them feel, not what you said. The best stories are the ones you're scared to tell.</p>
-      </div>
-
+  <!-- ESTABLISHING SHOT -->
+  <div class="panels">
+    <div class="panel action p-full">
+      <span class="sfx sfx-xl sfx-tr">ドン</span>
+      <div class="panel-label">ESTABLISHING SHOT</div>
+      <h3>DEV ATTRI</h3>
+      <p>A <span class="bold">builder</span> in the making. Runs 40km a week. Lifts heavy things. Ships code that sometimes breaks and always gets fixed. Based in India. Learning in public. The story of someone who refuses to wait until they're ready.</p>
     </div>
   </div>
 
-  <!-- FLIPPING PAGE -->
-  <div class="page-flip">
+  <!-- ROW: CHARACTER CARD + PHILOSOPHY -->
+  <div class="row-2">
+    <div class="panel screentone">
+      <span class="sfx sfx-md sfx-br">ザッ</span>
+      <div class="panel-label">CHARACTER PROFILE</div>
+      <h4>Name: Dev Attri</h4>
+      <p style="font-size:.48rem">
+        <span class="bold">Class:</span> Builder / Runner / Lifter<br>
+        <span class="bold">Level:</span> Learning ∞<br>
+        <span class="bold">HP:</span> High / <span class="bold">MP:</span> Medium<br>
+        <span class="bold">Location:</span> India<br>
+        <span class="bold">Status:</span> Active · Grinding
+      </p>
+    </div>
+    <div class="panel">
+      <span class="sfx sfx-sm sfx-tl">フッ</span>
+      <div class="panel-label">INNER MONOLOGUE</div>
+      <div class="thought">I don't believe in waiting until I'm ready. I ship first, then refine.</div>
+      <div class="thought">Everything worth doing is on the other side of discomfort.</div>
+      <div class="thought">Hard work beats talent when talent doesn't work hard.</div>
+    </div>
+  </div>
 
-    <!-- FRONT — Cover -->
-    <div class="cover">
-      <div class="cover-content">
-        <div class="author">Dev Attri</div>
-        <h1>Attri</h1>
-        <div class="ornament">❦</div>
-        <div class="sub">A book of building, breaking, and becoming</div>
-        <div class="hint">✦ click to open ✦</div>
+  <!-- IMPACT TEXT -->
+  <div class="impact">⚡ THE WORKSHOP ⚡</div>
+
+  <!-- ROW: LIVE TOOL + STATS -->
+  <div class="row-2">
+    <div class="panel dark">
+      <span class="sfx sfx-lg sfx-tr" style="color:rgba(255,255,255,.06)">NOW</span>
+      <div class="panel-label">CURRENT MISSION</div>
+      <h4><a href="/grit" style="color:var(--paper);border-color:var(--paper)">VEKTOR ▶</a></h4>
+      <p style="color:rgba(255,255,255,.7)">Hybrid Athlete Command Center. An adaptive performance OS for athletes who track everything.</p>
+
+      <div class="bubble" style="font-size:.4rem;margin-top:.5rem;border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.7)">
+        "Your aerobic efficiency improved this week. Maintain current mileage and reduce lateral work."
       </div>
     </div>
 
-    <!-- BACK — Newspaper -->
-    <div class="spread-right">
-
-      <div class="news-masthead">
-        <h3>The Daily Attri</h3>
-        <div class="news-date">Sunday Edition · Vol I · No 1</div>
-      </div>
-
-      <div class="news-article">
-        <h4>VEKTOR: Adaptive Performance OS Ships to Public</h4>
-        <div class="by">By Tools Desk</div>
-        <p>Hybrid Athlete Command Center now live. Track readiness, runs, strength, recovery, and injuries in one tactical dashboard. <a href="/grit" target="_blank">→ Open VEKTOR</a></p>
-      </div>
-
-      <div class="news-article">
-        <h4>Stack Report: TypeScript Leads Development Front</h4>
-        <div class="by">By Tech Desk</div>
-        <p>Next.js · Prisma · Python · APIs remain active. Full-stack systems being built at the edge. More tools in development pipeline.</p>
-      </div>
-
-      <div class="news-article">
-        <h4>Workshop Inventory: Five Tools Shipped</h4>
-        <div class="by">By Product Desk</div>
-        <p>VEKTOR · Weather App · Macro Tracker · Max Workspace · attridevv.com. Each one sharper than the last. More compounds brewing.</p>
-      </div>
-
-      <div class="news-article">
-        <h4>Half Marathon Achievement Unlocked</h4>
-        <div class="by">By Sports Desk</div>
-        <p>42.5km weekly average. Hybrid athlete training — running, lifting, recovery. Chess ELO: 1000. The body and mind sharpen together.</p>
-      </div>
-
-      <div class="news-classifieds">
-        <h5>✦ Signal Board</h5>
-        <div class="class-row">
-          <a href="https://github.com/attridevv" target="_blank" class="class-tag">GITHUB</a>
-          <a href="https://x.com/attridevv" target="_blank" class="class-tag">X</a>
-          <a href="https://instagram.com/attridevv" target="_blank" class="class-tag">INSTAGRAM</a>
-          <a href="https://anilist.co/user/Attridevv/" target="_blank" class="class-tag">ANILIST</a>
-        </div>
-      </div>
-
+    <div class="panel screentone">
+      <div class="panel-label">STATS</div>
+      <div class="stat-bar"><span class="stat-label">Running</span><span class="stat-fill" style="--pct:85%"></span><span class="stat-val">42.5km/wk</span></div>
+      <div class="stat-bar"><span class="stat-label">Lifting</span><span class="stat-fill" style="--pct:70%"></span><span class="stat-val">12.4K kg</span></div>
+      <div class="stat-bar"><span class="stat-label">Coding</span><span class="stat-fill" style="--pct:90%"></span><span class="stat-val">5+ tools</span></div>
+      <div class="stat-bar"><span class="stat-label">Sleep</span><span class="stat-fill" style="--pct:72%"></span><span class="stat-val">7.2h avg</span></div>
+      <div class="stat-bar"><span class="stat-label">Learning</span><span class="stat-fill" style="--pct:100%"></span><span class="stat-val">∞</span></div>
     </div>
+  </div>
 
+  <!-- ROW: TOOLS -->
+  <div class="row-3">
+    <div class="panel">
+      <span class="sfx sfx-sm sfx-bl">ピ</span>
+      <div class="panel-label">ITEM</div>
+      <p><span class="bold">Weather App</span><br>API-driven · States · Errors</p>
+    </div>
+    <div class="panel">
+      <div class="panel-label">ITEM</div>
+      <p><span class="bold">Macro Tracker</span><br>Nutrition · Forms · Persistence</p>
+    </div>
+    <div class="panel">
+      <div class="panel-label">ITEM</div>
+      <p><span class="bold">Max Workspace</span><br>Clean layouts · Browser surfaces</p>
+    </div>
+  </div>
+
+  <!-- ROW: POETRY + BELIEFS -->
+  <div class="row-2">
+    <div class="panel screentone">
+      <span class="sfx sfx-md sfx-tr" style="font-style:italic">poem</span>
+      <div class="panel-label">POETRY</div>
+      <p style="font-style:italic;font-size:.5rem;line-height:1.8">
+        "my eyes are where your eyes is —<br>
+        you blinked and i rewired."
+      </p>
+      <p style="font-style:italic;font-size:.48rem;line-height:1.8;margin-top:.3rem">
+        "i don't believe in god<br>
+        but i prayed when you held me."
+      </p>
+    </div>
+    <div class="panel">
+      <div class="panel-label">BELIEF SYSTEM</div>
+      <p>
+        <span class="bold">01</span> People remember how you made them feel, not what you said.<br>
+        <span class="bold">02</span> The best stories are the ones you're scared to tell.<br>
+        <span class="bold">03</span> Small wins compound. Keep showing up.
+      </p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="page-footer">
+    <div class="tags" style="justify-content:center;margin-bottom:.5rem">
+      <a href="https://github.com/attridevv" target="_blank" class="tag">GITHUB</a>
+      <a href="https://x.com/attridevv" target="_blank" class="tag">X</a>
+      <a href="https://instagram.com/attridevv" target="_blank" class="tag">INSTAGRAM</a>
+      <a href="https://anilist.co/user/Attridevv/" target="_blank" class="tag">ANILIST</a>
+    </div>
+    続く → To Be Continued · 次号予告: More builds. More runs. More becoming.
   </div>
 
 </div>
 
-<button class="nav-btn" id="flipBtn" onclick="toggleBook()">Open Book</button>
-
-<script>
-var open=false;
-function toggleBook(){
-  open=!open;
-  document.getElementById('book').classList.toggle('open',open);
-  document.getElementById('flipBtn').textContent=open?'Close Book':'Open Book';
-}
-document.querySelector('.page-flip').addEventListener('click',toggleBook);
-</script>
 </body>
 </html>
