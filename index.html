@@ -7,325 +7,368 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap');
+
 body{
-  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-family:'Inter',-apple-system,sans-serif;
   width:100vw;height:100vh;overflow:hidden;display:flex;
+  background:#000;
 }
 
-/* ===== LEFT WORLD — Cherry Blossom Peace ===== */
+.world{flex:1;position:relative;overflow:hidden;cursor:pointer;text-decoration:none;color:inherit}
+.world:active{transform:scale(.98)}
+
+canvas.world-canvas{position:absolute;inset:0;z-index:1}
+
+/* ===== LEFT — SAKURA REALM ===== */
 .world-l{
-  flex:1;position:relative;overflow:hidden;cursor:pointer;
-  text-decoration:none;color:inherit;
-  background:radial-gradient(ellipse at 60% 50%,rgba(236,72,153,.08),transparent 50%),
-    linear-gradient(to right,#0d0812,#1a0a18);
-  transition:all .6s;
+  background:linear-gradient(to bottom,#0d0515,#1a0618,#0d0515);
 }
-.world-l:hover{background:radial-gradient(ellipse at 60% 50%,rgba(236,72,153,.15),transparent 45%),
-  linear-gradient(to right,#150a1a,#220a1e)}
+/* Radial warmth */
+.world-l::before{
+  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 60%,rgba(236,72,153,.15),transparent 60%),
+    radial-gradient(ellipse at 80% 30%,rgba(251,191,36,.06),transparent 50%);
+}
 
-/* ===== RIGHT WORLD — Lightning Void ===== */
+/* ===== RIGHT — VOID REALM ===== */
 .world-r{
-  flex:1;position:relative;overflow:hidden;cursor:pointer;
-  text-decoration:none;color:inherit;
-  background:radial-gradient(ellipse at 40% 50%,rgba(168,85,247,.06),transparent 50%),
-    linear-gradient(to left,#010108,#0a0a1a);
-  transition:all .6s;
+  background:linear-gradient(to bottom,#010108,#020210,#010108);
 }
-.world-r:hover{background:radial-gradient(ellipse at 40% 50%,rgba(168,85,247,.12),transparent 45%),
-  linear-gradient(to left,#020210,#0d0d22)}
-
-/* ===== CANVAS LAYERS ===== */
-canvas{position:absolute;inset:0;pointer-events:none}
-
-/* ===== PETALS (CSS) ===== */
-.petals{position:absolute;inset:0;pointer-events:none}
-.petal{position:absolute;border-radius:50% 0 50% 0;animation:petalFall var(--dur) ease-in-out infinite;animation-delay:var(--del);left:var(--x);opacity:0}
-.petal.pink{width:5px;height:9px;background:radial-gradient(ellipse at 30% 30%,#fce7f3,#f9a8d4)}
-.petal.light{width:4px;height:7px;background:radial-gradient(ellipse at 30% 30%,#fff,#fce7f3)}
-@keyframes petalFall{
-  0%{opacity:.8;transform:translate(0,0)rotate(0deg)}
-  20%{transform:translate(var(--d1),15vh)rotate(72deg)}
-  40%{transform:translate(var(--d2),30vh)rotate(144deg)}
-  60%{opacity:.5;transform:translate(var(--d3),50vh)rotate(216deg)}
-  80%{transform:translate(var(--d4),70vh)rotate(288deg)}
-  100%{opacity:0;transform:translate(var(--d5),95vh)rotate(360deg)}
+.world-r::before{
+  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 40%,rgba(88,28,135,.12),transparent 55%),
+    radial-gradient(ellipse at 30% 70%,rgba(30,64,175,.04),transparent 50%);
 }
 
-/* ===== CONTENT ===== */
-.content{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;pointer-events:none}
-.content-inner{text-align:center;transition:transform .5s cubic-bezier(.16,1,.3,1)}
-.world-l:hover .content-inner{transform:translateY(-8px)}
-.world-r:hover .content-inner{transform:translateY(-8px)}
-
-.c-number{display:block;font-size:.5rem;letter-spacing:.25em;text-transform:uppercase;margin-bottom:.5rem;font-weight:700;opacity:.4;transition:opacity .4s}
-.world-l:hover .c-number{opacity:.7}.world-r:hover .c-number{opacity:.7}
-.world-l .c-number{color:#f9a8d4}.world-r .c-number{color:#c084fc}
-
-.c-title{display:block;font-size:1.6rem;font-weight:900;letter-spacing:.04em;margin-bottom:.25rem;transition:text-shadow .4s}
-.world-l .c-title{color:#fce7f3}.world-r .c-title{color:#e9d5ff}
-.world-l:hover .c-title{text-shadow:0 0 40px rgba(236,72,153,.4)}
-.world-r:hover .c-title{text-shadow:0 0 40px rgba(168,85,247,.4)}
-
-.c-desc{display:block;font-size:.52rem;letter-spacing:.1em;color:rgba(255,255,255,.2)}
-.world-l:hover .c-desc{color:rgba(255,255,255,.35)}
-.world-r:hover .c-desc{color:rgba(255,255,255,.35)}
-
-/* ===== CENTER DIVIDER ===== */
-.divider{
-  position:fixed;top:0;bottom:0;left:50%;width:1px;z-index:20;
-  background:linear-gradient(to bottom,transparent,rgba(255,255,255,.08) 20%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.08) 80%,transparent);
+/* ===== CONTENT OVERLAY ===== */
+.content{
+  position:absolute;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;
   pointer-events:none;
-  animation:divPulse 3s ease-in-out infinite;
 }
-@keyframes divPulse{0%,100%{opacity:.6}50%{opacity:1}}
+.inner{text-align:center;transition:all .6s cubic-bezier(.16,1,.3,1)}
+.world:hover .inner{transform:translateY(-12px)}
 
-/* ===== BRANCH REACHING ACROSS ===== */
-.branch{position:fixed;top:0;left:0;right:0;height:40%;z-index:5;pointer-events:none;opacity:.15}
-.branch svg{width:100%;height:100%}
+.japanese{
+  display:block;font-size:2.5rem;margin-bottom:.5rem;opacity:.15;transition:all .5s;
+  letter-spacing:.1em;
+}
+.world:hover .japanese{opacity:.25;transform:scale(1.05)}
+.world-l .japanese{color:#f9a8d4}.world-r .japanese{color:#c084fc}
+
+.realm-title{
+  display:block;font-size:2.8rem;font-weight:900;letter-spacing:.02em;margin-bottom:.3rem;
+  transition:all .5s;
+}
+.world-l .realm-title{color:#fce7f3}.world-r .realm-title{color:#e9d5ff}
+.world:hover .realm-title{transform:scale(1.04)}
+
+.realm-sub{
+  display:block;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;
+  opacity:.3;transition:all .5s;
+}
+.world-l .realm-sub{color:#f9a8d4}.world-r .realm-sub{color:#c084fc}
+.world:hover .realm-sub{opacity:.6;letter-spacing:.25em}
+
+.realm-desc{
+  display:block;font-size:.55rem;opacity:0;transform:translateY(8px);transition:all .5s;
+  margin-top:.75rem;letter-spacing:.08em;
+}
+.world-l .realm-desc{color:rgba(252,231,243,.5)}.world-r .realm-desc{color:rgba(233,213,255,.5)}
+.world:hover .realm-desc{opacity:1;transform:translateY(0)}
+
+/* ===== CENTER ===== */
+.center-line{
+  position:fixed;top:5%;bottom:5%;left:50%;width:1px;z-index:30;pointer-events:none;
+  background:linear-gradient(to bottom,transparent,rgba(168,85,247,.4),rgba(255,255,255,.15),rgba(168,85,247,.4),transparent);
+  box-shadow:0 0 15px rgba(168,85,247,.3),0 0 30px rgba(139,92,246,.15);
+  animation:linePulse 2.5s ease-in-out infinite;
+}
+@keyframes linePulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+.center-node{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:31;pointer-events:none;
+  width:12px;height:12px;border-radius:50%;
+  background:#c084fc;box-shadow:0 0 20px rgba(168,85,247,.8),0 0 60px rgba(139,92,246,.4);
+  animation:nodePulse 3s ease-in-out infinite;
+}
+@keyframes nodePulse{0%,100%{transform:translate(-50%,-50%)scale(1);opacity:.7}50%{transform:translate(-50%,-50%)scale(1.8);opacity:.4}}
 
 /* ===== RESPONSIVE ===== */
 @media(max-width:768px){
   body{flex-direction:column}
-  .world-l,.world-r{flex:none;height:50vh}
-  .divider{top:50%;left:0;right:0;bottom:auto;width:100%;height:1px}
-  .c-title{font-size:1.15rem}
+  .world{flex:none;height:50vh}
+  .center-line{top:50%;left:5%;right:5%;bottom:auto;width:auto;height:1px}
+  .center-node{top:50%}
+  .realm-title{font-size:1.8rem}
+  .japanese{font-size:1.6rem}
 }
 </style>
 </head>
 <body>
 
-<!-- ===== LEFT WORLD — Sakura ===== -->
-<a href="/fire" class="world-l">
-  <canvas id="sakuraCanvas"></canvas>
-  <div class="petals" id="petals-l"></div>
+<!-- ===== LEFT — SAKURA ===== -->
+<a href="/fire" class="world world-l">
+  <canvas class="world-canvas" id="c-sakura"></canvas>
   <div class="content">
-    <div class="content-inner">
-      <span class="c-number">第一章</span>
-      <span class="c-title">About</span>
-      <span class="c-desc">The self · Leo · Identity</span>
+    <div class="inner">
+      <span class="japanese">桜</span>
+      <span class="realm-title">About</span>
+      <span class="realm-sub">第一章 · The Self</span>
+      <span class="realm-desc">Leo · Identity · Who I am</span>
     </div>
   </div>
 </a>
 
-<!-- ===== RIGHT WORLD — Void Lightning ===== -->
-<a href="/water" class="world-r">
-  <canvas id="voidCanvas"></canvas>
+<!-- ===== RIGHT — VOID ===== -->
+<a href="/water" class="world world-r">
+  <canvas class="world-canvas" id="c-void"></canvas>
   <div class="content">
-    <div class="content-inner">
-      <span class="c-number">第二章</span>
-      <span class="c-title">Create</span>
-      <span class="c-desc">Tools · Builds · The work</span>
+    <div class="inner">
+      <span class="japanese">雷</span>
+      <span class="realm-title">Create</span>
+      <span class="realm-sub">第二章 · The Work</span>
+      <span class="realm-desc">Tools · Builds · What I make</span>
     </div>
   </div>
 </a>
 
-<!-- ===== CENTER DIVIDER ===== -->
-<div class="divider"></div>
-
-<!-- ===== SAKURA BRANCH ===== -->
-<div class="branch">
-  <svg viewBox="0 0 1200 300" preserveAspectRatio="none">
-    <path d="M200,300 Q300,250 400,200 Q500,150 600,180 Q700,210 800,170 Q900,130 1000,200" stroke="rgba(236,72,153,.2)" stroke-width="3" fill="none"/>
-    <path d="M350,240 Q380,220 420,200" stroke="rgba(236,72,153,.12)" stroke-width="2" fill="none"/>
-    <path d="M700,190 Q750,160 820,170" stroke="rgba(168,85,247,.08)" stroke-width="2" fill="none"/>
-    <!-- Pink blossoms -->
-    <circle cx="400" cy="200" r="15" fill="rgba(249,168,212,.15)"/><circle cx="400" cy="200" r="8" fill="rgba(249,168,212,.08)"/>
-    <circle cx="600" cy="180" r="12" fill="rgba(251,207,232,.12)"/><circle cx="600" cy="180" r="6" fill="rgba(251,207,232,.06)"/>
-    <circle cx="800" cy="170" r="10" fill="rgba(216,180,254,.08)"/><circle cx="800" cy="170" r="5" fill="rgba(216,180,254,.04)"/>
-  </svg>
-</div>
+<div class="center-line"></div>
+<div class="center-node"></div>
 
 <script>
-// ==================== LEFT — SAKURA CANVAS ====================
-(function() {
-  var c = document.getElementById('sakuraCanvas'),
-      ctx = c.getContext('2d'),
-      w, h;
+// ==================== SAKURA ENGINE ====================
+(function(){
+var c=document.getElementById('c-sakura'),ctx=c.getContext('2d'),w,h;
+var petals=[],blooms=[],lights=[],branches=[];
+var wind=0,targetWind=0,time=0;
 
-  function resize() {
-    w = c.width = c.parentElement.offsetWidth;
-    h = c.height = c.parentElement.offsetHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
+function R(){w=c.width=c.parentElement.offsetWidth;h=c.height=c.parentElement.offsetHeight}
+R();window.addEventListener('resize',function(){R();initStatic()});
 
-  // Cherry blossom on tree branches (static positions)
-  var blooms = [];
-  for (var i = 0; i < 25; i++) {
+function initStatic(){
+  // Tree branches
+  branches=[];
+  var bx=w*.35,by=h*.55;
+  branches.push({x:bx,y:by,angle:-1.4,len:w*.35,thick:14,children:[]});
+  branches.push({x:bx,y:by,angle:-1.0,len:w*.28,thick:10,children:[]});
+  branches.push({x:bx,y:by,angle:-.6,len:w*.22,thick:8,children:[]});
+  branches.push({x:bx,y:by,angle:0,len:w*.15,thick:6,children:[]});
+
+  // Bloom clusters on branches
+  blooms=[];
+  for(var i=0;i<60;i++){
     blooms.push({
-      x: Math.random() * w,
-      y: Math.random() * h * 0.45 + h * 0.1,
-      r: 3 + Math.random() * 12,
-      o: 0.06 + Math.random() * 0.12,
-      pulse: Math.random() * Math.PI * 2
+      x:Math.random()*w*.7+w*.05,y:Math.random()*h*.55+h*.05,
+      r:4+Math.random()*18,o:.06+Math.random()*.15,
+      phase:Math.random()*Math.PI*2,speed:.002+Math.random()*.004
     });
   }
 
-  // Gentle floating dots
-  var dots = [];
-  for (var i = 0; i < 30; i++) {
-    dots.push({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      r: 0.5 + Math.random() * 1.5,
-      vy: -0.1 - Math.random() * 0.3,
-      o: 0.1 + Math.random() * 0.3,
-      phase: Math.random() * Math.PI * 2
+  // Floating petals (100+)
+  petals=[];
+  for(var i=0;i<120;i++){
+    petals.push({
+      x:Math.random()*w,y:Math.random()*h,
+      vx:(Math.random()-.5)*.6,vy:.3+Math.random()*.8,
+      r:2+Math.random()*3,rot:Math.random()*Math.PI*2,rspeed:(Math.random()-.5)*.03,
+      o:.3+Math.random()*.5,phase:Math.random()*Math.PI*2,
+      color:Math.random()>.3?0:1 // 0=pink, 1=white
     });
   }
 
-  function draw(t) {
-    if (w !== c.parentElement.offsetWidth || h !== c.parentElement.offsetHeight) resize();
-    ctx.clearRect(0, 0, w, h);
-
-    // Blossom clusters
-    blooms.forEach(function(b) {
-      var pulse = 0.6 + 0.4 * Math.sin(t * 0.002 + b.pulse);
-      var grad = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
-      grad.addColorStop(0, 'rgba(252,231,243,' + (b.o * pulse * 1.5) + ')');
-      grad.addColorStop(0.5, 'rgba(249,168,212,' + (b.o * pulse) + ')');
-      grad.addColorStop(1, 'transparent');
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-      ctx.fill();
+  // Ambient lights
+  lights=[];
+  for(var i=0;i<40;i++){
+    lights.push({
+      x:Math.random()*w,y:Math.random()*h,
+      vy:-.15-Math.random()*.35,r:.5+Math.random()*1.2,
+      o:.08+Math.random()*.2,phase:Math.random()*Math.PI*2
     });
-
-    // Floating light dots
-    dots.forEach(function(d) {
-      d.y += d.vy;
-      if (d.y < -10) { d.y = h + 10; d.x = Math.random() * w; }
-      var blink = 0.5 + 0.5 * Math.sin(t * 0.003 + d.phase);
-      ctx.beginPath();
-      ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(252,231,243,' + (d.o * blink) + ')';
-      ctx.fill();
-    });
-
-    requestAnimationFrame(draw);
   }
-  requestAnimationFrame(draw);
+}
 
-  // CSS Petals
-  var p = document.getElementById('petals-l'), hh = '';
-  for (var i = 0; i < 35; i++) {
-    var x = Math.random() * 90;
-    var dur = 7 + Math.random() * 12;
-    var del = Math.random() * 14;
-    var d1 = (Math.random() - 0.5) * 60;
-    var d2 = (Math.random() - 0.5) * 40;
-    var d3 = (Math.random() - 0.5) * 30;
-    var d4 = (Math.random() - 0.5) * 25;
-    var d5 = (Math.random() - 0.5) * 80;
-    var cls = Math.random() > 0.25 ? 'pink' : 'light';
-    hh += '<div class="petal ' + cls + '" style="--x:' + x + '%;--dur:' + dur + 's;--del:' + del + 's;--d1:' + d1 + 'px;--d2:' + d2 + 'px;--d3:' + d3 + 'px;--d4:' + d4 + 'px;--d5:' + d5 + 'px"></div>';
-  }
-  p.innerHTML = hh;
+function drawBranch(x,y,angle,len,thick){
+  if(len<8||thick<1)return;
+  ctx.beginPath();ctx.moveTo(x,y);
+  var ex=x+Math.cos(angle)*len,ey=y+Math.sin(angle)*len;
+  ctx.lineTo(ex,ey);
+  ctx.strokeStyle='#1a0a18';ctx.lineWidth=thick;ctx.stroke();
+  // Highlight
+  ctx.strokeStyle='rgba(236,72,153,.08)';ctx.lineWidth=thick*.5;ctx.stroke();
+
+  // Sub-branches
+  var subAngle=angle+(Math.random()-.5)*.8;
+  drawBranch(ex,ey,subAngle,len*.58,thick*.6);
+  subAngle=angle+(Math.random()-.5)*.7;
+  drawBranch(ex,ey,subAngle,len*.5,thick*.55);
+}
+
+function drawFrame(ts){
+  time=ts;
+  if(w!==c.parentElement.offsetWidth||h!==c.parentElement.offsetHeight)R();
+  ctx.clearRect(0,0,w,h);
+
+  // Wind
+  targetWind=Math.sin(ts*.0003)*.3;
+  wind+=(targetWind-wind)*.02;
+
+  // Draw tree
+  branches.forEach(function(b){drawBranch(b.x,b.y,b.angle+wind,b.len,b.thick)});
+
+  // Blooms
+  blooms.forEach(function(b){
+    var pulse=.6+.4*Math.sin(ts*b.speed+b.phase);
+    var g=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,b.r);
+    g.addColorStop(0,'rgba(252,231,243,'+(b.o*pulse*1.3)+')');
+    g.addColorStop(.4,'rgba(249,168,212,'+(b.o*pulse)+')');
+    g.addColorStop(1,'transparent');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.fill();
+  });
+
+  // Petals
+  petals.forEach(function(p){
+    p.x+=p.vx+wind*.8;p.y+=p.vy;p.rot+=p.rspeed;
+    if(p.y>h+20){p.y=-20;p.x=Math.random()*w;p.rot=Math.random()*Math.PI*2}
+    if(p.x<-20)p.x=w+20;if(p.x>w+20)p.x=-20;
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+    var col=p.color===0?'rgba(249,168,212,'+p.o+')':'rgba(252,231,243,'+(p.o*.8)+')';
+    ctx.fillStyle=col;ctx.beginPath();
+    ctx.moveTo(0,0);ctx.bezierCurveTo(-p.r,-p.r*.2,-p.r*.3,-p.r*1.2,0,-p.r*1.5);
+    ctx.bezierCurveTo(p.r*.3,-p.r*1.2,p.r,-p.r*.2,0,0);
+    ctx.fill();ctx.restore();
+  });
+
+  // Ambient lights
+  lights.forEach(function(l){
+    l.y+=l.vy;if(l.y<-10){l.y=h+10;l.x=Math.random()*w}
+    var b=.5+.5*Math.sin(ts*.002+l.phase);
+    ctx.beginPath();ctx.arc(l.x,l.y,l.r,0,Math.PI*2);
+    ctx.fillStyle='rgba(252,231,243,'+(l.o*b)+')';ctx.fill();
+  });
+
+  requestAnimationFrame(drawFrame);
+}
+
+initStatic();
+requestAnimationFrame(drawFrame);
 })();
 
-// ==================== RIGHT — VOID LIGHTNING CANVAS ====================
-(function() {
-  var c = document.getElementById('voidCanvas'),
-      ctx = c.getContext('2d'),
-      w, h;
+// ==================== VOID LIGHTNING ENGINE ====================
+(function(){
+var c=document.getElementById('c-void'),ctx=c.getContext('2d'),w,h;
+var bolts=[],stars=[],darkParticles=[],lastBolt=0;
 
-  function resize() {
-    w = c.width = c.parentElement.offsetWidth;
-    h = c.height = c.parentElement.offsetHeight;
+function R(){w=c.width=c.parentElement.offsetWidth;h=c.height=c.parentElement.offsetHeight}
+R();window.addEventListener('resize',function(){R();initStars()});
+
+function initStars(){
+  stars=[];
+  for(var i=0;i<50;i++){
+    stars.push({x:Math.random()*w,y:Math.random()*h,r:.2+Math.random()*.8,o:.05+Math.random()*.2,phase:Math.random()*Math.PI*2});
   }
-  resize();
-  window.addEventListener('resize', resize);
+  darkParticles=[];
+  for(var i=0;i<30;i++){
+    darkParticles.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.2,vy:(Math.random()-.5)*.2-.1,r:.5+Math.random()*1.5,o:.04+Math.random()*.1,phase:Math.random()*Math.PI*2});
+  }
+}
 
-  var bolts = [];
-  var lastBolt = 0;
-
-  function genBolt() {
-    var x = w * 0.5 + (Math.random() - 0.5) * w * 0.6;
-    var pts = [{ x: x, y: h * 0.02 }];
-    for (var i = 0; i < 10; i++) {
-      x += (Math.random() - 0.5) * 30;
-      var y = pts[pts.length - 1].y + h * 0.08 + Math.random() * h * 0.05;
-      pts.push({ x: x, y: y });
-      if (Math.random() < 0.2 && i > 2) {
-        var fx = x, fy = pts[pts.length - 1].y;
-        var fork = [{ x: fx, y: fy }];
-        for (var j = 0; j < 5; j++) { fx += (Math.random() - 0.5) * 20; fy += h * 0.05 + Math.random() * h * 0.03; fork.push({ x: fx, y: fy }); }
-        pts[pts.length - 1].fork = fork;
-      }
+function genBolt(){
+  var x=w*.3+Math.random()*w*.4,y=h*.02;
+  var pts=[{x:x,y:y}];
+  var segments=8+Math.floor(Math.random()*6);
+  for(var i=0;i<segments;i++){
+    x+=(Math.random()-.5)*40;
+    y+=h/(segments+1)+Math.random()*h*.04;
+    pts.push({x:x,y:y});
+    // Forks
+    if(Math.random()<.3&&i>2){
+      var fx=x,fy=y;
+      var fork=[{x:fx,y:fy}];
+      for(var j=0;j<5;j++){fx+=(Math.random()-.5)*30;fy+=h*.04+Math.random()*h*.03;fork.push({x:fx,y:fy})}
+      pts[pts.length-1].fork=fork;
     }
-    return { pts: pts, life: 30, alpha: 0.6 + Math.random() * 0.4 };
-  }
-
-  // Static stars in void
-  var stars = [];
-  for (var i = 0; i < 40; i++) {
-    stars.push({
-      x: Math.random() * w, y: Math.random() * h,
-      r: 0.3 + Math.random() * 0.7,
-      o: 0.08 + Math.random() * 0.2,
-      pulse: Math.random() * Math.PI * 2
-    });
-  }
-
-  function drawBolt(bolt) {
-    if (bolt.life <= 0) return;
-    var a = bolt.alpha * (bolt.life / 30);
-
-    function drawPath(pts) {
-      ctx.moveTo(pts[0].x, pts[0].y);
-      for (var i = 1; i < pts.length; i++) {
-        if (pts[i].fork) { ctx.lineTo(pts[i - 1].x, pts[i - 1].y); drawPath(pts[i].fork); ctx.moveTo(pts[i - 1].x, pts[i - 1].y); }
-        else ctx.lineTo(pts[i].x, pts[i].y);
-      }
+    // Sub-forks
+    if(Math.random()<.2&&i>4){
+      var fx2=x,fy2=y;
+      var fork2=[{x:fx2,y:fy2}];
+      for(var k=0;k<3;k++){fx2+=(Math.random()-.5)*20;fy2+=h*.03;fork2.push({x:fx2,y:fy2})}
+      pts[pts.length-1].fork2=fork2;
     }
-
-    // Glow
-    ctx.strokeStyle = 'rgba(168,85,247,' + (a * 0.3) + ')';
-    ctx.lineWidth = 8; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    ctx.shadowColor = 'rgba(168,85,247,' + (a * 0.5) + ')';
-    ctx.shadowBlur = 20;
-    ctx.beginPath(); drawPath(bolt.pts); ctx.stroke();
-
-    // Purple core
-    ctx.strokeStyle = 'rgba(192,132,252,' + (a * 0.5) + ')';
-    ctx.lineWidth = 3;
-    ctx.shadowBlur = 10;
-    ctx.beginPath(); drawPath(bolt.pts); ctx.stroke();
-
-    // White hot
-    ctx.strokeStyle = 'rgba(255,255,255,' + (a * 0.6) + ')';
-    ctx.lineWidth = 1;
-    ctx.shadowBlur = 4;
-    ctx.beginPath(); drawPath(bolt.pts); ctx.stroke();
-
-    ctx.shadowBlur = 0;
   }
+  return {pts:pts,life:35,alpha:.5+Math.random()*.5};
+}
 
-  function draw(t) {
-    if (w !== c.parentElement.offsetWidth || h !== c.parentElement.offsetHeight) resize();
-    ctx.clearRect(0, 0, w, h);
-
-    // Stars
-    stars.forEach(function(s) {
-      var b = 0.5 + 0.5 * Math.sin(t * 0.002 + s.pulse);
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(196,181,253,' + (s.o * b) + ')';
-      ctx.fill();
-    });
-
-    // Lightning
-    if (t - lastBolt > 2000 + Math.random() * 3000) {
-      bolts.push(genBolt());
-      if (bolts.length > 3) bolts.shift();
-      lastBolt = t;
-    }
-    bolts = bolts.filter(function(b) { return b.life > 0; });
-    bolts.forEach(function(b) { b.life -= 0.5; drawBolt(b); });
-
-    requestAnimationFrame(draw);
+function drawPath(pts){
+  ctx.moveTo(pts[0].x,pts[0].y);
+  for(var i=1;i<pts.length;i++){
+    if(pts[i].fork){ctx.lineTo(pts[i-1].x,pts[i-1].y);drawPath(pts[i].fork);ctx.moveTo(pts[i-1].x,pts[i-1].y)}
+    else if(pts[i].fork2){ctx.lineTo(pts[i-1].x,pts[i-1].y);drawPath(pts[i].fork2);ctx.moveTo(pts[i-1].x,pts[i-1].y)}
+    else ctx.lineTo(pts[i].x,pts[i].y);
   }
-  requestAnimationFrame(draw);
+}
+
+function drawBolt(bolt){
+  if(bolt.life<=0)return;
+  var a=bolt.alpha*(bolt.life/35);
+
+  // Wide glow
+  ctx.strokeStyle='rgba(139,92,246,'+(a*.25)+')';ctx.lineWidth=14;ctx.lineCap='round';ctx.lineJoin='round';
+  ctx.shadowColor='rgba(139,92,246,'+(a*.4)+')';ctx.shadowBlur=30;
+  ctx.beginPath();drawPath(bolt.pts);ctx.stroke();
+
+  // Mid glow
+  ctx.strokeStyle='rgba(168,85,247,'+(a*.4)+')';ctx.lineWidth=6;
+  ctx.shadowColor='rgba(168,85,247,'+(a*.5)+')';ctx.shadowBlur=16;
+  ctx.beginPath();drawPath(bolt.pts);ctx.stroke();
+
+  // Purple core
+  ctx.strokeStyle='rgba(192,132,252,'+(a*.55)+')';ctx.lineWidth=2.5;
+  ctx.shadowColor='rgba(192,132,252,'+(a*.6)+')';ctx.shadowBlur=8;
+  ctx.beginPath();drawPath(bolt.pts);ctx.stroke();
+
+  // White hot
+  ctx.strokeStyle='rgba(255,255,255,'+(a*.65)+')';ctx.lineWidth=.8;
+  ctx.shadowColor='rgba(255,255,255,'+(a*.7)+')';ctx.shadowBlur=3;
+  ctx.beginPath();drawPath(bolt.pts);ctx.stroke();
+
+  ctx.shadowBlur=0;
+}
+
+function drawFrame(ts){
+  if(w!==c.parentElement.offsetWidth||h!==c.parentElement.offsetHeight)R();
+  ctx.clearRect(0,0,w,h);
+
+  // Stars
+  stars.forEach(function(s){
+    var b=.5+.5*Math.sin(ts*.002+s.phase);
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle='rgba(196,181,253,'+(s.o*b)+')';ctx.fill();
+  });
+
+  // Dark particles
+  darkParticles.forEach(function(d){
+    d.x+=d.vx;d.y+=d.vy;
+    if(d.x<0||d.x>w||d.y<0||d.y>h){d.x=Math.random()*w;d.y=Math.random()*h}
+    var b=.5+.5*Math.sin(ts*.003+d.phase);
+    ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+    ctx.fillStyle='rgba(139,92,246,'+(d.o*b)+')';ctx.fill();
+  });
+
+  // Lightning generation
+  if(ts-lastBolt>1500+Math.random()*2500){
+    bolts.push(genBolt());
+    if(bolts.length>4)bolts.shift();
+    lastBolt=ts;
+  }
+  bolts=bolts.filter(function(b){return b.life>0});
+  bolts.forEach(function(b){b.life-=.6;drawBolt(b)});
+
+  requestAnimationFrame(drawFrame);
+}
+
+initStars();
+requestAnimationFrame(drawFrame);
 })();
 </script>
 </body>
