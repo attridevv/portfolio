@@ -3,274 +3,216 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Dev Attri · 第1話</title>
+<title>Dev Attri</title>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-  --paper:#f8f8f6;--ink:#111;--grey:#333;--mid:#777;--light:#bbb;--rule:#ddd;
-  --red:#cc0000;--red-light:rgba(204,0,0,.08);
+  --fire-bg:#0a0404;--fire-surface:#140808;--fire-glow:rgba(239,68,68,.08);
+  --ice-bg:#040a10;--ice-surface:#081420;--ice-glow:rgba(59,130,246,.08);
+  --text:#e2e8f0;--dim:#94a3b8;--faint:#475569;--accent-fire:#ef4444;--accent-ice:#3b82f6;
 }
 
 body{
-  background:#e8e8e4;color:var(--ink);
-  font-family:'Georgia','Times New Roman',serif;
-  display:flex;justify-content:center;align-items:flex-start;
-  min-height:100vh;padding:1.5rem 1rem;
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  width:100vw;height:100vh;overflow:hidden;display:flex;background:#000;
 }
 
-/* ===== MANGA PAGE ===== */
-.page{
-  width:100%;max-width:720px;
-  background:var(--paper);
-  box-shadow:0 1px 8px rgba(0,0,0,.08),0 0 0 1px rgba(0,0,0,.04);
-  padding:1.25rem;
-  position:relative;
+/* ===== WORLDS ===== */
+.world{flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.world-fire{background:var(--fire-bg);border-right:1px solid rgba(239,68,68,.1)}
+.world-ice{background:var(--ice-bg)}
+
+/* ===== AMBIENT GLOW ===== */
+.ambient{position:absolute;inset:0;pointer-events:none;z-index:0}
+.fire-ambient{background:radial-gradient(ellipse at 50% 60%,var(--fire-glow),transparent 65%)}
+.ice-ambient{background:radial-gradient(ellipse at 50% 60%,var(--ice-glow),transparent 65%)}
+
+/* ===== CONTENT ===== */
+.world-content{position:relative;z-index:10;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
+
+/* ===== REALM LABEL ===== */
+.realm-label{font-size:.5rem;letter-spacing:.28em;text-transform:uppercase;font-weight:700;margin-bottom:.5rem}
+.world-fire .realm-label{color:rgba(239,68,68,.5)}.world-ice .realm-label{color:rgba(59,130,246,.5)}
+
+/* ===== MAIN TITLE ===== */
+.realm-title{font-size:1.6rem;font-weight:900;letter-spacing:.06em;margin-bottom:.3rem}
+.world-fire .realm-title{color:#fecaca}.world-ice .realm-title{color:#bfdbfe}
+
+/* ===== DIVIDER LINE ===== */
+.realm-divider{width:40px;height:2px;margin-bottom:1rem}
+.world-fire .realm-divider{background:rgba(239,68,68,.3)}.world-ice .realm-divider{background:rgba(59,130,246,.3)}
+
+/* ===== CONTENT CARDS ===== */
+.realm-cards{display:flex;flex-direction:column;gap:.5rem;width:100%;max-width:280px}
+
+.card{
+  padding:.6rem .75rem;border-radius:6px;transition:all .3s;
+  text-decoration:none;color:inherit;display:block;
 }
+.world-fire .card{background:var(--fire-surface);border:1px solid rgba(239,68,68,.08)}
+.world-fire .card:hover{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.04);transform:translateX(4px)}
+.world-ice .card{background:var(--ice-surface);border:1px solid rgba(59,130,246,.08)}
+.world-ice .card:hover{border-color:rgba(59,130,246,.25);background:rgba(59,130,246,.04);transform:translateX(4px)}
 
-/* ===== TOP STRIP ===== */
-.top-strip{
-  display:flex;justify-content:space-between;align-items:flex-end;
-  border-bottom:2px solid var(--ink);padding-bottom:.4rem;margin-bottom:1rem;
+.card-title{font-size:.6rem;font-weight:700;letter-spacing:.03em;margin-bottom:.15rem}
+.world-fire .card-title{color:var(--accent-fire)}.world-ice .card-title{color:var(--accent-ice)}
+
+.card-desc{font-size:.46rem;color:var(--dim);line-height:1.55}
+
+.live-dot{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:.25rem;animation:pulse 2s infinite}
+.world-fire .live-dot{background:var(--accent-fire)}.world-ice .live-dot{background:var(--accent-ice)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ===== LINKS ROW ===== */
+.links-row{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.75rem;justify-content:center}
+.link{
+  font-size:.4rem;letter-spacing:.1em;text-decoration:none;padding:.2rem .45rem;
+  border-radius:3px;transition:all .25s;
 }
-.top-strip .magazine{font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--mid);font-family:'Inter',sans-serif}
-.top-strip .chapter{font-size:.7rem;font-weight:900;letter-spacing:.06em}
-.top-strip .issue{font-size:.42rem;color:var(--mid);font-family:'Inter',sans-serif;letter-spacing:.08em}
+.world-fire .link{color:rgba(239,68,68,.4);border:1px solid rgba(239,68,68,.1)}
+.world-fire .link:hover{color:var(--accent-fire);border-color:rgba(239,68,68,.3)}
+.world-ice .link{color:rgba(59,130,246,.4);border:1px solid rgba(59,130,246,.1)}
+.world-ice .link:hover{color:var(--accent-ice);border-color:rgba(59,130,246,.3)}
 
-/* ===== PANEL GRID ===== */
-.panels{display:grid;gap:.5rem}
+/* ===== PARTICLES ===== */
+canvas.particles{position:absolute;inset:0;z-index:1;pointer-events:none}
 
-/* ===== PANEL TYPES ===== */
-.panel{
-  border:2px solid var(--ink);padding:.7rem;position:relative;
-  background:var(--paper);overflow:hidden;
-}
+/* ===== CENTER DIVIDER ===== */
+.void-divider{position:fixed;top:0;bottom:0;left:50%;width:1px;z-index:20;pointer-events:none;
+  background:linear-gradient(to bottom,transparent,rgba(255,255,255,.06) 20%,rgba(255,255,255,.1) 50%,rgba(255,255,255,.06) 80%,transparent)}
 
-/* Full width */
-.p-full{grid-column:1/-1}
-
-/* Row layouts */
-.row-2{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
-.row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem}
-.row-2-1{display:grid;grid-template-columns:2fr 1fr;gap:.5rem}
-.row-1-2{display:grid;grid-template-columns:1fr 2fr;gap:.5rem}
-
-/* ===== PANEL STYLES ===== */
-/* Action panel */
-.panel.action{background:var(--paper)}
-.panel.action::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.05;
-  background:repeating-linear-gradient(70deg,transparent,transparent 3px,var(--ink) 3px,var(--ink) 4px)}
-
-/* Dark panel */
-.panel.dark{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.panel.dark .panel-label{color:rgba(255,255,255,.4)}
-.panel.dark p{color:rgba(255,255,255,.8)}
-
-/* Screentone panel */
-.panel.screentone{position:relative}
-.panel.screentone::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.04;
-  background-image:radial-gradient(circle,var(--ink) 1px,transparent 1px);background-size:5px 5px}
-
-/* ===== PANEL ELEMENTS ===== */
-.panel-label{
-  font-size:.42rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);
-  margin-bottom:.25rem;font-family:'Inter',sans-serif;font-weight:700;
-}
-
-.panel h3{font-size:.85rem;font-weight:900;letter-spacing:-.01em;line-height:1.1;margin-bottom:.2rem}
-.panel h4{font-size:.6rem;font-weight:700;line-height:1.2;margin-bottom:.15rem}
-.panel p{font-size:.52rem;line-height:1.65;color:var(--grey)}
-.panel .bold{font-weight:700;color:var(--ink)}
-.panel a{color:var(--ink);font-weight:700;text-decoration:none;border-bottom:1.5px solid var(--ink);transition:all .2s}
-.panel a:hover{color:var(--red);border-color:var(--red)}
-
-/* ===== SFX TEXT ===== */
-.sfx{position:absolute;font-weight:900;pointer-events:none;letter-spacing:.08em}
-.sfx-xl{font-size:1.8rem;opacity:.06}
-.sfx-lg{font-size:1.2rem;opacity:.08}
-.sfx-md{font-size:.8rem;opacity:.1}
-.sfx-sm{font-size:.5rem;opacity:.12}
-.sfx-tl{top:.2rem;left:.3rem}
-.sfx-tr{top:.2rem;right:.3rem}
-.sfx-bl{bottom:.2rem;left:.3rem}
-.sfx-br{bottom:.2rem;right:.3rem}
-
-/* ===== SPEECH BUBBLE ===== */
-.bubble{
-  position:relative;padding:.35rem .5rem;border:1.5px solid var(--ink);border-radius:8px;
-  font-size:.45rem;line-height:1.5;margin:.3rem 0;display:inline-block;max-width:85%;
-  font-family:'Inter',sans-serif;
-}
-.bubble::after{content:'';position:absolute;bottom:-6px;left:15px;
-  width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;
-  border-top:6px solid var(--ink)}
-
-/* ===== THOUGHT BUBBLE ===== */
-.thought{position:relative;padding:.35rem .5rem;border-radius:12px;
-  font-size:.42rem;line-height:1.5;margin:.3rem 0;display:inline-block;max-width:80%;
-  font-family:'Inter',sans-serif;font-style:italic;color:var(--grey);
-  background:rgba(0,0,0,.03);border:1px dashed var(--rule);
-}
-
-/* ===== IMPACT TEXT ===== */
-.impact{
-  text-align:center;font-size:1rem;font-weight:900;letter-spacing:.15em;
-  padding:.3rem 0;margin:.2rem 0;color:var(--ink);
-  border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);
-}
-
-/* ===== TAG ROW ===== */
-.tags{display:flex;flex-wrap:wrap;gap:.25rem}
-.tag{padding:.15rem .35rem;border:1.5px solid var(--ink);font-size:.38rem;font-family:'Inter',sans-serif;
-  font-weight:700;letter-spacing:.04em;text-decoration:none;color:var(--ink);transition:all .2s}
-.tag:hover{background:var(--ink);color:var(--paper)}
-
-/* ===== PROGRESS BAR ===== */
-.stat-bar{display:flex;align-items:center;gap:.4rem;margin:.2rem 0}
-.stat-bar .stat-label{font-size:.4rem;color:var(--mid);min-width:50px;font-family:'Inter',sans-serif;text-transform:uppercase;letter-spacing:.06em}
-.stat-bar .stat-fill{flex:1;height:8px;background:var(--rule);position:relative}
-.stat-bar .stat-fill::after{content:'';position:absolute;left:0;top:0;bottom:0;background:var(--ink);width:var(--pct)}
-.stat-bar .stat-val{font-size:.4rem;font-weight:700;font-family:'Inter',sans-serif}
-
-/* ===== FOOTER ===== */
-.page-footer{text-align:center;border-top:1.5px solid var(--ink);margin-top:.75rem;padding-top:.5rem;
-  font-size:.42rem;letter-spacing:.15em;color:var(--mid);font-family:'Inter',sans-serif}
-.page-footer a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--ink)}
-.page-footer a:hover{color:var(--red)}
+/* ===== FOOTER QUOTE ===== */
+.world-quote{font-size:.38rem;font-style:italic;color:var(--faint);margin-top:1rem;text-align:center;max-width:260px;line-height:1.6}
 
 /* ===== RESPONSIVE ===== */
-@media(max-width:600px){
-  .page{padding:.75rem}
-  .row-2,.row-3,.row-2-1,.row-1-2{grid-template-columns:1fr}
-  .panel h3{font-size:.7rem}
-  .sfx-xl{font-size:1.2rem}
-  .impact{font-size:.7rem}
+@media(max-width:768px){
+  body{flex-direction:column}
+  .world{flex:none;height:50vh}
+  .void-divider{top:50%;left:0;right:0;bottom:auto;width:auto;height:1px}
+  .realm-title{font-size:1.2rem}
+  .card{padding:.5rem .6rem}
 }
 </style>
 </head>
 <body>
 
-<div class="page">
+<!-- ===== FIRE REALM — Personal ===== -->
+<div class="world world-fire">
+  <div class="ambient fire-ambient"></div>
+  <canvas class="particles" id="fire-particles"></canvas>
 
-  <!-- TOP STRIP -->
-  <div class="top-strip">
-    <span class="magazine">週刊アトリ · Weekly Attri</span>
-    <span class="chapter">第1話</span>
-    <span class="issue">2026.05 · ¥0</span>
-  </div>
+  <div class="world-content">
+    <span class="realm-label">第一章 · The Self</span>
+    <span class="realm-title">Fire</span>
+    <div class="realm-divider"></div>
 
-  <!-- ESTABLISHING SHOT -->
-  <div class="panels">
-    <div class="panel action p-full">
-      <span class="sfx sfx-xl sfx-tr">ドン</span>
-      <div class="panel-label">ESTABLISHING SHOT</div>
-      <h3>DEV ATTRI</h3>
-      <p>A <span class="bold">builder</span> in the making. Runs 40km a week. Lifts heavy things. Ships code that sometimes breaks and always gets fixed. Based in India. Learning in public. The story of someone who refuses to wait until they're ready.</p>
-    </div>
-  </div>
-
-  <!-- ROW: CHARACTER CARD + PHILOSOPHY -->
-  <div class="row-2">
-    <div class="panel screentone">
-      <span class="sfx sfx-md sfx-br">ザッ</span>
-      <div class="panel-label">CHARACTER PROFILE</div>
-      <h4>Name: Dev Attri</h4>
-      <p style="font-size:.48rem">
-        <span class="bold">Class:</span> Builder / Runner / Lifter<br>
-        <span class="bold">Level:</span> Learning ∞<br>
-        <span class="bold">HP:</span> High / <span class="bold">MP:</span> Medium<br>
-        <span class="bold">Location:</span> India<br>
-        <span class="bold">Status:</span> Active · Grinding
-      </p>
-    </div>
-    <div class="panel">
-      <span class="sfx sfx-sm sfx-tl">フッ</span>
-      <div class="panel-label">INNER MONOLOGUE</div>
-      <div class="thought">I don't believe in waiting until I'm ready. I ship first, then refine.</div>
-      <div class="thought">Everything worth doing is on the other side of discomfort.</div>
-      <div class="thought">Hard work beats talent when talent doesn't work hard.</div>
-    </div>
-  </div>
-
-  <!-- IMPACT TEXT -->
-  <div class="impact">⚡ THE WORKSHOP ⚡</div>
-
-  <!-- ROW: LIVE TOOL + STATS -->
-  <div class="row-2">
-    <div class="panel dark">
-      <span class="sfx sfx-lg sfx-tr" style="color:rgba(255,255,255,.06)">NOW</span>
-      <div class="panel-label">CURRENT MISSION</div>
-      <h4><a href="/grit" style="color:var(--paper);border-color:var(--paper)">VEKTOR ▶</a></h4>
-      <p style="color:rgba(255,255,255,.7)">Hybrid Athlete Command Center. An adaptive performance OS for athletes who track everything.</p>
-
-      <div class="bubble" style="font-size:.4rem;margin-top:.5rem;border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.7)">
-        "Your aerobic efficiency improved this week. Maintain current mileage and reduce lateral work."
+    <div class="realm-cards">
+      <div class="card">
+        <div class="card-title">Identity</div>
+        <div class="card-desc">Dev Attri. Builder, runner, lifter. Based in India. Figuring it out — one build, one rep, one kilometer at a time.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Philosophy</div>
+        <div class="card-desc">Ship first. Refine later. Hard work beats talent that doesn't work. Everything worth doing is on the other side of discomfort.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Poetry</div>
+        <div class="card-desc" style="font-style:italic">"my eyes are where your eyes is — you blinked and i rewired."</div>
       </div>
     </div>
 
-    <div class="panel screentone">
-      <div class="panel-label">STATS</div>
-      <div class="stat-bar"><span class="stat-label">Running</span><span class="stat-fill" style="--pct:85%"></span><span class="stat-val">42.5km/wk</span></div>
-      <div class="stat-bar"><span class="stat-label">Lifting</span><span class="stat-fill" style="--pct:70%"></span><span class="stat-val">12.4K kg</span></div>
-      <div class="stat-bar"><span class="stat-label">Coding</span><span class="stat-fill" style="--pct:90%"></span><span class="stat-val">5+ tools</span></div>
-      <div class="stat-bar"><span class="stat-label">Sleep</span><span class="stat-fill" style="--pct:72%"></span><span class="stat-val">7.2h avg</span></div>
-      <div class="stat-bar"><span class="stat-label">Learning</span><span class="stat-fill" style="--pct:100%"></span><span class="stat-val">∞</span></div>
+    <div class="links-row">
+      <a href="https://github.com/attridevv" target="_blank" class="link">GitHub</a>
+      <a href="https://x.com/attridevv" target="_blank" class="link">X</a>
+      <a href="https://instagram.com/attridevv" target="_blank" class="link">Instagram</a>
     </div>
-  </div>
 
-  <!-- ROW: TOOLS -->
-  <div class="row-3">
-    <div class="panel">
-      <span class="sfx sfx-sm sfx-bl">ピ</span>
-      <div class="panel-label">ITEM</div>
-      <p><span class="bold">Weather App</span><br>API-driven · States · Errors</p>
-    </div>
-    <div class="panel">
-      <div class="panel-label">ITEM</div>
-      <p><span class="bold">Macro Tracker</span><br>Nutrition · Forms · Persistence</p>
-    </div>
-    <div class="panel">
-      <div class="panel-label">ITEM</div>
-      <p><span class="bold">Max Workspace</span><br>Clean layouts · Browser surfaces</p>
-    </div>
+    <div class="world-quote">"You are under no obligation to be the same person you were five minutes ago."</div>
   </div>
-
-  <!-- ROW: POETRY + BELIEFS -->
-  <div class="row-2">
-    <div class="panel screentone">
-      <span class="sfx sfx-md sfx-tr" style="font-style:italic">poem</span>
-      <div class="panel-label">POETRY</div>
-      <p style="font-style:italic;font-size:.5rem;line-height:1.8">
-        "my eyes are where your eyes is —<br>
-        you blinked and i rewired."
-      </p>
-      <p style="font-style:italic;font-size:.48rem;line-height:1.8;margin-top:.3rem">
-        "i don't believe in god<br>
-        but i prayed when you held me."
-      </p>
-    </div>
-    <div class="panel">
-      <div class="panel-label">BELIEF SYSTEM</div>
-      <p>
-        <span class="bold">01</span> People remember how you made them feel, not what you said.<br>
-        <span class="bold">02</span> The best stories are the ones you're scared to tell.<br>
-        <span class="bold">03</span> Small wins compound. Keep showing up.
-      </p>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <div class="page-footer">
-    <div class="tags" style="justify-content:center;margin-bottom:.5rem">
-      <a href="https://github.com/attridevv" target="_blank" class="tag">GITHUB</a>
-      <a href="https://x.com/attridevv" target="_blank" class="tag">X</a>
-      <a href="https://instagram.com/attridevv" target="_blank" class="tag">INSTAGRAM</a>
-      <a href="https://anilist.co/user/Attridevv/" target="_blank" class="tag">ANILIST</a>
-    </div>
-    続く → To Be Continued · 次号予告: More builds. More runs. More becoming.
-  </div>
-
 </div>
 
+<!-- ===== ICE REALM — Professional ===== -->
+<div class="world world-ice">
+  <div class="ambient ice-ambient"></div>
+  <canvas class="particles" id="ice-particles"></canvas>
+
+  <div class="world-content">
+    <span class="realm-label">第二章 · The Work</span>
+    <span class="realm-title">Ice</span>
+    <div class="realm-divider"></div>
+
+    <div class="realm-cards">
+      <a href="/grit" class="card">
+        <div class="card-title"><span class="live-dot"></span>VEKTOR</div>
+        <div class="card-desc">Hybrid Athlete Command Center. Adaptive performance OS for tracking readiness, runs, strength, recovery & injuries. → Launch</div>
+      </a>
+      <div class="card">
+        <div class="card-title">Weather App</div>
+        <div class="card-desc">API-driven weather interface. Clean data fetching, error handling, readable UI states.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Macro Tracker</div>
+        <div class="card-desc">Nutrition tracking experiment. Forms, local persistence, health tooling exploration.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Max Workspace</div>
+        <div class="card-desc">Workspace concept focused on clean layouts, useful surfaces, browser experiences.</div>
+      </div>
+    </div>
+
+    <div class="links-row">
+      <a href="https://youtube.com/@attridevv" target="_blank" class="link">YouTube</a>
+      <a href="https://anilist.co/user/Attridevv/" target="_blank" class="link">AniList</a>
+    </div>
+
+    <div class="world-quote">"The mystery of human existence lies not in just staying alive, but in finding something to live for." — Dostoevsky</div>
+  </div>
+</div>
+
+<!-- DIVIDER -->
+<div class="void-divider"></div>
+
+<script>
+// Fire particles (embers rising)
+(function(){
+var c=document.getElementById('fire-particles'),ctx=c.getContext('2d'),w,h;
+function R(){w=c.width=c.parentElement.offsetWidth;h=c.height=c.parentElement.offsetHeight}
+R();window.addEventListener('resize',R);
+var pts=[];
+for(var i=0;i<50;i++)pts.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.3,vy:-.3-Math.random()*.8,r:Math.random()*1.5+.5,o:Math.random()*.4+.2,life:Math.random()*150});
+(function D(t){
+if(w!==c.parentElement.offsetWidth||h!==c.parentElement.offsetHeight)R();
+ctx.clearRect(0,0,w,h);
+pts.forEach(function(p){
+p.x+=p.vx;p.y+=p.vy;p.life--;
+if(p.y<-10||p.life<=0){p.x=Math.random()*w;p.y=h+10;p.life=150+Math.random()*100}
+ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+ctx.fillStyle='rgba(239,68,68,'+(p.o*(p.life/150))+')';ctx.fill();
+});
+requestAnimationFrame(D);
+})();
+})();
+
+// Ice particles (frost drifting)
+(function(){
+var c=document.getElementById('ice-particles'),ctx=c.getContext('2d'),w,h;
+function R(){w=c.width=c.parentElement.offsetWidth;h=c.height=c.parentElement.offsetHeight}
+R();window.addEventListener('resize',R);
+var pts=[];
+for(var i=0;i<50;i++)pts.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.2,vy:-.15-Math.random()*.5,r:Math.random()*1.2+.3,o:Math.random()*.3+.15,life:Math.random()*200});
+(function D(t){
+if(w!==c.parentElement.offsetWidth||h!==c.parentElement.offsetHeight)R();
+ctx.clearRect(0,0,w,h);
+pts.forEach(function(p){
+p.x+=p.vx;p.y+=p.vy;p.life--;
+if(p.y<-10||p.life<=0){p.x=Math.random()*w;p.y=h+10;p.life=200+Math.random()*150}
+ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+ctx.fillStyle='rgba(147,197,253,'+(p.o*(p.life/200))+')';ctx.fill();
+});
+requestAnimationFrame(D);
+})();
+})();
+</script>
 </body>
 </html>
