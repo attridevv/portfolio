@@ -6,267 +6,209 @@
 <title>attridevv</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#070510;overflow:hidden;width:100vw;height:100vh;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif}
+body{background:#0a0814;overflow:hidden;width:100vw;height:100vh;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif}
 
-.scene{position:fixed;inset:0}
+.scene{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
 
-/* ===== TREE ===== */
-.tree{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:min(600px,90%);height:85%;z-index:5}
-.tree svg{width:100%;height:100%}
+/* ===== THE COUPLE (center) ===== */
+.couple{position:relative;width:min(500px,90vw);height:min(500px,80vh);z-index:5}
+.couple svg{width:100%;height:100%}
 
-/* ===== CONSCIOUSNESS ORBS ===== */
-.orb{position:absolute;z-index:4;width:60px;height:60px;border-radius:50%;animation:orbFloat 6s ease-in-out infinite}
-.orb-l{left:15%;top:35%;animation-delay:0s}
-.orb-r{right:15%;top:35%;animation-delay:3s}
-@keyframes orbFloat{0%,100%{transform:translateY(0)}25%{transform:translateY(-15px)}50%{transform:translateY(-5px)}75%{transform:translateY(-20px)}}
+/* ===== RED THREADS ===== */
+.threads{position:fixed;inset:0;z-index:4;pointer-events:none}
+.threads svg{width:100%;height:100%}
 
-.orb-core{position:absolute;inset:0;border-radius:50%}
-.orb-l .orb-core{background:radial-gradient(circle at 40% 40%,#fbcfe8,#ec4899 40%,#9d174d 80%);box-shadow:0 0 40px rgba(236,72,153,.4),0 0 80px rgba(236,72,153,.15),inset 0 0 30px rgba(251,207,232,.2)}
-.orb-r .orb-core{background:radial-gradient(circle at 40% 40%,#bfdbfe,#3b82f6 40%,#1e3a8a 80%);box-shadow:0 0 40px rgba(59,130,246,.4),0 0 80px rgba(59,130,246,.15),inset 0 0 30px rgba(191,219,254,.2)}
-
-.orb-ring{position:absolute;inset:-15px;border-radius:50%;border:1px solid transparent;animation:ringSpin 8s linear infinite}
-.orb-l .orb-ring{border-color:rgba(236,72,153,.2);animation-duration:8s}
-.orb-r .orb-ring{border-color:rgba(59,130,246,.2);animation-duration:10s;animation-direction:reverse}
+/* ===== ORBS ===== */
+.orb{position:fixed;z-index:3;width:50px;height:50px;border-radius:50%;animation:orbPulse 4s ease-in-out infinite}
+.orb-l{left:12%;top:25%;animation-delay:0s}
+.orb-r{right:12%;top:25%;animation-delay:2s}
+@keyframes orbPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.2);opacity:.9}}
+.orb-l .orb-inner{background:radial-gradient(circle at 40% 40%,#fbcfe8,#ec4899 50%,#831843);box-shadow:0 0 35px rgba(236,72,153,.35),0 0 70px rgba(236,72,153,.1)}
+.orb-r .orb-inner{background:radial-gradient(circle at 40% 40%,#bfdbfe,#3b82f6 50%,#1e3a8a);box-shadow:0 0 35px rgba(59,130,246,.35),0 0 70px rgba(59,130,246,.1)}
+.orb-inner{position:absolute;inset:0;border-radius:50%}
+.orb-ring{position:absolute;inset:-12px;border-radius:50%;border:1px solid transparent;animation:ringSpin 10s linear infinite}
+.orb-l .orb-ring{border-color:rgba(236,72,153,.15)}.orb-r .orb-ring{border-color:rgba(59,130,246,.15);animation-direction:reverse}
 @keyframes ringSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-
-.orb-ring2{position:absolute;inset:-25px;border-radius:50%;border:1px solid transparent;animation:ringSpin 12s linear infinite}
-.orb-l .orb-ring2{border-color:rgba(236,72,153,.1);animation-direction:reverse}
-.orb-r .orb-ring2{border-color:rgba(59,130,246,.1)}
-
-/* ===== ENERGY STREAMS FROM ORBS TO TREE ===== */
-.stream{position:absolute;z-index:3;pointer-events:none}
-.stream svg{width:100%;height:100%}
-
-/* ===== PARTICLES FROM ORBS ===== */
-.orb-particles{position:absolute;inset:-30px;pointer-events:none}
-.op{position:absolute;border-radius:50%;animation:opFloat var(--d) ease-out infinite;animation-delay:var(--del);opacity:0}
-.orb-l .op{background:#f9a8d4;width:2px;height:2px}
-.orb-r .op{background:#93c5fd;width:2px;height:2px}
-@keyframes opFloat{0%{opacity:.8;transform:translate(0,0)}100%{opacity:0;transform:translate(var(--tx),var(--ty))}}
 
 /* ===== PETALS ===== */
 .petals{position:fixed;inset:0;z-index:8;pointer-events:none}
-.petal{position:absolute;width:7px;height:11px;border-radius:50% 0 50% 0;opacity:0;animation:petalFall var(--dur) ease-in-out infinite;animation-delay:var(--del);left:var(--x)}
+.petal{position:absolute;width:6px;height:10px;border-radius:50% 0 50% 0;opacity:0;animation:petalDrift var(--dur) ease-in-out infinite;animation-delay:var(--del);left:var(--x)}
 .petal.pink{background:radial-gradient(ellipse at 30% 30%,#fce7f3,#f9a8d4)}
-.petal.white{background:radial-gradient(ellipse at 30% 30%,#fff,#fce7f3);width:5px;height:8px}
-@keyframes petalFall{0%{opacity:.7;transform:translate(0,0)rotate(0deg)}25%{transform:translate(var(--drift),25vh)rotate(90deg)}50%{opacity:.5;transform:translate(calc(var(--drift)*-.2),50vh)rotate(180deg)}75%{transform:translate(calc(var(--drift)*.3),75vh)rotate(270deg)}100%{opacity:0;transform:translate(var(--drift),100vh)rotate(360deg)}}
+.petal.white{background:radial-gradient(ellipse at 30% 30%,#fff,#fce7f3);width:4px;height:7px}
+@keyframes petalDrift{0%{opacity:.7;transform:translate(0,0)rotate(0deg)}25%{transform:translate(var(--drift),25vh)rotate(90deg)}50%{opacity:.5;transform:translate(calc(var(--drift)*-.3),50vh)rotate(180deg)}75%{transform:translate(calc(var(--drift)*.2),75vh)rotate(270deg)}100%{opacity:0;transform:translate(var(--drift),100vh)rotate(360deg)}}
 
-/* ===== GROUND ===== */
-.ground{position:absolute;bottom:0;left:0;right:0;height:25%;z-index:2;pointer-events:none;
-  background:linear-gradient(to top,rgba(7,5,16,1),transparent)}
-.ground::before{content:'';position:absolute;left:0;bottom:0;width:50%;height:100%;
-  background:radial-gradient(ellipse at 30% 100%,rgba(236,72,153,.04),transparent 60%)}
-.ground::after{content:'';position:absolute;right:0;bottom:0;width:50%;height:100%;
-  background:radial-gradient(ellipse at 70% 100%,rgba(59,130,246,.04),transparent 60%)}
-
-/* ===== FALLEN PETALS ON GROUND ===== */
-.fallen{position:absolute;bottom:8%;left:30%;right:30%;height:5%;z-index:3;pointer-events:none}
-.fp{position:absolute;width:5px;height:8px;background:rgba(249,168,212,.3);border-radius:50% 0 50% 0}
+/* ===== PARTICLES ===== */
+.spark{position:absolute;border-radius:50%;pointer-events:none;animation:sparkRise var(--d) ease-out infinite;animation-delay:var(--del);opacity:0}
+@keyframes sparkRise{0%{opacity:.7;transform:translate(0,0)}100%{opacity:0;transform:translate(var(--sx),var(--sy))}}
 
 /* ===== OVERLAY ===== */
 .overlay{position:fixed;inset:0;z-index:20;pointer-events:none;display:flex}
-.choice{flex:1;cursor:pointer;pointer-events:auto;position:relative;text-decoration:none;transition:background .6s}
+.choice{flex:1;cursor:pointer;pointer-events:auto;text-decoration:none;transition:background .6s;position:relative}
 .choice:hover .choice-hint{opacity:1;transform:translateX(-50%)translateY(-6px)}
-.choice-l:hover{background:radial-gradient(ellipse at 20% 50%,rgba(236,72,153,.025),transparent 55%)}
-.choice-r:hover{background:radial-gradient(ellipse at 80% 50%,rgba(59,130,246,.025),transparent 55%)}
+.choice-l:hover{background:radial-gradient(ellipse at 20% 50%,rgba(236,72,153,.02),transparent 55%)}
+.choice-r:hover{background:radial-gradient(ellipse at 80% 50%,rgba(59,130,246,.02),transparent 55%)}
 
 .choice-hint{position:absolute;bottom:1.8rem;left:50%;transform:translateX(-50%);text-align:center;opacity:0;transition:all .6s}
 .choice-l .choice-hint{color:#f9a8d4}.choice-r .choice-hint{color:#93c5fd}
-.choice-hint .c1{display:block;font-size:.44rem;letter-spacing:.28em;text-transform:uppercase;font-weight:800;margin-bottom:.08rem;opacity:.5}
-.choice-hint .c2{display:block;font-size:.72rem;font-weight:900;letter-spacing:.06em}
-.choice-hint .c3{display:block;font-size:.32rem;letter-spacing:.16em;margin-top:.06rem;opacity:.3}
+.choice-hint .l1{display:block;font-size:.42rem;letter-spacing:.28em;text-transform:uppercase;font-weight:800;margin-bottom:.06rem;opacity:.5}
+.choice-hint .l2{display:block;font-size:.7rem;font-weight:900;letter-spacing:.06em}
+.choice-hint .l3{display:block;font-size:.3rem;letter-spacing:.16em;margin-top:.06rem;opacity:.3}
 
-@media(max-width:768px){
-  .orb{width:40px;height:40px}.orb-ring{inset:-10px}.orb-ring2{inset:-18px}
-  .orb-l{left:8%;top:30%}.orb-r{right:8%;top:30%}
-}
+@media(max-width:768px){.orb{width:35px;height:35px}.orb-ring{inset:-8px}}
 </style>
 </head>
 <body>
 
 <canvas id="stars"></canvas>
 
-<div class="scene">
+<!-- RED THREADS OF FATE -->
+<div class="threads">
+  <svg width="100%" height="100%">
+    <defs>
+      <linearGradient id="threadG" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#ec4899" stop-opacity="0"/><stop offset="20%" stop-color="#ec4899" stop-opacity=".7"/>
+        <stop offset="50%" stop-color="#fbbf24" stop-opacity=".8"/><stop offset="80%" stop-color="#3b82f6" stop-opacity=".7"/>
+        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+      </linearGradient>
+      <filter id="glow"><feGaussianBlur stdDeviation="3"/></filter>
+    </defs>
+    <!-- Main fate thread -->
+    <path d="M0,200 Q200,160 400,150 Q600,140 800,170 Q1000,200 1200,190" stroke="url(#threadG)" stroke-width="1.2" fill="none" filter="url(#glow)" opacity=".7"/>
+    <!-- Second wrapping thread -->
+    <path d="M0,220 Q250,180 500,200 Q750,220 1000,180 Q1100,160 1200,175" stroke="url(#threadG)" stroke-width=".7" fill="none" opacity=".4"/>
+    <!-- Third delicate thread -->
+    <path d="M0,170 Q180,130 380,140 Q580,150 780,130 Q980,110 1200,160" stroke="url(#threadG)" stroke-width=".5" fill="none" opacity=".3"/>
+  </svg>
+</div>
 
-  <!-- GROUND -->
-  <div class="ground"></div>
+<!-- ORBS -->
+<div class="orb orb-l"><div class="orb-inner"></div><div class="orb-ring"></div></div>
+<div class="orb orb-r"><div class="orb-inner"></div><div class="orb-ring"></div></div>
 
-  <!-- FALLEN PETALS -->
-  <div class="fallen" id="fallen"></div>
+<!-- THE COUPLE -->
+<div class="couple">
+  <svg viewBox="0 0 400 400">
+    <defs>
+      <radialGradient id="centerGlow"><stop offset="0%" stop-color="rgba(251,191,36,.15)"/><stop offset="60%" stop-color="transparent"/></radialGradient>
+      <linearGradient id="fateThread" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#ec4899" stop-opacity=".8"/><stop offset="50%" stop-color="#fbbf24" stop-opacity=".9"/><stop offset="100%" stop-color="#3b82f6" stop-opacity=".8"/>
+      </linearGradient>
+      <filter id="fGlow"><feGaussianBlur stdDeviation="2"/></filter>
+    </defs>
 
-  <!-- ZERO TWO CONSCIOUSNESS (left orb) -->
-  <div class="orb orb-l">
-    <div class="orb-core"></div>
-    <div class="orb-ring"></div>
-    <div class="orb-ring2"></div>
-    <div class="orb-particles" id="op-l"></div>
-  </div>
+    <!-- Center glow where they nearly touch -->
+    <ellipse cx="200" cy="195" rx="80" ry="60" fill="url(#centerGlow)"/>
 
-  <!-- HIRO CONSCIOUSNESS (right orb) -->
-  <div class="orb orb-r">
-    <div class="orb-core"></div>
-    <div class="orb-ring"></div>
-    <div class="orb-ring2"></div>
-    <div class="orb-particles" id="op-r"></div>
-  </div>
+    <!-- ===== ZERO TWO PROFILE (left, facing right) ===== -->
+    <g transform="translate(140,180)">
+      <!-- Aura -->
+      <ellipse cx="0" cy="0" rx="70" ry="80" fill="rgba(236,72,153,.06)"/>
 
-  <!-- ENERGY STREAMS -->
-  <div class="stream" style="position:absolute;inset:0;z-index:3;pointer-events:none">
-    <svg width="100%" height="100%">
-      <defs>
-        <linearGradient id="streamL" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#ec4899" stop-opacity=".3"/>
-          <stop offset="100%" stop-color="#ec4899" stop-opacity="0"/>
-        </linearGradient>
-        <linearGradient id="streamR" x1="100%" y1="0%" x2="0%" y2="0%">
-          <stop offset="0%" stop-color="#3b82f6" stop-opacity=".3"/>
-          <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
-        </linearGradient>
-        <filter id="sGlow"><feGaussianBlur stdDeviation="4"/></filter>
-      </defs>
-      <!-- Left stream to tree -->
-      <path d="M15%,35% Q25%,30% 40%,50% Q45%,55% 48%,60%" stroke="url(#streamL)" stroke-width="2" fill="none" filter="url(#sGlow)" opacity=".6"/>
-      <path d="M15%,38% Q30%,35% 42%,55% Q47%,62% 49%,65%" stroke="url(#streamL)" stroke-width="1" fill="none" opacity=".3"/>
-      <!-- Right stream to tree -->
-      <path d="M85%,35% Q75%,30% 60%,50% Q55%,55% 52%,60%" stroke="url(#streamR)" stroke-width="2" fill="none" filter="url(#sGlow)" opacity=".6"/>
-      <path d="M85%,38% Q70%,35% 58%,55% Q53%,62% 51%,65%" stroke="url(#streamR)" stroke-width="1" fill="none" opacity=".3"/>
-    </svg>
-  </div>
+      <!-- Neck -->
+      <path d="M-3,40 L-3,60 L5,60 L5,40 Z" fill="#1a0a15" stroke="rgba(236,72,153,.2)" stroke-width=".6"/>
 
-  <!-- SAKURA TREE -->
-  <div class="tree">
-    <svg viewBox="0 0 500 550" preserveAspectRatio="xMidYMax meet">
-      <defs>
-        <radialGradient id="bloom" cx="50%" cy="50%"><stop offset="0%" stop-color="#fdf2f8"/><stop offset="30%" stop-color="#fbcfe8"/><stop offset="70%" stop-color="#f472b6"/><stop offset="100%" stop-color="#be185d" stop-opacity=".4"/></radialGradient>
-        <radialGradient id="bloom2" cx="50%" cy="50%"><stop offset="0%" stop-color="#fff"/><stop offset="25%" stop-color="#fce7f3"/><stop offset="60%" stop-color="#f9a8d4"/><stop offset="100%" stop-color="#db2777" stop-opacity=".35"/></radialGradient>
-        <radialGradient id="bloom3" cx="50%" cy="50%"><stop offset="0%" stop-color="#fef2f2"/><stop offset="40%" stop-color="#fbcfe8"/><stop offset="100%" stop-color="#ec4899" stop-opacity=".5"/></radialGradient>
-        <filter id="treeGlow"><feGaussianBlur stdDeviation="12"/></filter>
-        <linearGradient id="trunkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#1a1020"/><stop offset="50%" stop-color="#2d1a30"/><stop offset="100%" stop-color="#1a1025"/>
-        </linearGradient>
-      </defs>
+      <!-- Torso top -->
+      <path d="M-10,55 Q-12,70 -8,85 L16,85 Q20,70 18,55 Z" fill="#1a0a15" stroke="rgba(236,72,153,.15)" stroke-width=".6"/>
 
-      <!-- ===== TRUNK GLOW ===== -->
-      <path d="M245,530 Q240,380 235,280 Q230,200 240,150 Q245,110 250,80" stroke="rgba(236,72,153,.08)" stroke-width="50" fill="none" filter="url(#treeGlow)"/>
+      <!-- Hair (long, flowing behind) -->
+      <path d="M-18,-25 Q-40,-15 -45,5 Q-48,25 -42,45 Q-38,55 -30,48 Q-22,40 -25,25 Q-28,10 -22,-5 Q-18,-15 -15,-22 Z" fill="#140510" stroke="rgba(236,72,153,.2)" stroke-width=".5"/>
+      <!-- Hair strands -->
+      <path d="M-20,-20 Q-42,0 -40,20" fill="none" stroke="rgba(236,72,153,.1)" stroke-width=".4"/>
+      <path d="M-18,-15 Q-38,5 -35,30" fill="none" stroke="rgba(236,72,153,.08)" stroke-width=".3"/>
 
-      <!-- ===== MAIN TRUNK ===== -->
-      <path d="M235,550 Q230,450 225,370 Q220,300 230,220 Q235,160 240,110 Q245,70 248,40 L258,40 Q262,70 260,110 Q265,160 270,220 Q280,300 275,370 Q270,450 265,550 Z" fill="url(#trunkGrad)" stroke="#3d1a3a" stroke-width=".8"/>
+      <!-- Face profile (facing right) -->
+      <path d="M-10,-28 Q-12,-15 -10,0 Q-8,10 -6,15 Q-4,20 0,22 Q2,24 4,22 Q6,20 6,15 Q6,8 5,0 Q4,-10 2,-20 Q0,-26 -4,-30 Q-8,-32 -10,-28 Z" fill="rgba(236,72,153,.06)" stroke="rgba(236,72,153,.25)" stroke-width=".7"/>
+      <!-- Forehead -->
+      <path d="M-10,-28 Q-6,-32 0,-30 Q4,-28 5,-24" fill="none" stroke="rgba(236,72,153,.15)" stroke-width=".4"/>
+      <!-- Nose -->
+      <path d="M5,-8 Q6,-5 6,0" fill="none" stroke="rgba(236,72,153,.2)" stroke-width=".4"/>
+      <!-- Lips -->
+      <path d="M6,3 Q6,6 4,7" fill="none" stroke="rgba(236,72,153,.25)" stroke-width=".5"/>
+      <!-- Chin -->
+      <path d="M4,7 Q2,9 -2,8" fill="none" stroke="rgba(236,72,153,.15)" stroke-width=".4"/>
+      <!-- Jaw line -->
+      <path d="M-2,8 Q-6,4 -8,-2" fill="none" stroke="rgba(236,72,153,.12)" stroke-width=".4"/>
 
-      <!-- Trunk bark texture -->
-      <path d="M240,480 Q237,400 238,320 Q239,250 242,180" fill="none" stroke="#4a2040" stroke-width="1.2" opacity=".35"/>
-      <path d="M250,500 Q248,420 250,340 Q252,260 250,180" fill="none" stroke="#3d1a35" stroke-width=".8" opacity=".25"/>
-      <path d="M260,480 Q262,400 260,320 Q258,250 258,180" fill="none" stroke="#4a2040" stroke-width="1" opacity=".3"/>
-      <path d="M245,450 Q243,380 246,300" fill="none" stroke="#3d1a35" stroke-width=".6" opacity=".2"/>
+      <!-- Eye -->
+      <path d="M1,-10 Q3,-13 5,-10" fill="none" stroke="#10b981" stroke-width=".8"/>
+      <path d="M2,-11 Q3,-12 4,-11" fill="#10b981" opacity=".6"/>
 
-      <!-- ===== MAJOR BRANCHES ===== -->
-      <!-- Left main branch -->
-      <path d="M238,280 Q200,240 160,200 Q130,170 100,155 Q80,148 65,150" stroke="url(#trunkGrad)" stroke-width="14" fill="none" stroke-linecap="round"/>
-      <path d="M65,150 Q60,152 55,150" stroke="#2d1a30" stroke-width="6" fill="none"/>
-      <!-- Left branch bark -->
-      <path d="M220,260 Q180,225 140,190" fill="none" stroke="#4a2040" stroke-width=".7" opacity=".3"/>
+      <!-- Horn (curved, red) -->
+      <path d="M-6,-28 Q-8,-40 -2,-52 Q2,-56 6,-50 Q8,-44 2,-38 Q-2,-34 -4,-30" fill="rgba(236,72,153,.3)" stroke="#ec4899" stroke-width=".8"/>
+      <!-- Horn highlight -->
+      <path d="M-3,-38 Q-1,-46 2,-50" fill="none" stroke="rgba(251,207,232,.4)" stroke-width=".5"/>
 
-      <!-- Right main branch -->
-      <path d="M262,280 Q300,240 340,200 Q370,170 400,155 Q420,148 435,150" stroke="url(#trunkGrad)" stroke-width="14" fill="none" stroke-linecap="round"/>
-      <path d="M435,150 Q440,152 445,150" stroke="#2d1a30" stroke-width="6" fill="none"/>
-      <path d="M280,260 Q320,225 360,190" fill="none" stroke="#4a2040" stroke-width=".7" opacity=".3"/>
+      <!-- Headband -->
+      <path d="M-10,-26 Q-4,-29 2,-28" fill="none" stroke="rgba(236,72,153,.15)" stroke-width=".6"/>
 
-      <!-- Upper branches -->
-      <path d="M242,200 Q220,160 200,130 Q185,110 175,100" stroke="#2d1a30" stroke-width="10" fill="none" stroke-linecap="round"/>
-      <path d="M258,190 Q280,150 300,125 Q315,108 325,100" stroke="#2d1a30" stroke-width="10" fill="none" stroke-linecap="round"/>
-      <path d="M245,150 Q240,120 235,100" stroke="#2d1a30" stroke-width="8" fill="none"/>
-      <path d="M255,140 Q265,110 270,90" stroke="#2d1a30" stroke-width="8" fill="none"/>
+      <!-- Hair tufts on top -->
+      <path d="M-6,-30 Q-4,-38 0,-36 Q2,-34 0,-30" fill="#140510" stroke="rgba(236,72,153,.15)" stroke-width=".4"/>
+    </g>
 
-      <!-- Lower secondary branches -->
-      <path d="M232,340 Q195,320 160,330 Q140,338 125,340" stroke="#2d1a30" stroke-width="8" fill="none" stroke-linecap="round"/>
-      <path d="M268,340 Q305,320 340,330 Q360,338 375,340" stroke="#2d1a30" stroke-width="8" fill="none" stroke-linecap="round"/>
-      <path d="M230,400 Q200,390 175,400" stroke="#2d1a30" stroke-width="6" fill="none"/>
-      <path d="M270,400 Q300,390 325,400" stroke="#2d1a30" stroke-width="6" fill="none"/>
+    <!-- ===== HIRO PROFILE (right, facing left) ===== -->
+    <g transform="translate(260,180)">
+      <!-- Aura -->
+      <ellipse cx="0" cy="0" rx="70" ry="80" fill="rgba(59,130,246,.05)"/>
 
-      <!-- Extra branch details -->
-      <path d="M180,220 Q160,210 145,215" stroke="#2d1a30" stroke-width="5" fill="none"/>
-      <path d="M320,220 Q340,210 355,215" stroke="#2d1a30" stroke-width="5" fill="none"/>
-      <path d="M200,160 Q188,148 178,150" stroke="#2d1a30" stroke-width="5" fill="none"/>
-      <path d="M300,155 Q312,143 322,145" stroke="#2d1a30" stroke-width="5" fill="none"/>
+      <!-- Neck -->
+      <path d="M-5,40 L-5,60 L3,60 L3,40 Z" fill="#050a15" stroke="rgba(59,130,246,.2)" stroke-width=".6"/>
 
-      <!-- ===== ROOTS ===== -->
-      <path d="M235,540 Q210,555 185,560 Q160,562 140,558" stroke="#2d1a30" stroke-width="7" fill="none" stroke-linecap="round"/>
-      <path d="M265,540 Q290,555 315,560 Q340,562 360,558" stroke="#2d1a30" stroke-width="7" fill="none" stroke-linecap="round"/>
-      <path d="M240,545 Q220,565 200,568" stroke="#2d1a30" stroke-width="4" fill="none"/>
-      <path d="M260,545 Q280,565 300,568" stroke="#2d1a30" stroke-width="4" fill="none"/>
+      <!-- Torso -->
+      <path d="M-18,55 Q-20,70 -16,85 L8,85 Q12,70 10,55 Z" fill="#050a15" stroke="rgba(59,130,246,.15)" stroke-width=".6"/>
 
-      <!-- ===== BLOOM CLUSTERS ===== -->
-      <!-- Top crown -->
-      <circle cx="250" cy="75" r="35" fill="url(#bloom)" opacity=".9"/>
-      <circle cx="225" cy="95" r="30" fill="url(#bloom2)" opacity=".85"/>
-      <circle cx="275" cy="90" r="30" fill="url(#bloom3)" opacity=".85"/>
-      <circle cx="250" cy="55" r="25" fill="url(#bloom)" opacity=".88"/>
-      <circle cx="210" cy="110" r="22" fill="url(#bloom3)" opacity=".8"/>
-      <circle cx="290" cy="105" r="22" fill="url(#bloom2)" opacity=".8"/>
+      <!-- Hair (messy, dark) -->
+      <path d="M18,-25 Q38,-15 42,5 Q44,20 38,35 Q34,42 28,38 Q22,34 24,20 Q26,8 22,-2 Q18,-12 16,-20 Z" fill="#030712" stroke="rgba(59,130,246,.15)" stroke-width=".5"/>
 
-      <!-- Left canopy -->
-      <circle cx="160" cy="175" r="30" fill="url(#bloom2)" opacity=".85"/>
-      <circle cx="135" cy="188" r="26" fill="url(#bloom)" opacity=".8"/>
-      <circle cx="180" cy="200" r="22" fill="url(#bloom3)" opacity=".75"/>
-      <circle cx="115" cy="175" r="20" fill="url(#bloom)" opacity=".7"/>
-      <circle cx="150" cy="210" r="18" fill="url(#bloom2)" opacity=".7"/>
-      <circle cx="100" cy="162" r="18" fill="url(#bloom3)" opacity=".65"/>
-      <circle cx="80" cy="155" r="16" fill="url(#bloom)" opacity=".6"/>
-      <circle cx="170" cy="160" r="20" fill="url(#bloom)" opacity=".78"/>
+      <!-- Face profile (facing left) -->
+      <path d="M10,-28 Q12,-15 10,0 Q8,10 6,15 Q4,20 0,22 Q-2,24 -4,22 Q-6,20 -6,15 Q-6,8 -5,0 Q-4,-10 -2,-20 Q0,-26 4,-30 Q8,-32 10,-28 Z" fill="rgba(59,130,246,.05)" stroke="rgba(59,130,246,.2)" stroke-width=".7"/>
+      <!-- Forehead -->
+      <path d="M10,-28 Q6,-32 0,-30 Q-4,-28 -5,-24" fill="none" stroke="rgba(59,130,246,.12)" stroke-width=".4"/>
+      <!-- Nose -->
+      <path d="M-5,-8 Q-6,-5 -6,0" fill="none" stroke="rgba(59,130,246,.18)" stroke-width=".4"/>
+      <!-- Lips -->
+      <path d="M-6,3 Q-6,6 -4,7" fill="none" stroke="rgba(59,130,246,.2)" stroke-width=".5"/>
+      <!-- Chin -->
+      <path d="M-4,7 Q-2,9 2,8" fill="none" stroke="rgba(59,130,246,.12)" stroke-width=".4"/>
+      <!-- Jaw -->
+      <path d="M2,8 Q6,4 8,-2" fill="none" stroke="rgba(59,130,246,.1)" stroke-width=".4"/>
 
-      <!-- Right canopy -->
-      <circle cx="340" cy="175" r="30" fill="url(#bloom3)" opacity=".85"/>
-      <circle cx="365" cy="188" r="26" fill="url(#bloom2)" opacity=".8"/>
-      <circle cx="320" cy="200" r="22" fill="url(#bloom)" opacity=".75"/>
-      <circle cx="385" cy="175" r="20" fill="url(#bloom3)" opacity=".7"/>
-      <circle cx="350" cy="210" r="18" fill="url(#bloom)" opacity=".7"/>
-      <circle cx="400" cy="162" r="18" fill="url(#bloom2)" opacity=".65"/>
-      <circle cx="420" cy="155" r="16" fill="url(#bloom3)" opacity=".6"/>
-      <circle cx="330" cy="160" r="20" fill="url(#bloom2)" opacity=".78"/>
+      <!-- Eye -->
+      <path d="M-1,-10 Q-3,-13 -5,-10" fill="none" stroke="#3b82f6" stroke-width=".8"/>
+      <path d="M-2,-11 Q-3,-12 -4,-11" fill="#3b82f6" opacity=".6"/>
 
-      <!-- Middle fill clusters -->
-      <circle cx="210" cy="150" r="24" fill="url(#bloom)" opacity=".8"/>
-      <circle cx="290" cy="145" r="24" fill="url(#bloom2)" opacity=".8"/>
-      <circle cx="200" cy="180" r="20" fill="url(#bloom3)" opacity=".75"/>
-      <circle cx="300" cy="178" r="20" fill="url(#bloom)" opacity=".75"/>
-      <circle cx="250" cy="120" r="22" fill="url(#bloom2)" opacity=".82"/>
-      <circle cx="235" cy="135" r="18" fill="url(#bloom3)" opacity=".78"/>
-      <circle cx="265" cy="132" r="18" fill="url(#bloom)" opacity=".78"/>
+      <!-- Hair spikes on top -->
+      <path d="M6,-30 Q4,-42 0,-44 Q-2,-42 -2,-36 Q0,-34 4,-32 Q6,-30 4,-28" fill="#030712" stroke="rgba(59,130,246,.12)" stroke-width=".4"/>
+      <path d="M8,-28 Q10,-38 8,-42 Q6,-40 6,-36" fill="#030712" stroke="rgba(59,130,246,.1)" stroke-width=".3"/>
+    </g>
 
-      <!-- Lower canopy -->
-      <circle cx="180" cy="250" r="22" fill="url(#bloom2)" opacity=".7"/>
-      <circle cx="320" cy="250" r="22" fill="url(#bloom3)" opacity=".7"/>
-      <circle cx="150" cy="280" r="18" fill="url(#bloom)" opacity=".6"/>
-      <circle cx="350" cy="280" r="18" fill="url(#bloom2)" opacity=".6"/>
-      <circle cx="210" cy="300" r="16" fill="url(#bloom3)" opacity=".55"/>
-      <circle cx="290" cy="300" r="16" fill="url(#bloom)" opacity=".55"/>
+    <!-- ===== THE RED STRING OF FATE (between their foreheads) ===== -->
+    <!-- Central knot / nexus -->
+    <circle cx="200" cy="165" r="3" fill="#fbbf24" opacity=".8" filter="url(#fGlow)"/>
 
-      <!-- Branch-tip blooms -->
-      <circle cx="60" cy="148" r="14" fill="url(#bloom)" opacity=".55"/>
-      <circle cx="440" cy="148" r="14" fill="url(#bloom3)" opacity=".55"/>
-      <circle cx="175" cy="98" r="12" fill="url(#bloom2)" opacity=".65"/>
-      <circle cx="325" cy="98" r="12" fill="url(#bloom3)" opacity=".65"/>
-      <circle cx="140" cy="215" r="10" fill="url(#bloom)" opacity=".5"/>
-      <circle cx="360" cy="215" r="10" fill="url(#bloom2)" opacity=".5"/>
+    <!-- Thread from Zero Two to center -->
+    <path d="M155,165 Q170,160 185,163 Q195,164 200,165" stroke="url(#fateThread)" stroke-width="1.2" fill="none" filter="url(#fGlow)"/>
+    <!-- Thread from Hiro to center -->
+    <path d="M245,165 Q230,160 215,163 Q205,164 200,165" stroke="url(#fateThread)" stroke-width="1.2" fill="none" filter="url(#fGlow)"/>
 
-      <!-- Highlight dots within blooms -->
-      <circle cx="248" cy="72" r="4" fill="#fff" opacity=".6"/>
-      <circle cx="160" cy="173" r="3.5" fill="#fff" opacity=".5"/>
-      <circle cx="340" cy="173" r="3.5" fill="#fff" opacity=".5"/>
-      <circle cx="225" cy="93" r="3" fill="#fff" opacity=".55"/>
-      <circle cx="275" cy="88" r="3" fill="#fff" opacity=".55"/>
-      <circle cx="135" cy="186" r="2.5" fill="#fff" opacity=".45"/>
-      <circle cx="365" cy="186" r="2.5" fill="#fff" opacity=".45"/>
-    </svg>
-  </div>
+    <!-- Loose thread wrapping -->
+    <path d="M150,155 Q175,148 200,155 Q225,162 250,155" stroke="rgba(236,72,153,.3)" stroke-width=".6" fill="none"/>
+    <path d="M150,175 Q180,182 200,175 Q220,168 250,175" stroke="rgba(59,130,246,.3)" stroke-width=".6" fill="none"/>
 
+    <!-- Additional wraparound threads -->
+    <path d="M140,180 Q170,195 200,185 Q230,175 260,180" stroke="url(#fateThread)" stroke-width=".5" fill="none" opacity=".4"/>
+    <path d="M140,135 Q170,125 200,138 Q230,150 260,135" stroke="url(#fateThread)" stroke-width=".4" fill="none" opacity=".3"/>
+  </svg>
 </div>
 
 <!-- PETALS -->
 <div class="petals" id="petals"></div>
 
+<!-- SPARKS -->
+<div class="petals" id="sparks"></div>
+
 <div class="overlay">
-  <a href="/fire" class="choice choice-l"><div class="choice-hint"><span class="c1">The Self</span><span class="c2">ABOUT</span><span class="c3">Leo · Identity · Fire</span></div></a>
-  <a href="/water" class="choice choice-r"><div class="choice-hint"><span class="c1">The Work</span><span class="c2">CREATE</span><span class="c3">Tools · Builds · Output</span></div></a>
+  <a href="/fire" class="choice choice-l"><div class="choice-hint"><span class="l1">The Self</span><span class="l2">ABOUT</span><span class="l3">Leo · Identity · Fire</span></div></a>
+  <a href="/water" class="choice choice-r"><div class="choice-hint"><span class="l1">The Work</span><span class="l2">CREATE</span><span class="l3">Tools · Builds · Output</span></div></a>
 </div>
 
 <script>
@@ -275,50 +217,23 @@ body{background:#070510;overflow:hidden;width:100vw;height:100vh;font-family:'In
 var c=document.getElementById('stars'),ctx=c.getContext('2d'),w,h;
 function R(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}
 R();window.addEventListener('resize',R);
-var stars=[];
-for(var i=0;i<50;i++)stars.push({x:Math.random()*w,y:Math.random()*h*.7,r:Math.random()*.6+.06,o:Math.random()*.2+.04,p:Math.random()*Math.PI*2});
-(function D(t){
-if(w!==c.width||h!==c.height)R();
-ctx.clearRect(0,0,w,h);
-stars.forEach(function(s){var b=.5+.5*Math.sin(t*.001+s.p);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,'+(s.o*b)+')';ctx.fill()});
-requestAnimationFrame(D);
-})();
+var pts=[];for(var i=0;i<60;i++)pts.push({x:Math.random()*w,y:Math.random()*h*.8,r:Math.random()*.5+.05,o:Math.random()*.2+.03,p:Math.random()*Math.PI*2});
+(function D(t){if(w!==c.width||h!==c.height)R();ctx.clearRect(0,0,w,h);pts.forEach(function(s){var b=.4+.6*Math.sin(t*.001+s.p);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,'+(s.o*b)+')';ctx.fill()});requestAnimationFrame(D)})();
 })();
 
 // Petals
 (function(){
 var p=document.getElementById('petals'),h='';
-for(var i=0;i<45;i++){
-  var x=8+Math.random()*84,typ=Math.random()>.3?'pink':'white',dur=8+Math.random()*14,del=Math.random()*15,drift=(Math.random()-.5)*200;
-  h+='<div class="petal '+typ+'" style="--x:'+x+'%;--dur:'+dur+'s;--del:'+del+'s;--drift:'+drift+'px"></div>';
-}
+for(var i=0;i<40;i++){var x=8+Math.random()*84,dur=8+Math.random()*14,del=Math.random()*15,drift=(Math.random()-.5)*180;h+='<div class="petal '+(Math.random()>.25?'pink':'white')+'" style="--x:'+x+'%;--dur:'+dur+'s;--del:'+del+'s;--drift:'+drift+'px"></div>'}
 p.innerHTML=h;
 })();
 
-// Orb particles
-(function gen(id,count,txMin,txMax,tyMin,tyMax,color){
-var el=document.getElementById(id),h='';
-for(var i=0;i<count;i++){
-  h+='<div class="op" style="left:50%;top:50%;--tx:'+(txMin+Math.random()*(txMax-txMin))+'px;--ty:'+(tyMin+Math.random()*(tyMax-tyMin))+'px;--d:'+(1.5+Math.random()*2.5)+'s;--del:'+(Math.random()*3)+'s"></div>';
-}
-el.innerHTML=h;
-})('op-l',15,-30,30,-30,-5);
-(function gen(id,count,txMin,txMax,tyMin,tyMax,color){
-var el=document.getElementById(id),h='';
-for(var i=0;i<count;i++){
-  h+='<div class="op" style="left:50%;top:50%;--tx:'+(txMin+Math.random()*(txMax-txMin))+'px;--ty:'+(tyMin+Math.random()*(tyMax-tyMin))+'px;--d:'+(1.5+Math.random()*2.5)+'s;--del:'+(Math.random()*3)+'s"></div>';
-}
-el.innerHTML=h;
-})('op-r',15,-30,30,-30,-5);
-
-// Fallen petals on ground
+// Ambient sparks
 (function(){
-var el=document.getElementById('fallen'),h='';
-for(var i=0;i<25;i++){
-  var x=10+Math.random()*80,y=10+Math.random()*80,r=Math.random()*90;
-  h+='<div class="fp" style="left:'+x+'%;top:'+y+'%;transform:rotate('+r+'deg);opacity:'+(.1+Math.random()*.3)+'"></div>';
-}
-el.innerHTML=h;
+var s=document.getElementById('sparks'),h='';
+for(var i=0;i<15;i++)h+='<div class="spark" style="left:'+(15+Math.random()*25)+'%;top:'+(40+Math.random()*20)+'%;width:2px;height:2px;background:#f9a8d4;--sx:'+((Math.random()-.5)*30)+'px;--sy:'+(-10-Math.random()*20)+'px;--d:'+(2+Math.random()*2)+'s;--del:'+(Math.random()*2)+'s"></div>';
+for(var i=0;i<15;i++)h+='<div class="spark" style="left:'+(65+Math.random()*25)+'%;top:'+(40+Math.random()*20)+'%;width:2px;height:2px;background:#93c5fd;--sx:'+((Math.random()-.5)*30)+'px;--sy:'+(-10-Math.random()*20)+'px;--d:'+(2+Math.random()*2)+'s;--del:'+(Math.random()*2)+'s"></div>';
+s.innerHTML=h;
 })();
 </script>
 </body>
