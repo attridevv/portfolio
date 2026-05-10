@@ -5,236 +5,265 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>attridevv</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0814;overflow:hidden;width:100vw;height:100vh;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
-.scene{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+:root{
+  --bg:#fafafa;--ink:#0a0a0a;--grey:#2a2a2a;--mid:#6b6b6b;--light:#d4d4d4;--paper:#f5f5f5;
+}
 
-/* ===== THE COUPLE (center) ===== */
-.couple{position:relative;width:min(500px,90vw);height:min(500px,80vh);z-index:5}
-.couple svg{width:100%;height:100%}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  min-height:100vh;
+}
 
-/* ===== RED THREADS ===== */
-.threads{position:fixed;inset:0;z-index:4;pointer-events:none}
-.threads svg{width:100%;height:100%}
+/* ===== MANGA PAGE ===== */
+.page{
+  max-width:800px;margin:0 auto;padding:1.5rem;
+  display:grid;gap:.75rem;
+}
 
-/* ===== ORBS ===== */
-.orb{position:fixed;z-index:3;width:50px;height:50px;border-radius:50%;animation:orbPulse 4s ease-in-out infinite}
-.orb-l{left:12%;top:25%;animation-delay:0s}
-.orb-r{right:12%;top:25%;animation-delay:2s}
-@keyframes orbPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.2);opacity:.9}}
-.orb-l .orb-inner{background:radial-gradient(circle at 40% 40%,#fbcfe8,#ec4899 50%,#831843);box-shadow:0 0 35px rgba(236,72,153,.35),0 0 70px rgba(236,72,153,.1)}
-.orb-r .orb-inner{background:radial-gradient(circle at 40% 40%,#bfdbfe,#3b82f6 50%,#1e3a8a);box-shadow:0 0 35px rgba(59,130,246,.35),0 0 70px rgba(59,130,246,.1)}
-.orb-inner{position:absolute;inset:0;border-radius:50%}
-.orb-ring{position:absolute;inset:-12px;border-radius:50%;border:1px solid transparent;animation:ringSpin 10s linear infinite}
-.orb-l .orb-ring{border-color:rgba(236,72,153,.15)}.orb-r .orb-ring{border-color:rgba(59,130,246,.15);animation-direction:reverse}
-@keyframes ringSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+/* ===== PANELS ===== */
+.panel{
+  border:2.5px solid var(--ink);padding:1.25rem;position:relative;
+  background:var(--paper);
+  transition:all .25s;
+  overflow:hidden;
+}
+.panel:hover{background:#fff;box-shadow:4px 4px 0 rgba(0,0,0,.08)}
 
-/* ===== PETALS ===== */
-.petals{position:fixed;inset:0;z-index:8;pointer-events:none}
-.petal{position:absolute;width:6px;height:10px;border-radius:50% 0 50% 0;opacity:0;animation:petalDrift var(--dur) ease-in-out infinite;animation-delay:var(--del);left:var(--x)}
-.petal.pink{background:radial-gradient(ellipse at 30% 30%,#fce7f3,#f9a8d4)}
-.petal.white{background:radial-gradient(ellipse at 30% 30%,#fff,#fce7f3);width:4px;height:7px}
-@keyframes petalDrift{0%{opacity:.7;transform:translate(0,0)rotate(0deg)}25%{transform:translate(var(--drift),25vh)rotate(90deg)}50%{opacity:.5;transform:translate(calc(var(--drift)*-.3),50vh)rotate(180deg)}75%{transform:translate(calc(var(--drift)*.2),75vh)rotate(270deg)}100%{opacity:0;transform:translate(var(--drift),100vh)rotate(360deg)}}
+/* Panel sizes */
+.p-full{grid-column:1/-1}
+.p-half{grid-column:span 1}
+.p-2x3{grid-column:span 2}
+.p-1x3{grid-column:span 1}
 
-/* ===== PARTICLES ===== */
-.spark{position:absolute;border-radius:50%;pointer-events:none;animation:sparkRise var(--d) ease-out infinite;animation-delay:var(--del);opacity:0}
-@keyframes sparkRise{0%{opacity:.7;transform:translate(0,0)}100%{opacity:0;transform:translate(var(--sx),var(--sy))}}
+/* Grid for panel rows */
+.page-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem}
+.page-grid2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.page-grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}
 
-/* ===== OVERLAY ===== */
-.overlay{position:fixed;inset:0;z-index:20;pointer-events:none;display:flex}
-.choice{flex:1;cursor:pointer;pointer-events:auto;text-decoration:none;transition:background .6s;position:relative}
-.choice:hover .choice-hint{opacity:1;transform:translateX(-50%)translateY(-6px)}
-.choice-l:hover{background:radial-gradient(ellipse at 20% 50%,rgba(236,72,153,.02),transparent 55%)}
-.choice-r:hover{background:radial-gradient(ellipse at 80% 50%,rgba(59,130,246,.02),transparent 55%)}
+/* ===== MANGA FX ===== */
+/* Speed lines */
+.speed-lines{position:absolute;top:0;bottom:0;left:0;width:100%;pointer-events:none;opacity:.06}
+.speed-lines .sl{position:absolute;background:var(--ink)}
+.sl-h{height:1px;left:0;right:0}
+.sl-v{width:1px;top:0;bottom:0}
 
-.choice-hint{position:absolute;bottom:1.8rem;left:50%;transform:translateX(-50%);text-align:center;opacity:0;transition:all .6s}
-.choice-l .choice-hint{color:#f9a8d4}.choice-r .choice-hint{color:#93c5fd}
-.choice-hint .l1{display:block;font-size:.42rem;letter-spacing:.28em;text-transform:uppercase;font-weight:800;margin-bottom:.06rem;opacity:.5}
-.choice-hint .l2{display:block;font-size:.7rem;font-weight:900;letter-spacing:.06em}
-.choice-hint .l3{display:block;font-size:.3rem;letter-spacing:.16em;margin-top:.06rem;opacity:.3}
+/* Sound effect */
+.sfx{position:absolute;font-size:1.6rem;font-weight:900;letter-spacing:.06em;opacity:.15;pointer-events:none;font-style:italic}
+.sfx-tr{top:.5rem;right:.75rem}
+.sfx-tl{top:.5rem;left:.75rem}
+.sfx-br{bottom:.5rem;right:.75rem}
 
-@media(max-width:768px){.orb{width:35px;height:35px}.orb-ring{inset:-8px}}
+/* Action burst behind panel */
+.panel.action{background:var(--paper)}
+.panel.action::before{content:'';position:absolute;inset:-3px;border:2px solid var(--ink);opacity:.1;transform:scale(1.02)}
+
+/* ===== TYPOGRAPHY ===== */
+.panel-label{
+  font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--mid);margin-bottom:.5rem;font-weight:700;
+}
+
+.panel h2{font-size:1.2rem;font-weight:900;letter-spacing:-.02em;margin-bottom:.35rem;line-height:1.1}
+.panel h3{font-size:.85rem;font-weight:700;margin-bottom:.2rem}
+.panel p{font-size:.75rem;line-height:1.65;color:var(--grey)}
+.panel a{color:var(--ink);text-decoration:none;border-bottom:1.5px solid var(--ink);font-weight:600;font-size:.72rem;transition:all .2s}
+.panel a:hover{background:var(--ink);color:var(--bg);border-bottom-color:var(--ink)}
+
+/* ===== SPECIAL PANEL TYPES ===== */
+/* Hero panel - large title */
+.panel.hero{background:var(--ink);color:var(--bg);text-align:center;padding:2.5rem 1.5rem}
+.panel.hero h1{font-size:2.8rem;font-weight:900;letter-spacing:-.04em;margin-bottom:.15rem}
+.panel.hero .sub{font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;opacity:.5;margin-top:.25rem}
+.panel.hero .hero-line{position:absolute;background:var(--bg);opacity:.1}
+.panel.hero .hero-line:nth-child(1){top:20%;left:0;right:0;height:1px}
+.panel.hero .hero-line:nth-child(2){bottom:25%;left:0;right:0;height:1px}
+.panel.hero .hero-line:nth-child(3){left:15%;top:0;bottom:0;width:1px}
+
+/* Manga screentone dots */
+.screentone{
+  position:absolute;inset:0;pointer-events:none;opacity:.04;
+  background-image:radial-gradient(circle,var(--ink) 1px,transparent 1px);
+  background-size:6px 6px;
+}
+
+/* ===== LINK TAGS ===== */
+.tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem}
+.tag{
+  display:inline-block;padding:.25rem .55rem;border:1.5px solid var(--ink);
+  font-size:.58rem;font-weight:700;letter-spacing:.05em;text-decoration:none;
+  color:var(--ink);transition:all .2s;
+}
+.tag:hover{background:var(--ink);color:var(--bg)}
+
+/* ===== LIST ITEMS ===== */
+.panel ul{list-style:none;font-size:.72rem;color:var(--grey)}
+.panel ul li{padding:.25rem 0;border-bottom:1px dashed var(--light)}
+.panel ul li:last-child{border-bottom:none}
+
+/* ===== NUMBER BADGE ===== */
+.num{display:inline-flex;width:22px;height:22px;align-items:center;justify-content:center;
+  border:2px solid var(--ink);border-radius:50%;font-size:.6rem;font-weight:900;margin-right:.5rem}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .page{padding:.75rem;gap:.5rem}
+  .page-grid,.page-grid2{grid-template-columns:1fr 1fr;gap:.5rem}
+  .page-grid4{grid-template-columns:1fr 1fr;gap:.5rem}
+  .p-2x3{grid-column:span 2}
+  .panel.hero h1{font-size:1.8rem}
+  .panel{padding:1rem}
+}
+
+@media(max-width:480px){
+  .page-grid,.page-grid2,.page-grid4{grid-template-columns:1fr}
+  .p-2x3{grid-column:span 1}.p-half{grid-column:span 1}.p-1x3{grid-column:span 1}
+}
 </style>
 </head>
 <body>
 
-<canvas id="stars"></canvas>
+<div class="page">
 
-<!-- RED THREADS OF FATE -->
-<div class="threads">
-  <svg width="100%" height="100%">
-    <defs>
-      <linearGradient id="threadG" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%" stop-color="#ec4899" stop-opacity="0"/><stop offset="20%" stop-color="#ec4899" stop-opacity=".7"/>
-        <stop offset="50%" stop-color="#fbbf24" stop-opacity=".8"/><stop offset="80%" stop-color="#3b82f6" stop-opacity=".7"/>
-        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
-      </linearGradient>
-      <filter id="glow"><feGaussianBlur stdDeviation="3"/></filter>
-    </defs>
-    <!-- Main fate thread -->
-    <path d="M0,200 Q200,160 400,150 Q600,140 800,170 Q1000,200 1200,190" stroke="url(#threadG)" stroke-width="1.2" fill="none" filter="url(#glow)" opacity=".7"/>
-    <!-- Second wrapping thread -->
-    <path d="M0,220 Q250,180 500,200 Q750,220 1000,180 Q1100,160 1200,175" stroke="url(#threadG)" stroke-width=".7" fill="none" opacity=".4"/>
-    <!-- Third delicate thread -->
-    <path d="M0,170 Q180,130 380,140 Q580,150 780,130 Q980,110 1200,160" stroke="url(#threadG)" stroke-width=".5" fill="none" opacity=".3"/>
-  </svg>
+  <!-- ===== ROW 1: HERO ===== -->
+  <div class="panel hero p-full">
+    <div class="hero-line"></div><div class="hero-line"></div><div class="hero-line"></div>
+    <p class="sub" style="margin-bottom:.75rem;opacity:.4">第1話</p>
+    <h1>Dev Attri</h1>
+    <p class="sub">builder · runner · lifter · learner</p>
+  </div>
+
+  <!-- ===== ROW 2: 3 Panels ===== -->
+  <div class="page-grid">
+
+    <div class="panel action p-1x3">
+      <div class="screentone"></div>
+      <span class="sfx sfx-tr">WHO?</span>
+      <span class="panel-label">Identity</span>
+      <p>I'm figuring it out. Building things, breaking them, learning. Not polished, not finished — just obsessed with making things work. Based in India. Learning in public.</p>
+    </div>
+
+    <div class="panel p-1x3">
+      <span class="sfx sfx-tl" style="font-size:1rem">SWISH</span>
+      <span class="panel-label">Currently</span>
+      <p>Deep in TypeScript. Building full-stack systems. Running 40km/week. Getting faster, stronger, sharper.</p>
+    </div>
+
+    <div class="panel p-1x3" style="background:#fff">
+      <span class="panel-label">Philosophy</span>
+      <p>"I don't believe in waiting until I'm ready. I ship first, then refine. Hard work beats talent when talent doesn't work hard."</p>
+    </div>
+
+  </div>
+
+  <!-- ===== ROW 3: 2 Panels (left big, right small) ===== -->
+  <div class="page-grid" style="grid-template-columns:2fr 1fr">
+
+    <div class="panel action p-full">
+      <span class="sfx sfx-tr" style="font-size:2rem">TOOLS</span>
+      <div class="screentone"></div>
+      <span class="panel-label">What I've Built</span>
+      <div class="page-grid2" style="margin-top:.75rem">
+        <a href="/grit" style="font-size:.75rem;display:block;padding:.5rem;border:1.5px solid var(--ink);text-align:center;border-bottom:1.5px solid var(--ink)">
+          <strong>VEKTOR</strong><br><span style="font-size:.6rem;color:var(--mid)">Hybrid Athlete OS</span>
+        </a>
+        <span style="font-size:.75rem;display:block;padding:.5rem;border:1.5px solid var(--ink);text-align:center;opacity:.6">
+          Weather App
+        </span>
+        <span style="font-size:.75rem;display:block;padding:.5rem;border:1.5px solid var(--ink);text-align:center;opacity:.6">
+          Macro Tracker
+        </span>
+        <span style="font-size:.75rem;display:block;padding:.5rem;border:1.5px solid var(--ink);text-align:center;opacity:.6">
+          Max Workspace
+        </span>
+      </div>
+    </div>
+
+    <div class="panel" style="background:#fff">
+      <span class="sfx sfx-br">GO</span>
+      <span class="panel-label">Live Now</span>
+      <a href="/grit" style="font-size:.8rem;line-height:2"><strong>→ Gritier</strong><br>Hybrid Athlete<br>Command Center</a>
+    </div>
+
+  </div>
+
+  <!-- ===== ROW 4: 4 Small Panels ===== -->
+  <div class="page-grid4">
+
+    <div class="panel">
+      <span class="panel-label">Readiness</span>
+      <p style="font-size:1.4rem;font-weight:900">78<span style="font-size:.6rem;color:var(--mid)">/100</span></p>
+      <p style="font-size:.6rem;color:var(--mid)">Last check-in</p>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">Weekly Km</span>
+      <p style="font-size:1.4rem;font-weight:900">42.5<span style="font-size:.6rem;color:var(--mid)">km</span></p>
+      <p style="font-size:.6rem;color:var(--mid)">Running</p>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">Sleep</span>
+      <p style="font-size:1.4rem;font-weight:900">7.2<span style="font-size:.6rem;color:var(--mid)">h</span></p>
+      <p style="font-size:.6rem;color:var(--mid)">Avg quality 7/10</p>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">Volume</span>
+      <p style="font-size:1.4rem;font-weight:900">12.4K<span style="font-size:.6rem;color:var(--mid)">kg</span></p>
+      <p style="font-size:.6rem;color:var(--mid)">Weekly lifted</p>
+    </div>
+
+  </div>
+
+  <!-- ===== ROW 5: 3 Panels ===== -->
+  <div class="page-grid">
+
+    <div class="panel" style="background:#fff">
+      <span class="sfx sfx-tl" style="font-size:.9rem">POEM</span>
+      <span class="panel-label">Poetry</span>
+      <p style="font-style:italic;font-size:.7rem">"my eyes are where your eyes is — you blinked and i rewired."</p>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label">Questions</span>
+      <p style="font-size:.68rem;line-height:1.6">What's the meaning of life? When did we stop asking? Why does being drunk make us happy?</p>
+    </div>
+
+    <div class="panel" style="background:#fff">
+      <span class="panel-label">Beliefs</span>
+      <ul style="font-size:.65rem">
+        <li>Hard work beats talent</li>
+        <li>Discomfort is the door</li>
+        <li>People remember feelings</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ===== ROW 6: Signal Panel ===== -->
+  <div class="panel hero p-full" style="background:var(--paper);color:var(--ink);padding:1.5rem">
+    <span class="sfx sfx-tr" style="font-size:1.2rem;opacity:.08">SIGNAL</span>
+    <span class="panel-label" style="text-align:center;display:block">Find Me</span>
+    <div class="tags" style="justify-content:center">
+      <a href="https://github.com/attridevv" target="_blank" class="tag">GitHub</a>
+      <a href="https://x.com/attridevv" target="_blank" class="tag">X</a>
+      <a href="https://instagram.com/attridevv" target="_blank" class="tag">Instagram</a>
+      <a href="https://anilist.co/user/Attridevv/" target="_blank" class="tag">AniList</a>
+      <a href="https://youtube.com/@attridevv" target="_blank" class="tag">YouTube</a>
+    </div>
+  </div>
+
+  <!-- ===== ROW 7: Footer ===== -->
+  <div class="panel p-full" style="text-align:center;padding:.75rem;background:var(--ink);color:var(--bg)">
+    <p style="font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--bg);opacity:.5;margin:0">
+      続く → To be continued
+    </p>
+  </div>
+
 </div>
 
-<!-- ORBS -->
-<div class="orb orb-l"><div class="orb-inner"></div><div class="orb-ring"></div></div>
-<div class="orb orb-r"><div class="orb-inner"></div><div class="orb-ring"></div></div>
-
-<!-- THE COUPLE -->
-<div class="couple">
-  <svg viewBox="0 0 400 400">
-    <defs>
-      <radialGradient id="centerGlow"><stop offset="0%" stop-color="rgba(251,191,36,.15)"/><stop offset="60%" stop-color="transparent"/></radialGradient>
-      <linearGradient id="fateThread" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%" stop-color="#ec4899" stop-opacity=".8"/><stop offset="50%" stop-color="#fbbf24" stop-opacity=".9"/><stop offset="100%" stop-color="#3b82f6" stop-opacity=".8"/>
-      </linearGradient>
-      <filter id="fGlow"><feGaussianBlur stdDeviation="2"/></filter>
-    </defs>
-
-    <!-- Center glow where they nearly touch -->
-    <ellipse cx="200" cy="195" rx="80" ry="60" fill="url(#centerGlow)"/>
-
-    <!-- ===== ZERO TWO PROFILE (left, facing right) ===== -->
-    <g transform="translate(140,180)">
-      <!-- Aura -->
-      <ellipse cx="0" cy="0" rx="70" ry="80" fill="rgba(236,72,153,.06)"/>
-
-      <!-- Neck -->
-      <path d="M-3,40 L-3,60 L5,60 L5,40 Z" fill="#1a0a15" stroke="rgba(236,72,153,.2)" stroke-width=".6"/>
-
-      <!-- Torso top -->
-      <path d="M-10,55 Q-12,70 -8,85 L16,85 Q20,70 18,55 Z" fill="#1a0a15" stroke="rgba(236,72,153,.15)" stroke-width=".6"/>
-
-      <!-- Hair (long, flowing behind) -->
-      <path d="M-18,-25 Q-40,-15 -45,5 Q-48,25 -42,45 Q-38,55 -30,48 Q-22,40 -25,25 Q-28,10 -22,-5 Q-18,-15 -15,-22 Z" fill="#140510" stroke="rgba(236,72,153,.2)" stroke-width=".5"/>
-      <!-- Hair strands -->
-      <path d="M-20,-20 Q-42,0 -40,20" fill="none" stroke="rgba(236,72,153,.1)" stroke-width=".4"/>
-      <path d="M-18,-15 Q-38,5 -35,30" fill="none" stroke="rgba(236,72,153,.08)" stroke-width=".3"/>
-
-      <!-- Face profile (facing right) -->
-      <path d="M-10,-28 Q-12,-15 -10,0 Q-8,10 -6,15 Q-4,20 0,22 Q2,24 4,22 Q6,20 6,15 Q6,8 5,0 Q4,-10 2,-20 Q0,-26 -4,-30 Q-8,-32 -10,-28 Z" fill="rgba(236,72,153,.06)" stroke="rgba(236,72,153,.25)" stroke-width=".7"/>
-      <!-- Forehead -->
-      <path d="M-10,-28 Q-6,-32 0,-30 Q4,-28 5,-24" fill="none" stroke="rgba(236,72,153,.15)" stroke-width=".4"/>
-      <!-- Nose -->
-      <path d="M5,-8 Q6,-5 6,0" fill="none" stroke="rgba(236,72,153,.2)" stroke-width=".4"/>
-      <!-- Lips -->
-      <path d="M6,3 Q6,6 4,7" fill="none" stroke="rgba(236,72,153,.25)" stroke-width=".5"/>
-      <!-- Chin -->
-      <path d="M4,7 Q2,9 -2,8" fill="none" stroke="rgba(236,72,153,.15)" stroke-width=".4"/>
-      <!-- Jaw line -->
-      <path d="M-2,8 Q-6,4 -8,-2" fill="none" stroke="rgba(236,72,153,.12)" stroke-width=".4"/>
-
-      <!-- Eye -->
-      <path d="M1,-10 Q3,-13 5,-10" fill="none" stroke="#10b981" stroke-width=".8"/>
-      <path d="M2,-11 Q3,-12 4,-11" fill="#10b981" opacity=".6"/>
-
-      <!-- Horn (curved, red) -->
-      <path d="M-6,-28 Q-8,-40 -2,-52 Q2,-56 6,-50 Q8,-44 2,-38 Q-2,-34 -4,-30" fill="rgba(236,72,153,.3)" stroke="#ec4899" stroke-width=".8"/>
-      <!-- Horn highlight -->
-      <path d="M-3,-38 Q-1,-46 2,-50" fill="none" stroke="rgba(251,207,232,.4)" stroke-width=".5"/>
-
-      <!-- Headband -->
-      <path d="M-10,-26 Q-4,-29 2,-28" fill="none" stroke="rgba(236,72,153,.15)" stroke-width=".6"/>
-
-      <!-- Hair tufts on top -->
-      <path d="M-6,-30 Q-4,-38 0,-36 Q2,-34 0,-30" fill="#140510" stroke="rgba(236,72,153,.15)" stroke-width=".4"/>
-    </g>
-
-    <!-- ===== HIRO PROFILE (right, facing left) ===== -->
-    <g transform="translate(260,180)">
-      <!-- Aura -->
-      <ellipse cx="0" cy="0" rx="70" ry="80" fill="rgba(59,130,246,.05)"/>
-
-      <!-- Neck -->
-      <path d="M-5,40 L-5,60 L3,60 L3,40 Z" fill="#050a15" stroke="rgba(59,130,246,.2)" stroke-width=".6"/>
-
-      <!-- Torso -->
-      <path d="M-18,55 Q-20,70 -16,85 L8,85 Q12,70 10,55 Z" fill="#050a15" stroke="rgba(59,130,246,.15)" stroke-width=".6"/>
-
-      <!-- Hair (messy, dark) -->
-      <path d="M18,-25 Q38,-15 42,5 Q44,20 38,35 Q34,42 28,38 Q22,34 24,20 Q26,8 22,-2 Q18,-12 16,-20 Z" fill="#030712" stroke="rgba(59,130,246,.15)" stroke-width=".5"/>
-
-      <!-- Face profile (facing left) -->
-      <path d="M10,-28 Q12,-15 10,0 Q8,10 6,15 Q4,20 0,22 Q-2,24 -4,22 Q-6,20 -6,15 Q-6,8 -5,0 Q-4,-10 -2,-20 Q0,-26 4,-30 Q8,-32 10,-28 Z" fill="rgba(59,130,246,.05)" stroke="rgba(59,130,246,.2)" stroke-width=".7"/>
-      <!-- Forehead -->
-      <path d="M10,-28 Q6,-32 0,-30 Q-4,-28 -5,-24" fill="none" stroke="rgba(59,130,246,.12)" stroke-width=".4"/>
-      <!-- Nose -->
-      <path d="M-5,-8 Q-6,-5 -6,0" fill="none" stroke="rgba(59,130,246,.18)" stroke-width=".4"/>
-      <!-- Lips -->
-      <path d="M-6,3 Q-6,6 -4,7" fill="none" stroke="rgba(59,130,246,.2)" stroke-width=".5"/>
-      <!-- Chin -->
-      <path d="M-4,7 Q-2,9 2,8" fill="none" stroke="rgba(59,130,246,.12)" stroke-width=".4"/>
-      <!-- Jaw -->
-      <path d="M2,8 Q6,4 8,-2" fill="none" stroke="rgba(59,130,246,.1)" stroke-width=".4"/>
-
-      <!-- Eye -->
-      <path d="M-1,-10 Q-3,-13 -5,-10" fill="none" stroke="#3b82f6" stroke-width=".8"/>
-      <path d="M-2,-11 Q-3,-12 -4,-11" fill="#3b82f6" opacity=".6"/>
-
-      <!-- Hair spikes on top -->
-      <path d="M6,-30 Q4,-42 0,-44 Q-2,-42 -2,-36 Q0,-34 4,-32 Q6,-30 4,-28" fill="#030712" stroke="rgba(59,130,246,.12)" stroke-width=".4"/>
-      <path d="M8,-28 Q10,-38 8,-42 Q6,-40 6,-36" fill="#030712" stroke="rgba(59,130,246,.1)" stroke-width=".3"/>
-    </g>
-
-    <!-- ===== THE RED STRING OF FATE (between their foreheads) ===== -->
-    <!-- Central knot / nexus -->
-    <circle cx="200" cy="165" r="3" fill="#fbbf24" opacity=".8" filter="url(#fGlow)"/>
-
-    <!-- Thread from Zero Two to center -->
-    <path d="M155,165 Q170,160 185,163 Q195,164 200,165" stroke="url(#fateThread)" stroke-width="1.2" fill="none" filter="url(#fGlow)"/>
-    <!-- Thread from Hiro to center -->
-    <path d="M245,165 Q230,160 215,163 Q205,164 200,165" stroke="url(#fateThread)" stroke-width="1.2" fill="none" filter="url(#fGlow)"/>
-
-    <!-- Loose thread wrapping -->
-    <path d="M150,155 Q175,148 200,155 Q225,162 250,155" stroke="rgba(236,72,153,.3)" stroke-width=".6" fill="none"/>
-    <path d="M150,175 Q180,182 200,175 Q220,168 250,175" stroke="rgba(59,130,246,.3)" stroke-width=".6" fill="none"/>
-
-    <!-- Additional wraparound threads -->
-    <path d="M140,180 Q170,195 200,185 Q230,175 260,180" stroke="url(#fateThread)" stroke-width=".5" fill="none" opacity=".4"/>
-    <path d="M140,135 Q170,125 200,138 Q230,150 260,135" stroke="url(#fateThread)" stroke-width=".4" fill="none" opacity=".3"/>
-  </svg>
-</div>
-
-<!-- PETALS -->
-<div class="petals" id="petals"></div>
-
-<!-- SPARKS -->
-<div class="petals" id="sparks"></div>
-
-<div class="overlay">
-  <a href="/fire" class="choice choice-l"><div class="choice-hint"><span class="l1">The Self</span><span class="l2">ABOUT</span><span class="l3">Leo · Identity · Fire</span></div></a>
-  <a href="/water" class="choice choice-r"><div class="choice-hint"><span class="l1">The Work</span><span class="l2">CREATE</span><span class="l3">Tools · Builds · Output</span></div></a>
-</div>
-
-<script>
-// Stars
-(function(){
-var c=document.getElementById('stars'),ctx=c.getContext('2d'),w,h;
-function R(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}
-R();window.addEventListener('resize',R);
-var pts=[];for(var i=0;i<60;i++)pts.push({x:Math.random()*w,y:Math.random()*h*.8,r:Math.random()*.5+.05,o:Math.random()*.2+.03,p:Math.random()*Math.PI*2});
-(function D(t){if(w!==c.width||h!==c.height)R();ctx.clearRect(0,0,w,h);pts.forEach(function(s){var b=.4+.6*Math.sin(t*.001+s.p);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,'+(s.o*b)+')';ctx.fill()});requestAnimationFrame(D)})();
-})();
-
-// Petals
-(function(){
-var p=document.getElementById('petals'),h='';
-for(var i=0;i<40;i++){var x=8+Math.random()*84,dur=8+Math.random()*14,del=Math.random()*15,drift=(Math.random()-.5)*180;h+='<div class="petal '+(Math.random()>.25?'pink':'white')+'" style="--x:'+x+'%;--dur:'+dur+'s;--del:'+del+'s;--drift:'+drift+'px"></div>'}
-p.innerHTML=h;
-})();
-
-// Ambient sparks
-(function(){
-var s=document.getElementById('sparks'),h='';
-for(var i=0;i<15;i++)h+='<div class="spark" style="left:'+(15+Math.random()*25)+'%;top:'+(40+Math.random()*20)+'%;width:2px;height:2px;background:#f9a8d4;--sx:'+((Math.random()-.5)*30)+'px;--sy:'+(-10-Math.random()*20)+'px;--d:'+(2+Math.random()*2)+'s;--del:'+(Math.random()*2)+'s"></div>';
-for(var i=0;i<15;i++)h+='<div class="spark" style="left:'+(65+Math.random()*25)+'%;top:'+(40+Math.random()*20)+'%;width:2px;height:2px;background:#93c5fd;--sx:'+((Math.random()-.5)*30)+'px;--sy:'+(-10-Math.random()*20)+'px;--d:'+(2+Math.random()*2)+'s;--del:'+(Math.random()*2)+'s"></div>';
-s.innerHTML=h;
-})();
-</script>
 </body>
 </html>
