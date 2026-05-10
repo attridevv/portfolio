@@ -7,263 +7,326 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
-:root{
-  --bg:#fafafa;--ink:#0a0a0a;--grey:#2a2a2a;--mid:#6b6b6b;--light:#d4d4d4;--paper:#f5f5f5;
-}
-
 body{
-  background:var(--bg);color:var(--ink);
   font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  min-height:100vh;
+  width:100vw;height:100vh;overflow:hidden;display:flex;
 }
 
-/* ===== MANGA PAGE ===== */
-.page{
-  max-width:800px;margin:0 auto;padding:1.5rem;
-  display:grid;gap:.75rem;
+/* ===== LEFT WORLD — Cherry Blossom Peace ===== */
+.world-l{
+  flex:1;position:relative;overflow:hidden;cursor:pointer;
+  text-decoration:none;color:inherit;
+  background:radial-gradient(ellipse at 60% 50%,rgba(236,72,153,.08),transparent 50%),
+    linear-gradient(to right,#0d0812,#1a0a18);
+  transition:all .6s;
+}
+.world-l:hover{background:radial-gradient(ellipse at 60% 50%,rgba(236,72,153,.15),transparent 45%),
+  linear-gradient(to right,#150a1a,#220a1e)}
+
+/* ===== RIGHT WORLD — Lightning Void ===== */
+.world-r{
+  flex:1;position:relative;overflow:hidden;cursor:pointer;
+  text-decoration:none;color:inherit;
+  background:radial-gradient(ellipse at 40% 50%,rgba(168,85,247,.06),transparent 50%),
+    linear-gradient(to left,#010108,#0a0a1a);
+  transition:all .6s;
+}
+.world-r:hover{background:radial-gradient(ellipse at 40% 50%,rgba(168,85,247,.12),transparent 45%),
+  linear-gradient(to left,#020210,#0d0d22)}
+
+/* ===== CANVAS LAYERS ===== */
+canvas{position:absolute;inset:0;pointer-events:none}
+
+/* ===== PETALS (CSS) ===== */
+.petals{position:absolute;inset:0;pointer-events:none}
+.petal{position:absolute;border-radius:50% 0 50% 0;animation:petalFall var(--dur) ease-in-out infinite;animation-delay:var(--del);left:var(--x);opacity:0}
+.petal.pink{width:5px;height:9px;background:radial-gradient(ellipse at 30% 30%,#fce7f3,#f9a8d4)}
+.petal.light{width:4px;height:7px;background:radial-gradient(ellipse at 30% 30%,#fff,#fce7f3)}
+@keyframes petalFall{
+  0%{opacity:.8;transform:translate(0,0)rotate(0deg)}
+  20%{transform:translate(var(--d1),15vh)rotate(72deg)}
+  40%{transform:translate(var(--d2),30vh)rotate(144deg)}
+  60%{opacity:.5;transform:translate(var(--d3),50vh)rotate(216deg)}
+  80%{transform:translate(var(--d4),70vh)rotate(288deg)}
+  100%{opacity:0;transform:translate(var(--d5),95vh)rotate(360deg)}
 }
 
-/* ===== PANELS ===== */
-.panel{
-  border:2.5px solid var(--ink);padding:1.25rem;position:relative;
-  background:var(--paper);
-  transition:all .25s;
-  overflow:hidden;
+/* ===== CONTENT ===== */
+.content{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;pointer-events:none}
+.content-inner{text-align:center;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.world-l:hover .content-inner{transform:translateY(-8px)}
+.world-r:hover .content-inner{transform:translateY(-8px)}
+
+.c-number{display:block;font-size:.5rem;letter-spacing:.25em;text-transform:uppercase;margin-bottom:.5rem;font-weight:700;opacity:.4;transition:opacity .4s}
+.world-l:hover .c-number{opacity:.7}.world-r:hover .c-number{opacity:.7}
+.world-l .c-number{color:#f9a8d4}.world-r .c-number{color:#c084fc}
+
+.c-title{display:block;font-size:1.6rem;font-weight:900;letter-spacing:.04em;margin-bottom:.25rem;transition:text-shadow .4s}
+.world-l .c-title{color:#fce7f3}.world-r .c-title{color:#e9d5ff}
+.world-l:hover .c-title{text-shadow:0 0 40px rgba(236,72,153,.4)}
+.world-r:hover .c-title{text-shadow:0 0 40px rgba(168,85,247,.4)}
+
+.c-desc{display:block;font-size:.52rem;letter-spacing:.1em;color:rgba(255,255,255,.2)}
+.world-l:hover .c-desc{color:rgba(255,255,255,.35)}
+.world-r:hover .c-desc{color:rgba(255,255,255,.35)}
+
+/* ===== CENTER DIVIDER ===== */
+.divider{
+  position:fixed;top:0;bottom:0;left:50%;width:1px;z-index:20;
+  background:linear-gradient(to bottom,transparent,rgba(255,255,255,.08) 20%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.08) 80%,transparent);
+  pointer-events:none;
+  animation:divPulse 3s ease-in-out infinite;
 }
-.panel:hover{background:#fff;box-shadow:4px 4px 0 rgba(0,0,0,.08)}
+@keyframes divPulse{0%,100%{opacity:.6}50%{opacity:1}}
 
-/* Panel sizes */
-.p-full{grid-column:1/-1}
-.p-half{grid-column:span 1}
-.p-2x3{grid-column:span 2}
-.p-1x3{grid-column:span 1}
-
-/* Grid for panel rows */
-.page-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem}
-.page-grid2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
-.page-grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}
-
-/* ===== MANGA FX ===== */
-/* Speed lines */
-.speed-lines{position:absolute;top:0;bottom:0;left:0;width:100%;pointer-events:none;opacity:.06}
-.speed-lines .sl{position:absolute;background:var(--ink)}
-.sl-h{height:1px;left:0;right:0}
-.sl-v{width:1px;top:0;bottom:0}
-
-/* Sound effect */
-.sfx{position:absolute;font-size:1.6rem;font-weight:900;letter-spacing:.06em;opacity:.15;pointer-events:none;font-style:italic}
-.sfx-tr{top:.5rem;right:.75rem}
-.sfx-tl{top:.5rem;left:.75rem}
-.sfx-br{bottom:.5rem;right:.75rem}
-
-/* Action burst behind panel */
-.panel.action{background:var(--paper)}
-.panel.action::before{content:'';position:absolute;inset:-3px;border:2px solid var(--ink);opacity:.1;transform:scale(1.02)}
-
-/* ===== TYPOGRAPHY ===== */
-.panel-label{
-  font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--mid);margin-bottom:.5rem;font-weight:700;
-}
-
-.panel h2{font-size:1.2rem;font-weight:900;letter-spacing:-.02em;margin-bottom:.35rem;line-height:1.1}
-.panel h3{font-size:.85rem;font-weight:700;margin-bottom:.2rem}
-.panel p{font-size:.75rem;line-height:1.65;color:var(--grey)}
-.panel a{color:var(--ink);text-decoration:none;border-bottom:1.5px solid var(--ink);font-weight:600;font-size:.72rem;transition:all .2s}
-.panel a:hover{background:var(--ink);color:var(--bg);border-bottom-color:var(--ink)}
-
-/* ===== SPECIAL PANEL TYPES ===== */
-/* Hero panel - large title */
-.panel.hero{background:var(--ink);color:var(--bg);text-align:center;padding:2.5rem 1.5rem}
-.panel.hero h1{font-size:2.8rem;font-weight:900;letter-spacing:-.04em;margin-bottom:.15rem}
-.panel.hero .sub{font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;opacity:.5;margin-top:.25rem}
-.panel.hero .hero-line{position:absolute;background:var(--bg);opacity:.1}
-.panel.hero .hero-line:nth-child(1){top:20%;left:0;right:0;height:1px}
-.panel.hero .hero-line:nth-child(2){bottom:25%;left:0;right:0;height:1px}
-.panel.hero .hero-line:nth-child(3){left:15%;top:0;bottom:0;width:1px}
-
-/* Manga screentone dots */
-.screentone{
-  position:absolute;inset:0;pointer-events:none;opacity:.04;
-  background-image:radial-gradient(circle,var(--ink) 1px,transparent 1px);
-  background-size:6px 6px;
-}
-
-/* ===== LINK TAGS ===== */
-.tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem}
-.tag{
-  display:inline-block;padding:.25rem .55rem;border:1.5px solid var(--ink);
-  font-size:.58rem;font-weight:700;letter-spacing:.05em;text-decoration:none;
-  color:var(--ink);transition:all .2s;
-}
-.tag:hover{background:var(--ink);color:var(--bg)}
-
-/* ===== LIST ITEMS ===== */
-.panel ul{list-style:none;font-size:.72rem;color:var(--grey)}
-.panel ul li{padding:.25rem 0;border-bottom:1px dashed var(--light)}
-.panel ul li:last-child{border-bottom:none}
-
-/* ===== NUMBER BADGE ===== */
-.num{display:inline-flex;width:22px;height:22px;align-items:center;justify-content:center;
-  border:2px solid var(--ink);border-radius:50%;font-size:.6rem;font-weight:900;margin-right:.5rem}
+/* ===== BRANCH REACHING ACROSS ===== */
+.branch{position:fixed;top:0;left:0;right:0;height:40%;z-index:5;pointer-events:none;opacity:.15}
+.branch svg{width:100%;height:100%}
 
 /* ===== RESPONSIVE ===== */
 @media(max-width:768px){
-  .page{padding:.75rem;gap:.5rem}
-  .page-grid,.page-grid2{grid-template-columns:1fr 1fr;gap:.5rem}
-  .page-grid4{grid-template-columns:1fr 1fr;gap:.5rem}
-  .p-2x3{grid-column:span 2}
-  .panel.hero h1{font-size:1.8rem}
-  .panel{padding:1rem}
-}
-
-@media(max-width:480px){
-  .page-grid,.page-grid2,.page-grid4{grid-template-columns:1fr}
-  .p-2x3{grid-column:span 1}.p-half{grid-column:span 1}.p-1x3{grid-column:span 1}
+  body{flex-direction:column}
+  .world-l,.world-r{flex:none;height:50vh}
+  .divider{top:50%;left:0;right:0;bottom:auto;width:100%;height:1px}
+  .c-title{font-size:1.15rem}
 }
 </style>
 </head>
 <body>
 
-<div class="page">
-
-  <!-- ===== ROW 1: HERO ===== -->
-  <div class="panel hero p-full">
-    <div class="hero-line"></div><div class="hero-line"></div><div class="hero-line"></div>
-    <p class="sub" style="margin-bottom:.75rem;opacity:.4">第1話</p>
-    <h1>Dev Attri</h1>
-    <p class="sub">builder · runner · lifter · learner</p>
-  </div>
-
-  <!-- ===== ROW 2: 3 Panels ===== -->
-  <div class="page-grid">
-
-    <div class="panel action p-1x3">
-      <div class="screentone"></div>
-      <span class="sfx sfx-tr">WHO?</span>
-      <span class="panel-label">Identity</span>
-      <p>I'm figuring it out. Building things, breaking them, learning. Not polished, not finished — just obsessed with making things work. Based in India. Learning in public.</p>
-    </div>
-
-    <div class="panel p-1x3">
-      <span class="sfx sfx-tl" style="font-size:1rem">SWISH</span>
-      <span class="panel-label">Currently</span>
-      <p>Deep in TypeScript. Building full-stack systems. Running 40km/week. Getting faster, stronger, sharper.</p>
-    </div>
-
-    <div class="panel p-1x3" style="background:#fff">
-      <span class="panel-label">Philosophy</span>
-      <p>"I don't believe in waiting until I'm ready. I ship first, then refine. Hard work beats talent when talent doesn't work hard."</p>
-    </div>
-
-  </div>
-
-  <!-- ===== ROW 3: 2 Panels (left big, right small) ===== -->
-  <div class="page-grid" style="grid-template-columns:2fr 1fr">
-
-    <div class="panel action p-full">
-      <span class="sfx sfx-tr" style="font-size:2rem">TOOLS</span>
-      <div class="screentone"></div>
-      <span class="panel-label">What I've Built</span>
-      <div class="page-grid2" style="margin-top:.75rem">
-        <a href="/grit" style="font-size:.75rem;display:block;padding:.5rem;border:1.5px solid var(--ink);text-align:center;border-bottom:1.5px solid var(--ink)">
-          <strong>VEKTOR</strong><br><span style="font-size:.6rem;color:var(--mid)">Hybrid Athlete OS</span>
-        </a>
-        <span style="font-size:.75rem;display:block;padding:.5rem;border:1.5px solid var(--ink);text-align:center;opacity:.6">
-          Weather App
-        </span>
-        <span style="font-size:.75rem;display:block;padding:.5rem;border:1.5px solid var(--ink);text-align:center;opacity:.6">
-          Macro Tracker
-        </span>
-        <span style="font-size:.75rem;display:block;padding:.5rem;border:1.5px solid var(--ink);text-align:center;opacity:.6">
-          Max Workspace
-        </span>
-      </div>
-    </div>
-
-    <div class="panel" style="background:#fff">
-      <span class="sfx sfx-br">GO</span>
-      <span class="panel-label">Live Now</span>
-      <a href="/grit" style="font-size:.8rem;line-height:2"><strong>→ Gritier</strong><br>Hybrid Athlete<br>Command Center</a>
-    </div>
-
-  </div>
-
-  <!-- ===== ROW 4: 4 Small Panels ===== -->
-  <div class="page-grid4">
-
-    <div class="panel">
-      <span class="panel-label">Readiness</span>
-      <p style="font-size:1.4rem;font-weight:900">78<span style="font-size:.6rem;color:var(--mid)">/100</span></p>
-      <p style="font-size:.6rem;color:var(--mid)">Last check-in</p>
-    </div>
-
-    <div class="panel">
-      <span class="panel-label">Weekly Km</span>
-      <p style="font-size:1.4rem;font-weight:900">42.5<span style="font-size:.6rem;color:var(--mid)">km</span></p>
-      <p style="font-size:.6rem;color:var(--mid)">Running</p>
-    </div>
-
-    <div class="panel">
-      <span class="panel-label">Sleep</span>
-      <p style="font-size:1.4rem;font-weight:900">7.2<span style="font-size:.6rem;color:var(--mid)">h</span></p>
-      <p style="font-size:.6rem;color:var(--mid)">Avg quality 7/10</p>
-    </div>
-
-    <div class="panel">
-      <span class="panel-label">Volume</span>
-      <p style="font-size:1.4rem;font-weight:900">12.4K<span style="font-size:.6rem;color:var(--mid)">kg</span></p>
-      <p style="font-size:.6rem;color:var(--mid)">Weekly lifted</p>
-    </div>
-
-  </div>
-
-  <!-- ===== ROW 5: 3 Panels ===== -->
-  <div class="page-grid">
-
-    <div class="panel" style="background:#fff">
-      <span class="sfx sfx-tl" style="font-size:.9rem">POEM</span>
-      <span class="panel-label">Poetry</span>
-      <p style="font-style:italic;font-size:.7rem">"my eyes are where your eyes is — you blinked and i rewired."</p>
-    </div>
-
-    <div class="panel">
-      <span class="panel-label">Questions</span>
-      <p style="font-size:.68rem;line-height:1.6">What's the meaning of life? When did we stop asking? Why does being drunk make us happy?</p>
-    </div>
-
-    <div class="panel" style="background:#fff">
-      <span class="panel-label">Beliefs</span>
-      <ul style="font-size:.65rem">
-        <li>Hard work beats talent</li>
-        <li>Discomfort is the door</li>
-        <li>People remember feelings</li>
-      </ul>
-    </div>
-
-  </div>
-
-  <!-- ===== ROW 6: Signal Panel ===== -->
-  <div class="panel hero p-full" style="background:var(--paper);color:var(--ink);padding:1.5rem">
-    <span class="sfx sfx-tr" style="font-size:1.2rem;opacity:.08">SIGNAL</span>
-    <span class="panel-label" style="text-align:center;display:block">Find Me</span>
-    <div class="tags" style="justify-content:center">
-      <a href="https://github.com/attridevv" target="_blank" class="tag">GitHub</a>
-      <a href="https://x.com/attridevv" target="_blank" class="tag">X</a>
-      <a href="https://instagram.com/attridevv" target="_blank" class="tag">Instagram</a>
-      <a href="https://anilist.co/user/Attridevv/" target="_blank" class="tag">AniList</a>
-      <a href="https://youtube.com/@attridevv" target="_blank" class="tag">YouTube</a>
+<!-- ===== LEFT WORLD — Sakura ===== -->
+<a href="/fire" class="world-l">
+  <canvas id="sakuraCanvas"></canvas>
+  <div class="petals" id="petals-l"></div>
+  <div class="content">
+    <div class="content-inner">
+      <span class="c-number">第一章</span>
+      <span class="c-title">About</span>
+      <span class="c-desc">The self · Leo · Identity</span>
     </div>
   </div>
+</a>
 
-  <!-- ===== ROW 7: Footer ===== -->
-  <div class="panel p-full" style="text-align:center;padding:.75rem;background:var(--ink);color:var(--bg)">
-    <p style="font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--bg);opacity:.5;margin:0">
-      続く → To be continued
-    </p>
+<!-- ===== RIGHT WORLD — Void Lightning ===== -->
+<a href="/water" class="world-r">
+  <canvas id="voidCanvas"></canvas>
+  <div class="content">
+    <div class="content-inner">
+      <span class="c-number">第二章</span>
+      <span class="c-title">Create</span>
+      <span class="c-desc">Tools · Builds · The work</span>
+    </div>
   </div>
+</a>
 
+<!-- ===== CENTER DIVIDER ===== -->
+<div class="divider"></div>
+
+<!-- ===== SAKURA BRANCH ===== -->
+<div class="branch">
+  <svg viewBox="0 0 1200 300" preserveAspectRatio="none">
+    <path d="M200,300 Q300,250 400,200 Q500,150 600,180 Q700,210 800,170 Q900,130 1000,200" stroke="rgba(236,72,153,.2)" stroke-width="3" fill="none"/>
+    <path d="M350,240 Q380,220 420,200" stroke="rgba(236,72,153,.12)" stroke-width="2" fill="none"/>
+    <path d="M700,190 Q750,160 820,170" stroke="rgba(168,85,247,.08)" stroke-width="2" fill="none"/>
+    <!-- Pink blossoms -->
+    <circle cx="400" cy="200" r="15" fill="rgba(249,168,212,.15)"/><circle cx="400" cy="200" r="8" fill="rgba(249,168,212,.08)"/>
+    <circle cx="600" cy="180" r="12" fill="rgba(251,207,232,.12)"/><circle cx="600" cy="180" r="6" fill="rgba(251,207,232,.06)"/>
+    <circle cx="800" cy="170" r="10" fill="rgba(216,180,254,.08)"/><circle cx="800" cy="170" r="5" fill="rgba(216,180,254,.04)"/>
+  </svg>
 </div>
 
+<script>
+// ==================== LEFT — SAKURA CANVAS ====================
+(function() {
+  var c = document.getElementById('sakuraCanvas'),
+      ctx = c.getContext('2d'),
+      w, h;
+
+  function resize() {
+    w = c.width = c.parentElement.offsetWidth;
+    h = c.height = c.parentElement.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Cherry blossom on tree branches (static positions)
+  var blooms = [];
+  for (var i = 0; i < 25; i++) {
+    blooms.push({
+      x: Math.random() * w,
+      y: Math.random() * h * 0.45 + h * 0.1,
+      r: 3 + Math.random() * 12,
+      o: 0.06 + Math.random() * 0.12,
+      pulse: Math.random() * Math.PI * 2
+    });
+  }
+
+  // Gentle floating dots
+  var dots = [];
+  for (var i = 0; i < 30; i++) {
+    dots.push({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      r: 0.5 + Math.random() * 1.5,
+      vy: -0.1 - Math.random() * 0.3,
+      o: 0.1 + Math.random() * 0.3,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+
+  function draw(t) {
+    if (w !== c.parentElement.offsetWidth || h !== c.parentElement.offsetHeight) resize();
+    ctx.clearRect(0, 0, w, h);
+
+    // Blossom clusters
+    blooms.forEach(function(b) {
+      var pulse = 0.6 + 0.4 * Math.sin(t * 0.002 + b.pulse);
+      var grad = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
+      grad.addColorStop(0, 'rgba(252,231,243,' + (b.o * pulse * 1.5) + ')');
+      grad.addColorStop(0.5, 'rgba(249,168,212,' + (b.o * pulse) + ')');
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // Floating light dots
+    dots.forEach(function(d) {
+      d.y += d.vy;
+      if (d.y < -10) { d.y = h + 10; d.x = Math.random() * w; }
+      var blink = 0.5 + 0.5 * Math.sin(t * 0.003 + d.phase);
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(252,231,243,' + (d.o * blink) + ')';
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+
+  // CSS Petals
+  var p = document.getElementById('petals-l'), hh = '';
+  for (var i = 0; i < 35; i++) {
+    var x = Math.random() * 90;
+    var dur = 7 + Math.random() * 12;
+    var del = Math.random() * 14;
+    var d1 = (Math.random() - 0.5) * 60;
+    var d2 = (Math.random() - 0.5) * 40;
+    var d3 = (Math.random() - 0.5) * 30;
+    var d4 = (Math.random() - 0.5) * 25;
+    var d5 = (Math.random() - 0.5) * 80;
+    var cls = Math.random() > 0.25 ? 'pink' : 'light';
+    hh += '<div class="petal ' + cls + '" style="--x:' + x + '%;--dur:' + dur + 's;--del:' + del + 's;--d1:' + d1 + 'px;--d2:' + d2 + 'px;--d3:' + d3 + 'px;--d4:' + d4 + 'px;--d5:' + d5 + 'px"></div>';
+  }
+  p.innerHTML = hh;
+})();
+
+// ==================== RIGHT — VOID LIGHTNING CANVAS ====================
+(function() {
+  var c = document.getElementById('voidCanvas'),
+      ctx = c.getContext('2d'),
+      w, h;
+
+  function resize() {
+    w = c.width = c.parentElement.offsetWidth;
+    h = c.height = c.parentElement.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var bolts = [];
+  var lastBolt = 0;
+
+  function genBolt() {
+    var x = w * 0.5 + (Math.random() - 0.5) * w * 0.6;
+    var pts = [{ x: x, y: h * 0.02 }];
+    for (var i = 0; i < 10; i++) {
+      x += (Math.random() - 0.5) * 30;
+      var y = pts[pts.length - 1].y + h * 0.08 + Math.random() * h * 0.05;
+      pts.push({ x: x, y: y });
+      if (Math.random() < 0.2 && i > 2) {
+        var fx = x, fy = pts[pts.length - 1].y;
+        var fork = [{ x: fx, y: fy }];
+        for (var j = 0; j < 5; j++) { fx += (Math.random() - 0.5) * 20; fy += h * 0.05 + Math.random() * h * 0.03; fork.push({ x: fx, y: fy }); }
+        pts[pts.length - 1].fork = fork;
+      }
+    }
+    return { pts: pts, life: 30, alpha: 0.6 + Math.random() * 0.4 };
+  }
+
+  // Static stars in void
+  var stars = [];
+  for (var i = 0; i < 40; i++) {
+    stars.push({
+      x: Math.random() * w, y: Math.random() * h,
+      r: 0.3 + Math.random() * 0.7,
+      o: 0.08 + Math.random() * 0.2,
+      pulse: Math.random() * Math.PI * 2
+    });
+  }
+
+  function drawBolt(bolt) {
+    if (bolt.life <= 0) return;
+    var a = bolt.alpha * (bolt.life / 30);
+
+    function drawPath(pts) {
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for (var i = 1; i < pts.length; i++) {
+        if (pts[i].fork) { ctx.lineTo(pts[i - 1].x, pts[i - 1].y); drawPath(pts[i].fork); ctx.moveTo(pts[i - 1].x, pts[i - 1].y); }
+        else ctx.lineTo(pts[i].x, pts[i].y);
+      }
+    }
+
+    // Glow
+    ctx.strokeStyle = 'rgba(168,85,247,' + (a * 0.3) + ')';
+    ctx.lineWidth = 8; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.shadowColor = 'rgba(168,85,247,' + (a * 0.5) + ')';
+    ctx.shadowBlur = 20;
+    ctx.beginPath(); drawPath(bolt.pts); ctx.stroke();
+
+    // Purple core
+    ctx.strokeStyle = 'rgba(192,132,252,' + (a * 0.5) + ')';
+    ctx.lineWidth = 3;
+    ctx.shadowBlur = 10;
+    ctx.beginPath(); drawPath(bolt.pts); ctx.stroke();
+
+    // White hot
+    ctx.strokeStyle = 'rgba(255,255,255,' + (a * 0.6) + ')';
+    ctx.lineWidth = 1;
+    ctx.shadowBlur = 4;
+    ctx.beginPath(); drawPath(bolt.pts); ctx.stroke();
+
+    ctx.shadowBlur = 0;
+  }
+
+  function draw(t) {
+    if (w !== c.parentElement.offsetWidth || h !== c.parentElement.offsetHeight) resize();
+    ctx.clearRect(0, 0, w, h);
+
+    // Stars
+    stars.forEach(function(s) {
+      var b = 0.5 + 0.5 * Math.sin(t * 0.002 + s.pulse);
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(196,181,253,' + (s.o * b) + ')';
+      ctx.fill();
+    });
+
+    // Lightning
+    if (t - lastBolt > 2000 + Math.random() * 3000) {
+      bolts.push(genBolt());
+      if (bolts.length > 3) bolts.shift();
+      lastBolt = t;
+    }
+    bolts = bolts.filter(function(b) { return b.life > 0; });
+    bolts.forEach(function(b) { b.life -= 0.5; drawBolt(b); });
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+</script>
 </body>
 </html>
