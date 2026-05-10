@@ -3,269 +3,229 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>attridevv · constellation</title>
+<title>DEV ATTRI · ARCADE</title>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-  --space:#030712;--star:#e2e8f0;--line:rgba(148,163,184,.15);
-  --gold:#fbbf24;--gold-dim:rgba(251,191,36,.3);
-  --cyan:#67e8f9;--cyan-dim:rgba(103,232,249,.18);
+  --bg:#0a0a14;--screen:#0d0d1a;
+  --pink:#ff6b9d;--cyan:#00e5ff;--yellow:#ffd740;--green:#69f0ae;--white:#e0e0e0;
 }
 
 body{
-  background:var(--space);color:var(--star);
-  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  width:100vw;min-height:100vh;overflow-x:hidden;
-  cursor:crosshair;
+  background:#050510;color:var(--white);
+  font-family:'Press Start 2P','Courier New',monospace;
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:1.5rem;overflow-x:hidden;
 }
 
-canvas#sky{position:fixed;inset:0;z-index:0}
-
-.map{position:relative;z-index:10;width:100%;max-width:900px;margin:0 auto;padding:4rem 1.5rem}
-
-/* ===== CONSTELLATION GROUP ===== */
-.constellation{margin-bottom:5rem;position:relative}
-.constellation:last-child{margin-bottom:2rem}
-
-/* Label */
-.c-label{
-  display:flex;align-items:center;gap:.5rem;margin-bottom:1.5rem;
-}
-.c-label .dot{
-  width:6px;height:6px;border-radius:50%;background:var(--gold);
-  box-shadow:0 0 12px rgba(251,191,36,.6),0 0 30px rgba(251,191,36,.2);
-  animation:starGlow 2s ease-in-out infinite;
-}
-@keyframes starGlow{0%,100%{box-shadow:0 0 12px rgba(251,191,36,.6),0 0 30px rgba(251,191,36,.2)}50%{box-shadow:0 0 20px rgba(251,191,36,.9),0 0 50px rgba(251,191,36,.35)}}
-
-.c-label span{
-  font-size:.5rem;letter-spacing:.25em;text-transform:uppercase;
-  color:rgba(148,163,184,.5);font-weight:700;
+/* ===== ARCADE CABINET ===== */
+.cabinet{
+  width:100%;max-width:680px;
+  border:4px solid #1a1a3a;border-radius:12px;
+  background:linear-gradient(180deg,#151530,#0d0d22);
+  box-shadow:0 0 40px rgba(100,100,255,.1),0 0 80px rgba(0,0,0,.6),inset 0 0 60px rgba(0,0,0,.3);
+  padding:.5rem;position:relative;overflow:hidden;
 }
 
-/* ===== STAR NODES ===== */
-.stars-row{display:flex;flex-wrap:wrap;gap:1.5rem;justify-content:center;align-items:flex-start}
-
-.star-node{
-  position:relative;width:160px;text-align:center;cursor:pointer;
-  transition:transform .4s cubic-bezier(.16,1,.3,1);text-decoration:none;color:inherit;
+/* ===== CABINET DECORATIONS ===== */
+.cabinet::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--pink),var(--cyan),var(--yellow),var(--green),var(--pink));
+  animation:borderRace 3s linear infinite;
 }
-.star-node:hover{transform:translateY(-8px)}
-.star-node:hover .star-dot{box-shadow:0 0 24px rgba(251,191,36,.9),0 0 60px rgba(251,191,36,.3)}
-.star-node:hover .star-title{color:var(--gold)}
+@keyframes borderRace{from{background-position:0 0}to{background-position:680px 0}}
 
-.star-dot{
-  width:10px;height:10px;border-radius:50%;margin:0 auto .75rem;
-  background:var(--star);box-shadow:0 0 10px rgba(255,255,255,.3);
-  transition:all .4s;position:relative;
+.cabinet::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--pink),var(--cyan),var(--yellow),var(--green),var(--pink));
+  animation:borderRace 3s linear infinite reverse;
 }
-.star-dot::after{
-  content:'';position:absolute;inset:-3px;border-radius:50%;
-  border:1px solid var(--gold-dim);animation:dotRing 3s ease-in-out infinite;
+
+/* Cabinet header */
+.cabinet-header{
+  text-align:center;padding:.8rem .5rem;
+  border-bottom:2px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
 }
-@keyframes dotRing{0%,100%{transform:scale(1);opacity:.3}50%{transform:scale(1.8);opacity:0}}
-
-.star-title{font-size:.75rem;font-weight:700;letter-spacing:.02em;margin-bottom:.3rem;transition:color .4s}
-.star-detail{font-size:.5rem;color:rgba(148,163,184,.5);line-height:1.55}
-
-/* Highlight node */
-.star-node.highlight .star-dot{background:var(--gold);box-shadow:0 0 16px rgba(251,191,36,.7)}
-.star-node.highlight .star-title{color:var(--gold)}
-
-/* ===== HERO NODE (center, large) ===== */
-.hero-node{text-align:center;margin-bottom:4rem}
-.hero-node .star-dot{width:14px;height:14px}
-.hero-node .star-title{font-size:1.4rem;font-weight:900;letter-spacing:.04em}
-.hero-node .star-detail{font-size:.6rem}
-
-/* ===== CONNECTING LINES HINT ===== */
-.line-hint{
-  position:absolute;pointer-events:none;opacity:0;transition:opacity .5s;
+.cabinet-header .neon-text{
+  font-size:.5rem;letter-spacing:.25em;
+  color:var(--pink);text-shadow:0 0 10px rgba(255,107,157,.6),0 0 20px rgba(255,107,157,.3);
+  animation:neonFlicker 3s ease-in-out infinite;
 }
-.star-node:hover .line-hint{opacity:1}
+@keyframes neonFlicker{0%,100%{opacity:1}92%{opacity:1}93%{opacity:.5}94%{opacity:1}96%{opacity:.6}97%{opacity:1}}
 
-/* ===== MAP LEGEND ===== */
-.legend{
-  text-align:center;margin-top:2rem;padding-top:2rem;
-  border-top:1px solid rgba(148,163,184,.06);
+/* ===== CRT SCREEN ===== */
+.screen{
+  background:var(--screen);
+  border:12px solid #1a1a30;border-radius:8px;
+  padding:1.5rem;position:relative;overflow:hidden;
 }
-.legend p{font-size:.45rem;letter-spacing:.15em;color:rgba(148,163,184,.3);text-transform:uppercase}
-.legend .gold-star{color:var(--gold)}
+
+/* Scanlines */
+.screen::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,
+    transparent,transparent 2px,
+    rgba(0,0,0,.05) 2px,rgba(0,0,0,.05) 4px);
+  z-index:50;
+}
+
+/* CRT vignette */
+.screen::before{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:49;
+  background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(0,0,0,.4) 100%);
+}
+
+/* ===== TITLE SCREEN ===== */
+.title-screen{text-align:center;margin-bottom:2rem;position:relative;z-index:1}
+.title-screen h1{
+  font-size:1.6rem;font-weight:400;letter-spacing:.15em;line-height:1.3;
+  color:var(--yellow);text-shadow:0 0 20px rgba(255,215,64,.4),0 0 40px rgba(255,215,64,.2);
+}
+.title-screen .subtitle{
+  font-size:.4rem;letter-spacing:.2em;color:var(--cyan);text-shadow:0 0 8px rgba(0,229,255,.4);
+  margin-top:.5rem;
+}
+.title-screen .blink{
+  font-size:.5rem;color:var(--pink);text-shadow:0 0 10px rgba(255,107,157,.5);
+  animation:blink 1s step-end infinite;margin-top:.75rem;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ===== CHARACTER SELECT ===== */
+.char-select{position:relative;z-index:1}
+.char-select h2{
+  font-size:.45rem;letter-spacing:.2em;color:var(--cyan);text-shadow:0 0 8px rgba(0,229,255,.3);
+  text-align:center;margin-bottom:1rem;
+}
+
+.char-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.char-card{
+  border:2px solid rgba(255,255,255,.06);padding:.7rem;text-align:center;
+  cursor:pointer;transition:all .2s;
+  text-decoration:none;color:inherit;display:block;
+  background:rgba(255,255,255,.015);
+}
+.char-card:hover{border-color:var(--cyan);background:rgba(0,229,255,.04);transform:scale(1.03)}
+.char-card:hover .char-avatar{border-color:var(--cyan);box-shadow:0 0 15px rgba(0,229,255,.3)}
+.char-card:hover .char-name{color:var(--cyan)}
+
+.char-avatar{
+  width:40px;height:40px;border:2px solid rgba(255,255,255,.1);
+  margin:0 auto .5rem;display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;transition:all .3s;
+}
+.char-name{font-size:.5rem;letter-spacing:.08em;margin-bottom:.2rem;transition:color .3s}
+.char-desc{font-size:.35rem;color:rgba(255,255,255,.3);line-height:1.5;letter-spacing:.04em}
+
+/* ===== HIGH SCORES ===== */
+.high-scores{position:relative;z-index:1;margin-top:1.5rem}
+.high-scores h2{
+  font-size:.42rem;letter-spacing:.22em;color:var(--yellow);text-shadow:0 0 8px rgba(255,215,64,.3);
+  text-align:center;margin-bottom:.75rem;
+}
+
+.score-row{
+  display:flex;align-items:center;gap:.5rem;padding:.35rem 0;
+  border-bottom:1px solid rgba(255,255,255,.04);font-size:.4rem;
+  letter-spacing:.06em;
+}
+.score-rank{color:var(--yellow);font-weight:700;width:20px}
+.score-name{flex:1;color:var(--white)}
+.score-val{color:var(--green);text-shadow:0 0 6px rgba(105,240,174,.3)}
+
+/* ===== COIN SLOT ===== */
+.coin-slot{text-align:center;margin-top:1.5rem;position:relative;z-index:1}
+.coin-slot p{font-size:.38rem;color:rgba(255,255,255,.2);letter-spacing:.12em;animation:blink 2s step-end infinite}
+
+/* ===== CREDITS ===== */
+.credits{position:relative;z-index:1;margin-top:1rem;text-align:center}
+.credits p{font-size:.3rem;color:rgba(255,255,255,.15);letter-spacing:.12em;line-height:2}
+.credits a{color:var(--cyan);text-decoration:none;transition:color .2s}
+.credits a:hover{color:var(--pink);text-shadow:0 0 8px rgba(255,107,157,.4)}
 
 /* ===== RESPONSIVE ===== */
-@media(max-width:600px){
-  .map{padding:3rem 1rem}
-  .stars-row{gap:1rem}
-  .star-node{width:130px}
-  .hero-node .star-title{font-size:1.1rem}
+@media(max-width:500px){
+  .title-screen h1{font-size:1.1rem}
+  .char-grid{grid-template-columns:1fr}
+  .cabinet{padding:.3rem}
+  .screen{padding:1rem;border-width:8px}
 }
 </style>
 </head>
 <body>
 
-<canvas id="sky"></canvas>
+<div class="cabinet">
 
-<div class="map">
-
-  <!-- HERO — Polaris (center star) -->
-  <div class="constellation">
-    <div class="c-label"><div class="dot"></div><span>Polaris · The Core</span></div>
-    <div class="hero-node star-node" style="width:auto">
-      <div class="star-dot"></div>
-      <div class="star-title">Dev Attri</div>
-      <div class="star-detail">Builder · Runner · Lifter · Learner · Based in India</div>
-    </div>
+  <div class="cabinet-header">
+    <span class="neon-text">✦ ARCADE CABINET v3.0 ✦</span>
   </div>
 
-  <!-- CONSTELLATION: The Builder -->
-  <div class="constellation">
-    <div class="c-label"><div class="dot"></div><span>Orion · The Builder</span></div>
-    <div class="stars-row">
-      <div class="star-node">
-        <div class="star-dot"></div>
-        <div class="star-title">Identity</div>
-        <div class="star-detail">Figuring it out. Building, breaking, learning. Not finished — just obsessed.</div>
-      </div>
-      <div class="star-node">
-        <div class="star-dot"></div>
-        <div class="star-title">Stack</div>
-        <div class="star-detail">TypeScript · Next.js · Prisma · Python · APIs · Git · Full-stack</div>
-      </div>
-      <div class="star-node">
-        <div class="star-dot"></div>
-        <div class="star-title">Philosophy</div>
-        <div class="star-detail">Ship first. Refine. Discomfort is the door. Hard work beats talent.</div>
+  <div class="screen">
+
+    <!-- TITLE SCREEN -->
+    <div class="title-screen">
+      <h1>DEV ATTRI</h1>
+      <div class="subtitle">BUILDER · RUNNER · LIFTER · LEARNER</div>
+      <div class="blink">▼ PRESS START ▼</div>
+    </div>
+
+    <!-- CHARACTER SELECT -->
+    <div class="char-select">
+      <h2>✦ SELECT CHARACTER ✦</h2>
+      <div class="char-grid">
+        <div class="char-card">
+          <div class="char-avatar">⚔️</div>
+          <div class="char-name">THE BUILDER</div>
+          <div class="char-desc">TypeScript · Next.js · Prisma<br>Full-stack systems</div>
+        </div>
+        <div class="char-card">
+          <div class="char-avatar">🏃</div>
+          <div class="char-name">THE RUNNER</div>
+          <div class="char-desc">40km/week · Half marathon<br>Hybrid athlete</div>
+        </div>
+        <div class="char-card">
+          <div class="char-avatar">🏋️</div>
+          <div class="char-name">THE LIFTER</div>
+          <div class="char-desc">Strength training · Volume<br>Getting stronger daily</div>
+        </div>
+        <a href="/grit" class="char-card" style="text-decoration:none">
+          <div class="char-avatar" style="font-size:1.5rem">⚡</div>
+          <div class="char-name">VEKTOR ▶ PLAY</div>
+          <div class="char-desc">Hybrid Athlete OS<br>Track readiness & recovery</div>
+        </a>
       </div>
     </div>
-  </div>
 
-  <!-- CONSTELLATION: The Work -->
-  <div class="constellation">
-    <div class="c-label"><div class="dot" style="background:var(--cyan);box-shadow:0 0 12px rgba(103,232,249,.6)"></div><span>Cygnus · The Work</span></div>
-    <div class="stars-row">
-      <a href="/grit" class="star-node highlight">
-        <div class="star-dot"></div>
-        <div class="star-title">VEKTOR ★</div>
-        <div class="star-detail">Hybrid Athlete OS — readiness, runs, strength, recovery</div>
-      </a>
-      <div class="star-node">
-        <div class="star-dot"></div>
-        <div class="star-title">Weather App</div>
-        <div class="star-detail">API-driven weather — data, states, clean UI</div>
-      </div>
-      <div class="star-node">
-        <div class="star-dot"></div>
-        <div class="star-title">Macro Tracker</div>
-        <div class="star-detail">Nutrition tracking — forms, persistence, health</div>
-      </div>
-      <div class="star-node">
-        <div class="star-dot"></div>
-        <div class="star-title">Max Workspace</div>
-        <div class="star-detail">Clean workspace — browser layouts & surfaces</div>
-      </div>
+    <!-- HIGH SCORES -->
+    <div class="high-scores">
+      <h2>✦ HIGH SCORES ✦</h2>
+      <div class="score-row"><span class="score-rank">1ST</span><span class="score-name">Projects Shipped</span><span class="score-val">5+</span></div>
+      <div class="score-row"><span class="score-rank">2ND</span><span class="score-name">Weekly Kilometers</span><span class="score-val">42.5</span></div>
+      <div class="score-row"><span class="score-rank">3RD</span><span class="score-name">Languages</span><span class="score-val">TS·PY·JS</span></div>
+      <div class="score-row"><span class="score-rank">4TH</span><span class="score-name">Current Streak</span><span class="score-val">∞</span></div>
     </div>
-  </div>
 
-  <!-- CONSTELLATION: Signal -->
-  <div class="constellation">
-    <div class="c-label"><div class="dot"></div><span>Pleiades · Signal</span></div>
-    <div class="stars-row">
-      <a href="https://github.com/attridevv" target="_blank" class="star-node">
-        <div class="star-dot"></div><div class="star-title">GitHub</div><div class="star-detail">Code & commits</div>
-      </a>
-      <a href="https://x.com/attridevv" target="_blank" class="star-node">
-        <div class="star-dot"></div><div class="star-title">X</div><div class="star-detail">Thoughts & signals</div>
-      </a>
-      <a href="https://instagram.com/attridevv" target="_blank" class="star-node">
-        <div class="star-dot"></div><div class="star-title">Instagram</div><div class="star-detail">Visual log</div>
-      </a>
-      <a href="https://anilist.co/user/Attridevv/" target="_blank" class="star-node">
-        <div class="star-dot"></div><div class="star-title">AniList</div><div class="star-detail">Anime tracker</div>
-      </a>
+    <!-- INSERT COIN -->
+    <div class="coin-slot">
+      <p>◇ INSERT COIN TO CONTINUE ◇</p>
     </div>
-  </div>
 
-  <div class="legend">
-    <p>Each <span class="gold-star">✦</span> is a fixed point. The lines connect them. You are here.</p>
+    <!-- CREDITS -->
+    <div class="credits">
+      <p>
+        <a href="https://github.com/attridevv" target="_blank">GITHUB</a> ·
+        <a href="https://x.com/attridevv" target="_blank">X</a> ·
+        <a href="https://instagram.com/attridevv" target="_blank">INSTAGRAM</a> ·
+        <a href="https://anilist.co/user/Attridevv/" target="_blank">ANILIST</a>
+      </p>
+      <p style="margin-top:.5rem">© 2026 ATTRI SOFT · ALL RIGHTS RESERVED</p>
+    </div>
+
   </div>
 
 </div>
 
-<script>
-(function(){
-  var c=document.getElementById('sky'),ctx=c.getContext('2d'),w,h;
-  var stars=[],mouse={x:0,y:0},connections=[];
-
-  function R(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}
-  R();window.addEventListener('resize',R);
-
-  // Generate stars
-  for(var i=0;i<200;i++){
-    stars.push({
-      x:Math.random()*w,y:Math.random()*h,
-      r:Math.random()*1+.2,o:Math.random()*.5+.1,
-      pulse:Math.random()*Math.PI*2,speed:.002+Math.random()*.004,
-      twinkle:Math.random()>.9 // some stars twinkle brighter
-    });
-  }
-
-  document.addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY});
-
-  // Get content star positions for constellation lines
-  function updateConnections(){
-    connections=[];
-    var nodes=document.querySelectorAll('.star-node');
-    var coords=[];
-    nodes.forEach(function(n){
-      var r=n.getBoundingClientRect();
-      var dot=n.querySelector('.star-dot');
-      if(dot){
-        var dr=dot.getBoundingClientRect();
-        coords.push({x:dr.left+dr.width/2,y:dr.top+dr.height/2});
-      }
-    });
-    // Draw lines between nearby nodes
-    for(var i=0;i<coords.length;i++){
-      for(var j=i+1;j<coords.length;j++){
-        var dx=coords[i].x-coords[j].x,dy=coords[i].y-coords[j].y;
-        var d=Math.sqrt(dx*dx+dy*dy);
-        if(d<250)connections.push({x1:coords[i].x,y1:coords[i].y,x2:coords[j].x,y2:coords[j].y,dist:d});
-      }
-    }
-  }
-  updateConnections();
-  setInterval(updateConnections,2000);
-  window.addEventListener('scroll',updateConnections);
-
-  function draw(t){
-    if(w!==c.width||h!==c.height)R();
-    ctx.clearRect(0,0,w,h);
-
-    // Nebula hint near mouse
-    var ng=ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,300);
-    ng.addColorStop(0,'rgba(148,163,184,.02)');ng.addColorStop(1,'transparent');
-    ctx.fillStyle=ng;ctx.beginPath();ctx.arc(mouse.x,mouse.y,300,0,Math.PI*2);ctx.fill();
-
-    // Stars
-    stars.forEach(function(s){
-      var b=.5+.5*Math.sin(t*s.speed+s.pulse);
-      if(s.twinkle)b=b>.7?1:.3;
-      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-      ctx.fillStyle='rgba(226,232,240,'+(s.o*b)+')';ctx.fill();
-    });
-
-    // Constellation lines between content nodes
-    connections.forEach(function(con){
-      var alpha=.08*(1-con.dist/250);
-      ctx.beginPath();ctx.moveTo(con.x1,con.y1);ctx.lineTo(con.x2,con.y2);
-      ctx.strokeStyle='rgba(148,163,184,'+alpha+')';ctx.lineWidth=.5;ctx.stroke();
-    });
-
-    requestAnimationFrame(draw);
-  }
-  requestAnimationFrame(draw);
-})();
-</script>
 </body>
 </html>
