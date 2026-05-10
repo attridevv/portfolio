@@ -6,328 +6,191 @@
 <title>attridevv</title>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@300;400;700&family=Space+Grotesk:wght@300;400;700&family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&display=swap');
 
 :root{
-  --fire:#f97316;--fire2:#c2410c;--fire3:#431407;
-  --water:#38bdf8;--water2:#0ea5e9;--water3:#0c4a6e;
-  --ice:#e0f2fe;--ice2:#7dd3fc;--ice3:#475569;
-  --thunder:#facc15;--thunder2:#eab308;--thunder3:#713f12;
-  --void:#a78bfa;--void2:#8b5cf6;--void3:#2e1065;
+  --fire:#f97316;--fire2:#c2410c;--fire3:#431407;--fire4:#7c2d12;
+  --water:#38bdf8;--water2:#0ea5e9;--water3:#0c4a6e;--water4:#082f49;
+  --ice:#e0f2fe;--ice2:#7dd3fc;--ice3:#475569;--ice4:#1e293b;
+  --thunder:#facc15;--thunder2:#eab308;--thunder3:#713f12;--thunder4:#422006;
+  --void:#a78bfa;--void2:#8b5cf6;--void3:#4c1d95;--void4:#1e0a3c;
 }
 
-body{
-  background:#010105;color:#e2e8f0;
-  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  width:100vw;height:100vh;overflow:hidden;
-}
+body{background:#010105;color:#e2e8f0;width:100vw;height:100vh;overflow:hidden}
 
 .map{
   display:grid;
-  grid-template-columns:1.2fr .25fr 2fr .25fr 1.2fr;
-  grid-template-rows:1.2fr .25fr 2fr .25fr 1.2fr;
+  grid-template-columns:1.3fr 2fr 1.3fr;
+  grid-template-rows:1.3fr 2fr 1.3fr;
   width:100%;height:100%;
 }
 
-/* Territory cells */
+/* === TERRITORIES === */
 .territory{
-  position:relative;
-  overflow:hidden;
-  cursor:pointer;
-  text-decoration:none;color:inherit;
+  position:relative;overflow:hidden;cursor:pointer;text-decoration:none;color:inherit;
   display:flex;align-items:center;justify-content:center;
-  transition:all .5s cubic-bezier(.16,1,.3,1);
+  transition:transform .6s cubic-bezier(.16,1,.3,1),box-shadow .6s;
+  z-index:1;
 }
-.territory:hover{z-index:10;transform:scale(1.03)}
-.territory:active{transform:scale(.98)}
+.territory:hover{z-index:20;transform:scale(1.04);box-shadow:0 0 80px rgba(0,0,0,.6),inset 0 0 80px rgba(0,0,0,.3)}
+.territory:active{transform:scale(.97)}
 
-/* Territory backgrounds with animated gradients */
-.fire-territory{
-  background:var(--fire3);
-  background-image:
-    radial-gradient(ellipse at 40% 35%,#fbbf24 0%,transparent 30%),
-    radial-gradient(ellipse at 60% 55%,#f97316 0%,transparent 35%),
-    radial-gradient(ellipse at 50% 70%,#ef4444 0%,transparent 30%),
-    radial-gradient(ellipse at 50% 50%,#7c2d12 0%,var(--fire3) 70%);
-  animation:fireBreathe 4s ease-in-out infinite alternate;
-}
-@keyframes fireBreathe{
-  0%{background-size:100% 100%,100% 100%,100% 100%,100% 100%}
-  100%{background-size:120% 110%,110% 120%,115% 115%,105% 105%}
-}
+/* Fire Territory */
+.fire{grid-column:2;grid-row:2;
+  background:radial-gradient(ellipse at 40% 35%,#fbbf24 0%,transparent 28%),
+    radial-gradient(ellipse at 60% 50%,#f97316 0%,transparent 30%),
+    radial-gradient(ellipse at 45% 65%,#ef4444 0%,transparent 25%),
+    radial-gradient(ellipse at 50% 50%,#7c2d12 0%,#431407 70%);
+  animation:firePulse 3.5s ease-in-out infinite alternate;}
+@keyframes firePulse{0%{filter:brightness(1)}50%{filter:brightness(1.08)}100%{filter:brightness(1)}}
 
-.thunder-territory{
-  background:var(--thunder3);
-  background-image:
-    radial-gradient(ellipse at 50% 30%,#fef08a 0%,transparent 25%),
-    radial-gradient(ellipse at 45% 50%,#facc15 0%,transparent 30%),
-    radial-gradient(ellipse at 55% 60%,#eab308 0%,transparent 35%),
-    radial-gradient(ellipse at 50% 75%,#854d0e 0%,var(--thunder3) 70%);
-  animation:thunderFlash 3s ease-in-out infinite;
-}
-@keyframes thunderFlash{
-  0%,90%,100%{filter:brightness(1)}
-  45%{filter:brightness(1.3)}
-  48%{filter:brightness(.7)}
-  50%{filter:brightness(1.6)}
-  52%{filter:brightness(.8)}
-}
+/* Thunder Territory */
+.thunder{grid-column:2;grid-row:1;
+  background:radial-gradient(ellipse at 50% 45%,#fef08a 0%,transparent 22%),
+    radial-gradient(ellipse at 45% 60%,#facc15 0%,transparent 25%),
+    radial-gradient(ellipse at 55% 70%,#eab308 0%,transparent 28%),
+    radial-gradient(ellipse at 50% 85%,#854d0e 0%,#422006 70%);
+  animation:thunderStrike 3s ease-in-out infinite;}
+@keyframes thunderStrike{0%,85%,100%{filter:brightness(1)}45%{filter:brightness(1.25)}48%{filter:brightness(.7)}50%{filter:brightness(1.5)}52%{filter:brightness(.8)}}
 
-.ice-territory{
-  background:var(--ice3);
-  background-image:
-    radial-gradient(ellipse at 55% 35%,#f0f9ff 0%,transparent 28%),
-    radial-gradient(ellipse at 40% 50%,#bae6fd 0%,transparent 30%),
-    radial-gradient(ellipse at 60% 60%,#7dd3fc 0%,transparent 32%),
-    radial-gradient(ellipse at 50% 70%,#64748b 0%,var(--ice3) 70%);
-  animation:iceShimmer 5s ease-in-out infinite alternate;
-}
-@keyframes iceShimmer{
-  0%{filter:brightness(1) saturate(.8)}
-  100%{filter:brightness(1.15) saturate(1)}
-}
+/* Ice Territory */
+.ice{grid-column:3;grid-row:2;
+  background:radial-gradient(ellipse at 55% 35%,#f0f9ff 0%,transparent 25%),
+    radial-gradient(ellipse at 40% 50%,#bae6fd 0%,transparent 27%),
+    radial-gradient(ellipse at 60% 55%,#7dd3fc 0%,transparent 25%),
+    radial-gradient(ellipse at 50% 65%,#64748b 0%,#1e293b 70%);
+  animation:iceGleam 4.5s ease-in-out infinite alternate;}
+@keyframes iceGleam{0%{filter:brightness(1) saturate(.8)}100%{filter:brightness(1.12) saturate(1.05)}}
 
-.water-territory{
-  background:var(--water3);
-  background-image:
-    radial-gradient(ellipse at 50% 40%,#bae6fd 0%,transparent 28%),
-    radial-gradient(ellipse at 40% 55%,#38bdf8 0%,transparent 30%),
-    radial-gradient(ellipse at 60% 65%,#0ea5e9 0%,transparent 32%),
-    radial-gradient(ellipse at 50% 80%,#1e3a5f 0%,var(--water3) 70%);
-  animation:waterFlow 6s ease-in-out infinite;
-}
-@keyframes waterFlow{
-  0%,100%{background-position:0 0,0 0,0 0,0 0}
-  33%{background-position:2% 1%,-1% 0%,1% 2%,0 -1%}
-  66%{background-position:-1% -1%,2% 1%,-2% 1%,1% 1%}
-}
+/* Water Territory */
+.water{grid-column:2;grid-row:3;
+  background:radial-gradient(ellipse at 50% 30%,#bae6fd 0%,transparent 25%),
+    radial-gradient(ellipse at 40% 45%,#38bdf8 0%,transparent 28%),
+    radial-gradient(ellipse at 60% 50%,#0ea5e9 0%,transparent 25%),
+    radial-gradient(ellipse at 50% 65%,#1e3a5f 0%,#082f49 70%);
+  animation:waterShift 5s ease-in-out infinite;}
+@keyframes waterShift{0%,100%{background-position:0 0,0 0,0 0,0 0}33%{background-position:3% 1%,-1% 1%,1% 2%,0 -1%}66%{background-position:-1% -1%,2% 1%,-1% 1%,1% 1%}}
 
-.void-territory{
-  background:var(--void3);
-  background-image:
-    radial-gradient(ellipse at 50% 30%,#c4b5fd 0%,transparent 25%),
-    radial-gradient(ellipse at 45% 55%,#a78bfa 0%,transparent 30%),
-    radial-gradient(ellipse at 55% 65%,#7c3aed 0%,transparent 32%),
-    radial-gradient(ellipse at 50% 80%,#3b0764 0%,var(--void3) 70%);
-  animation:voidBreathe 7s ease-in-out infinite alternate;
-}
-@keyframes voidBreathe{
-  0%{filter:brightness(1);background-size:100% 100%,100% 100%,100% 100%,100% 100%}
-  100%{filter:brightness(1.2);background-size:115% 110%,110% 115%,112% 112%,108% 108%}
-}
+/* Void Territory */
+.void{grid-column:1;grid-row:2;
+  background:radial-gradient(ellipse at 55% 35%,#c4b5fd 0%,transparent 22%),
+    radial-gradient(ellipse at 45% 50%,#a78bfa 0%,transparent 25%),
+    radial-gradient(ellipse at 50% 60%,#7c3aed 0%,transparent 28%),
+    radial-gradient(ellipse at 50% 75%,#3b0764 0%,#1e0a3c 70%);
+  animation:voidBreath 6s ease-in-out infinite alternate;}
+@keyframes voidBreath{0%{filter:brightness(1);background-size:100% 100%,100% 100%,100% 100%,100% 100%}100%{filter:brightness(1.15);background-size:120% 112%,112% 118%,115% 115%,108% 108%}}
 
-/* Content inside territories */
-.territory-content{
-  position:relative;z-index:2;text-align:center;
-  transition:transform .4s cubic-bezier(.16,1,.3,1);
-  pointer-events:none;
-}
-.territory:hover .territory-content{transform:translateY(-4px)}
+/* === CORNER FILLS (extend element colors to edges) === */
+.corner{position:relative;overflow:hidden}
+.c-nw{grid-column:1;grid-row:1;background:linear-gradient(135deg,#1e0a3c,#422006)}
+.c-nw::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 60%,rgba(139,92,246,.15),transparent 70%);animation:cornerBreath 6s ease-in-out infinite alternate}
+.c-ne{grid-column:3;grid-row:1;background:linear-gradient(225deg,#422006,#1e293b)}
+.c-ne::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 40% 60%,rgba(250,204,21,.08),transparent 70%);animation:cornerBreath 5s ease-in-out infinite alternate}
+.c-sw{grid-column:1;grid-row:3;background:linear-gradient(45deg,#1e0a3c,#082f49)}
+.c-sw::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 40%,rgba(56,189,248,.1),transparent 70%);animation:cornerBreath 7s ease-in-out infinite alternate}
+.c-se{grid-column:3;grid-row:3;background:linear-gradient(315deg,#1e293b,#082f49)}
+.c-se::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 40% 40%,rgba(224,242,254,.1),transparent 70%);animation:cornerBreath 5.5s ease-in-out infinite alternate}
+@keyframes cornerBreath{0%{opacity:.3}100%{opacity:.7}}
 
-.territory-number{
-  display:block;font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;
-  margin-bottom:.3rem;font-weight:700;opacity:.6;
-}
-.fire-territory .territory-number{color:#fb923c}
-.thunder-territory .territory-number{color:#facc15}
-.ice-territory .territory-number{color:#bae6fd}
-.water-territory .territory-number{color:#38bdf8}
-.void-territory .territory-number{color:#a78bfa}
+/* === TRANSITION BORDERS === */
+.trans{position:relative;overflow:hidden;pointer-events:none}
+.fire-thunder{grid-column:2;grid-row:span 1;
+  background:linear-gradient(to bottom,#422006,var(--fire4),#431407);
+  animation:heatRise 3s ease-in-out infinite alternate;}
+@keyframes heatRise{0%{opacity:.5}100%{opacity:.8}}
 
-.territory-name{
-  display:block;font-size:1.3rem;font-weight:900;letter-spacing:.1em;
-  margin-bottom:.15rem;transition:text-shadow .4s;
-}
-.fire-territory .territory-name{color:#ea580c}
-.thunder-territory .territory-name{color:#eab308}
-.ice-territory .territory-name{color:#e0f2fe}
-.water-territory .territory-name{color:#0ea5e9}
-.void-territory .territory-name{color:#7c3aed}
-.territory:hover .territory-name{text-shadow:0 0 30px currentColor}
+.fire-ice{grid-column:span 1;grid-row:2;
+  background:linear-gradient(to right,#431407,#082f49,#1e293b);
+  animation:waterBridge 4s ease-in-out infinite alternate;}
+@keyframes waterBridge{0%{opacity:.4}100%{opacity:.75}}
 
-.territory-sub{
-  display:block;font-size:.48rem;color:#52525b;letter-spacing:.06em;
-  transition:color .4s;
-}
-.territory:hover .territory-sub{color:#a1a1aa}
+.fire-water{grid-column:2;grid-row:span 1;
+  background:linear-gradient(to bottom,#431407,#082f49);
+  animation:steamRise 3.5s ease-in-out infinite alternate;}
+@keyframes steamRise{0%{opacity:.35}100%{opacity:.7}}
 
-/* Grid placement */
-.fire-slot{grid-column:3;grid-row:3}
-.thunder-slot{grid-column:3;grid-row:1}
-.ice-slot{grid-column:5;grid-row:3}
-.water-slot{grid-column:3;grid-row:5}
-.void-slot{grid-column:1;grid-row:3}
+.fire-void{grid-column:span 1;grid-row:2;
+  background:linear-gradient(to right,#1e0a3c,#1a0a20,#431407);
+  animation:smokeDrift 5s ease-in-out infinite alternate;}
+@keyframes smokeDrift{0%{opacity:.35}100%{opacity:.65}}
 
-/* Transition borders (the cells between territories) */
-.transition{
-  position:relative;overflow:hidden;
-  pointer-events:none;
-}
+/* Vertical transition bars */
+.tv1{grid-column:1;grid-row:2;border-right:1px solid rgba(167,139,250,.08)}  
+.tv2{grid-column:3;grid-row:2;border-left:1px solid rgba(224,242,254,.08)}
+.th1{grid-column:2;grid-row:1;border-bottom:1px solid rgba(250,204,21,.08)}
+.th2{grid-column:2;grid-row:3;border-top:1px solid rgba(56,189,248,.08)}
 
-/* Fire ↔ Thunder: Rising heat */
-.fire-thunder-h{grid-column:3;grid-row:2}
-.fire-thunder-h::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(to bottom,var(--thunder3),var(--fire3));
-  animation:heatRise 3s ease-in-out infinite alternate;
-}
-@keyframes heatRise{
-  0%{background:linear-gradient(to bottom,var(--thunder3),var(--fire3));opacity:.5}
-  100%{background:linear-gradient(to bottom,#422006,var(--fire3));opacity:.8}
-}
+/* === CONTENT STYLING === */
+.territory-content{position:relative;z-index:5;text-align:center;pointer-events:none;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.territory:hover .territory-content{transform:translateY(-6px)}
 
-/* Fire ↔ Ice: Through water */
-.fire-ice-h{grid-column:4;grid-row:3}
-.fire-ice-h::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(to right,var(--fire3),var(--water3),var(--ice3));
-  animation:waterBridge 4s ease-in-out infinite alternate;
-}
-@keyframes waterBridge{
-  0%{background:linear-gradient(to right,var(--fire3),var(--water3),var(--ice3))}
-  100%{background:linear-gradient(to right,#431407,#0c4a6e,#475569)}
-}
+.t-number{display:block;font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;margin-bottom:.5rem;font-weight:700;opacity:.5;transition:opacity .4s}
+.territory:hover .t-number{opacity:.8}
+.fire .t-number{color:#fb923c;font-family:'JetBrains Mono',monospace}
+.thunder .t-number{color:#facc15;font-family:'Space Grotesk',sans-serif}
+.ice .t-number{color:#bae6fd;font-family:'Cormorant Garamond',serif;font-style:italic}
+.water .t-number{color:#38bdf8;font-family:'JetBrains Mono',monospace}
+.void .t-number{color:#a78bfa;font-family:'Cinzel',serif}
 
-/* Fire ↔ Water: Steam */
-.fire-water-v{grid-column:3;grid-row:4}
-.fire-water-v::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(to bottom,var(--fire3),var(--water3));
-  animation:steamRise 3.5s ease-in-out infinite alternate;
-}
-@keyframes steamRise{
-  0%{background:linear-gradient(to bottom,var(--fire3),var(--water3));opacity:.4}
-  100%{background:linear-gradient(to bottom,var(--fire3),#0c4a6e);opacity:.7}
-}
+.t-name{display:block;font-size:1.5rem;font-weight:900;letter-spacing:.1em;margin-bottom:.2rem;transition:text-shadow .5s,color .5s}
+.territory:hover .t-name{text-shadow:0 0 40px currentColor}
+.fire .t-name{color:#ea580c;font-family:'Cinzel',serif}
+.thunder .t-name{color:#eab308;font-family:'Space Grotesk',sans-serif}
+.ice .t-name{color:#e0f2fe;font-family:'Cormorant Garamond',serif;font-weight:700;font-style:italic}
+.water .t-name{color:#0ea5e9;font-family:'Inter',sans-serif}
+.void .t-name{color:#7c3aed;font-family:'Cinzel',serif}
 
-/* Fire ↔ Void: Smoke */
-.fire-void-h{grid-column:2;grid-row:3}
-.fire-void-h::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(to right,var(--void3),#1a0a20,var(--fire3));
-  animation:smokeDrift 5s ease-in-out infinite alternate;
-}
-@keyframes smokeDrift{
-  0%{background:linear-gradient(to right,var(--void3),#1a0a20,var(--fire3))}
-  100%{background:linear-gradient(to right,#2e1065,#2a0a15,var(--fire3))}
-}
+.t-sub{display:block;font-size:.5rem;color:#3f3f46;letter-spacing:.08em;transition:color .4s}
+.territory:hover .t-sub{color:#71717a}
+.fire .t-sub{font-family:'Inter',sans-serif}
+.ice .t-sub{font-family:'Cormorant Garamond',serif;font-style:italic}
+.void .t-sub{font-family:'Cinzel',serif}
 
-/* Thunder ↔ Void: Dark lightning */
-.thunder-void-h{grid-column:2;grid-row:1}
-.thunder-void-h::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(to right,var(--void3),#1a0a20,var(--thunder3));
-  animation:darkStrike 4s ease-in-out infinite;
+/* === HOVER SUMMARY OVERLAY === */
+.t-summary{
+  position:absolute;bottom:12%;left:50%;transform:translateX(-50%)translateY(10px);
+  text-align:center;z-index:5;pointer-events:none;
+  opacity:0;transition:all .4s cubic-bezier(.16,1,.3,1);
+  max-width:85%;
 }
-@keyframes darkStrike{
-  0%,85%,100%{opacity:.3}
-  45%{opacity:.7}
-  48%{opacity:.2}
-  50%{opacity:1}
-  52%{opacity:.3}
-}
+.territory:hover .t-summary{opacity:1;transform:translateX(-50%)translateY(0)}
+.t-summary p{font-size:.52rem;line-height:1.6;margin:0}
+.fire .t-summary p{color:#fdba74;font-family:'Inter',sans-serif}
+.thunder .t-summary p{color:#fef08a;font-family:'Space Grotesk',sans-serif}
+.ice .t-summary p{color:#bae6fd;font-family:'Cormorant Garamond',serif;font-style:italic}
+.water .t-summary p{color:#7dd3fc;font-family:'Inter',sans-serif}
+.void .t-summary p{color:#c4b5fd;font-family:'Cinzel',serif;font-size:.5rem}
 
-/* Thunder ↔ Ice: Storm front */
-.thunder-ice-h{grid-column:4;grid-row:1}
-.thunder-ice-h::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(to right,var(--thunder3),#2a2a10,var(--ice3));
-  animation:stormFront 5s ease-in-out infinite alternate;
-}
-@keyframes stormFront{
-  0%{background:linear-gradient(to right,var(--thunder3),#2a2a10,var(--ice3));filter:brightness(.8)}
-  100%{background:linear-gradient(to right,#713f12,#2a3a20,var(--ice3));filter:brightness(1.1)}
-}
+/* === PARTICLE OVERLAYS === */
+.particles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.pt{position:absolute;border-radius:50%;animation:ptDrift var(--dur) ease-in-out infinite;animation-delay:var(--del)}
+.fire .pt{background:rgba(251,191,36,.5);width:2px;height:2px}
+.thunder .pt{background:rgba(254,240,138,.6);width:1.5px;height:3.5px}
+.ice .pt{background:rgba(255,255,255,.4);width:2px;height:2px}
+.water .pt{background:rgba(186,230,253,.4);width:2px;height:3px;border-radius:40%}
+.void .pt{background:rgba(196,181,253,.35);width:2px;height:2px}
 
-/* Ice ↔ Water: Freeze/flow */
-.ice-water-v{grid-column:5;grid-row:4}
-.ice-water-v::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(to bottom,var(--ice3),var(--water3));
-  animation:freezeFlow 5s ease-in-out infinite alternate;
-}
-@keyframes freezeFlow{
-  0%{background:linear-gradient(to bottom,var(--ice3),var(--water3))}
-  100%{background:linear-gradient(to bottom,#64748b,var(--water3))}
-}
-
-/* Water ↔ Void: Deep abyss */
-.water-void-v{grid-column:1;grid-row:4}
-.water-void-v::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(to bottom,var(--water3),var(--void3));
-  animation:abyssPull 6s ease-in-out infinite alternate;
-}
-@keyframes abyssPull{
-  0%{background:linear-gradient(to bottom,var(--water3),var(--void3))}
-  100%{background:linear-gradient(to bottom,#0c1929,#2e1065)}
-}
-
-/* Thunder ↔ Water: Diagonal storm */
-.thunder-water-d{grid-column:4;grid-row:2}
-.thunder-water-d::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,var(--thunder3),var(--water3));
-  animation:stormDiagonal 4s ease-in-out infinite alternate;
-}
-@keyframes stormDiagonal{
-  0%{opacity:.3;filter:brightness(.8)}
-  100%{opacity:.6;filter:brightness(1.1)}
-}
-
-/* Ice ↔ Void: Diagonal frost-dark */
-.ice-void-d{grid-column:2;grid-row:5}
-.ice-void-d::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(45deg,var(--void3),var(--ice3));
-  animation:frostDark 5.5s ease-in-out infinite alternate;
-}
-@keyframes frostDark{
-  0%{opacity:.25}
-  100%{opacity:.5}
-}
-
-/* Corner cells - ambient void */
-.corner{background:radial-gradient(ellipse at 50% 50%,rgba(15,15,30,.6),#010105)}
-.corner::after{
-  content:'';position:absolute;inset:0;
-  animation:cornerPulse 8s ease-in-out infinite alternate;
-}
-@keyframes cornerPulse{
-  0%{background:radial-gradient(ellipse at 50% 50%,rgba(15,15,30,.3),transparent)}
-  100%{background:radial-gradient(ellipse at 50% 50%,rgba(20,15,35,.5),transparent)}
-}
-
-/* Canvas particles overlay */
-canvas#particles{position:fixed;inset:0;z-index:5;pointer-events:none}
-
-/* Territory particle overlays */
-.territory-particles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-.tp{position:absolute;border-radius:50%;animation:tpDrift var(--dur) ease-in-out infinite;animation-delay:var(--del)}
-.fire-territory .tp{background:rgba(251,191,36,.6);width:2px;height:2px}
-.thunder-territory .tp{background:rgba(254,240,138,.7);width:1.5px;height:3px}
-.ice-territory .tp{background:rgba(255,255,255,.5);width:2px;height:2px}
-.water-territory .tp{background:rgba(255,255,255,.5);width:2px;height:3px;border-radius:40%}
-.void-territory .tp{background:rgba(196,181,253,.4);width:2px;height:2px}
-
-@keyframes tpDrift{
+@keyframes ptDrift{
   0%{transform:translate(0,0);opacity:var(--op)}
-  50%{transform:translate(var(--dx),var(--dy));opacity:.1}
+  50%{transform:translate(var(--dx),var(--dy));opacity:.05}
   100%{transform:translate(0,0);opacity:var(--op)}
 }
 
-/* Corner placements */
-.c1{grid-column:1;grid-row:1}.c2{grid-column:5;grid-row:1}
-.c3{grid-column:1;grid-row:5}.c4{grid-column:5;grid-row:5}
+/* === DIVINE RAYS ON FIRE (center) === */
+.fire::before{
+  content:'';position:absolute;inset:-30%;
+  background:conic-gradient(from 0deg,transparent 0deg,rgba(251,191,36,.03) 10deg,transparent 20deg,transparent 340deg,rgba(249,115,22,.03) 350deg);
+  animation:raySpin 30s linear infinite;pointer-events:none;
+}
+@keyframes raySpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-/* Responsive */
+/* === RESPONSIVE === */
 @media(max-width:768px){
-  .map{
-    grid-template-columns:1fr .15fr 2fr .15fr 1fr;
-    grid-template-rows:1fr .15fr 2fr .15fr 1fr;
-  }
-  .territory-name{font-size:.9rem}
-  .territory-number{font-size:.4rem}
-  .territory-sub{font-size:.4rem}
+  .map{grid-template-columns:1.2fr 1.8fr 1.2fr;grid-template-rows:1.2fr 1.8fr 1.2fr}
+  .t-name{font-size:1rem}
+  .t-number{font-size:.4rem}
+  .t-sub{font-size:.4rem}
+  .t-summary p{font-size:.45rem}
 }
 </style>
 </head>
@@ -335,124 +198,88 @@ canvas#particles{position:fixed;inset:0;z-index:5;pointer-events:none}
 
 <div class="map">
 
-  <!-- CENTER: FIRE -->
-  <a href="/fire" class="territory fire-territory fire-slot">
-    <div class="territory-particles" data-elem="fire"></div>
+  <!-- FIRE - CENTER -->
+  <a href="/fire" class="territory fire">
+    <div class="particles" data-el="fire"></div>
     <div class="territory-content">
-      <span class="territory-number">Realm I</span>
-      <span class="territory-name">Fire</span>
-      <span class="territory-sub">Leo · About Me</span>
+      <span class="t-number">Realm I</span>
+      <span class="t-name">Fire</span>
+      <span class="t-sub">Leo · About Me</span>
     </div>
+    <div class="t-summary"><p>The core. My identity, writings, and the signal I send into the world. Who I am and what I believe. The starting point.</p></div>
   </a>
 
-  <!-- TOP: THUNDER -->
-  <a href="/lightning" class="territory thunder-territory thunder-slot">
-    <div class="territory-particles" data-elem="thunder"></div>
+  <!-- THUNDER - TOP -->
+  <a href="/lightning" class="territory thunder">
+    <div class="particles" data-el="thunder"></div>
     <div class="territory-content">
-      <span class="territory-number">Realm IV</span>
-      <span class="territory-name">Thunder</span>
-      <span class="territory-sub">Ambitions · Goals</span>
+      <span class="t-number">Realm IV</span>
+      <span class="t-name">Thunder</span>
+      <span class="t-sub">Ambitions · Goals</span>
     </div>
+    <div class="t-summary"><p>What I'm chasing. Race targets, projects in motion, the learning path ahead. The direction of the arrow.</p></div>
   </a>
 
-  <!-- RIGHT: ICE -->
-  <a href="/ice" class="territory ice-territory ice-slot">
-    <div class="territory-particles" data-elem="ice"></div>
+  <!-- ICE - RIGHT -->
+  <a href="/ice" class="territory ice">
+    <div class="particles" data-el="ice"></div>
     <div class="territory-content">
-      <span class="territory-number">Realm III</span>
-      <span class="territory-name">Ice</span>
-      <span class="territory-sub">Creativity · Vent</span>
+      <span class="t-number">Realm III</span>
+      <span class="t-name">Ice</span>
+      <span class="t-sub">Creativity · Vent</span>
     </div>
+    <div class="t-summary"><p>Where the mind wanders. Poetry, questions with no easy answers, things I believe. Raw and unfiltered.</p></div>
   </a>
 
-  <!-- BOTTOM: WATER -->
-  <a href="/water" class="territory water-territory water-slot">
-    <div class="territory-particles" data-elem="water"></div>
+  <!-- WATER - BOTTOM -->
+  <a href="/water" class="territory water">
+    <div class="particles" data-el="water"></div>
     <div class="territory-content">
-      <span class="territory-number">Realm II</span>
-      <span class="territory-name">Water</span>
-      <span class="territory-sub">Tools · My Work</span>
+      <span class="t-number">Realm II</span>
+      <span class="t-name">Water</span>
+      <span class="t-sub">Tools · My Work</span>
     </div>
+    <div class="t-summary"><p>What I've built. VEKTOR, Weather App, Macro Tracker, and more. The workshop where things get shipped.</p></div>
   </a>
 
-  <!-- LEFT: VOID -->
-  <a href="/darkness" class="territory void-territory void-slot">
-    <div class="territory-particles" data-elem="void"></div>
+  <!-- VOID - LEFT -->
+  <a href="/darkness" class="territory void">
+    <div class="particles" data-el="void"></div>
     <div class="territory-content">
-      <span class="territory-number">Realm V</span>
-      <span class="territory-name">Void</span>
-      <span class="territory-sub">Admiration · Thanks</span>
+      <span class="t-number">Realm V</span>
+      <span class="t-name">Void</span>
+      <span class="t-sub">Admiration · Thanks</span>
     </div>
+    <div class="t-summary"><p>Gratitude and acknowledgment. People who shaped me, those I admire. The quiet place of regard.</p></div>
   </a>
-
-  <!-- TRANSITION BORDERS -->
-  <div class="transition fire-thunder-h"></div>
-  <div class="transition fire-ice-h"></div>
-  <div class="transition fire-water-v"></div>
-  <div class="transition fire-void-h"></div>
-  <div class="transition thunder-void-h"></div>
-  <div class="transition thunder-ice-h"></div>
-  <div class="transition ice-water-v"></div>
-  <div class="transition water-void-v"></div>
-  <div class="transition thunder-water-d"></div>
-  <div class="transition ice-void-d"></div>
 
   <!-- CORNERS -->
-  <div class="corner c1"></div>
-  <div class="corner c2"></div>
-  <div class="corner c3"></div>
-  <div class="corner c4"></div>
+  <div class="corner c-nw"></div>
+  <div class="corner c-ne"></div>
+  <div class="corner c-sw"></div>
+  <div class="corner c-se"></div>
+
+  <!-- TRANSITION BORDERS -->
+  <div class="trans fire-thunder" style="grid-area:none;position:absolute;top:0;left:0;right:0;bottom:0"></div>
 
 </div>
 
-<canvas id="particles"></canvas>
-
 <script>
-// Global particle canvas
+// Territory particles
 (function(){
-  var c=document.getElementById('particles'),ctx=c.getContext('2d'),w,h;
-  function R(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}
-  R();window.addEventListener('resize',R);
-
-  var pts=[];
-  for(var i=0;i<60;i++)pts.push({
-    x:Math.random()*w,y:Math.random()*h,
-    vx:(Math.random()-.5)*.2,vy:(Math.random()-.5)*.2,
-    r:Math.random()*.8+.2,o:Math.random()*.3+.1
-  });
-
-  function D(){
-    ctx.clearRect(0,0,w,h);
-    pts.forEach(function(p){
-      p.x+=p.vx;p.y+=p.vy;
-      if(p.x<0)p.x=w;if(p.x>w)p.x=0;if(p.y<0)p.y=h;if(p.y>h)p.y=0;
-      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle='rgba(255,255,255,'+p.o+')';ctx.fill();
-    });
-    requestAnimationFrame(D);
-  }
-  D();
-})();
-
-// Territory-specific particles
-(function(){
-  var configs={
-    fire:{count:25,gen:function(){return{left:Math.random()*100+'%',top:30+Math.random()*70+'%',dx:(Math.random()-.5)*30+'px',dy:(Math.random()-.8)*40+'px',dur:2+Math.random()*3+'s',del:Math.random()*3+'s',op:.3+Math.random()*.7}}},
-    thunder:{count:20,gen:function(){return{left:Math.random()*100+'%',top:10+Math.random()*50+'%',dx:(Math.random()-.5)*50+'px',dy:(Math.random()-.5)*20+'px',dur:1.5+Math.random()*2+'s',del:Math.random()*2+'s',op:.3+Math.random()*.7}}},
-    ice:{count:22,gen:function(){return{left:Math.random()*100+'%',top:Math.random()*100+'%',dx:(Math.random()-.5)*25+'px',dy:10+Math.random()*20+'px',dur:3+Math.random()*4+'s',del:Math.random()*4+'s',op:.3+Math.random()*.6}}},
-    water:{count:20,gen:function(){return{left:Math.random()*100+'%',top:10+Math.random()*40+'%',dx:(Math.random()-.5)*20+'px',dy:15+Math.random()*25+'px',dur:3+Math.random()*5+'s',del:Math.random()*4+'s',op:.3+Math.random()*.5}}},
-    void:{count:18,gen:function(){return{left:Math.random()*100+'%',top:Math.random()*100+'%',dx:(Math.random()-.5)*15+'px',dy:(Math.random()-.5)*15+'px',dur:4+Math.random()*5+'s',del:Math.random()*5+'s',op:.2+Math.random()*.5}}}
+  var cfgs={
+    fire:{n:30,g:function(){return{l:Math.random()*100+'%',t:20+Math.random()*80+'%',dx:(Math.random()-.5)*25+'px',dy:(Math.random()-.7)*35+'px',dur:2+Math.random()*3+'s',del:Math.random()*3+'s',op:.3+Math.random()*.7}}},
+    thunder:{n:22,g:function(){return{l:Math.random()*100+'%',t:5+Math.random()*50+'%',dx:(Math.random()-.5)*45+'px',dy:5+Math.random()*15+'px',dur:1.5+Math.random()*2+'s',del:Math.random()*2+'s',op:.3+Math.random()*.7}}},
+    ice:{n:25,g:function(){return{l:Math.random()*100+'%',t:Math.random()*100+'%',dx:(Math.random()-.5)*20+'px',dy:8+Math.random()*20+'px',dur:3+Math.random()*4+'s',del:Math.random()*4+'s',op:.25+Math.random()*.55}}},
+    water:{n:22,g:function(){return{l:Math.random()*100+'%',t:5+Math.random()*40+'%',dx:(Math.random()-.5)*15+'px',dy:12+Math.random()*22+'px',dur:3+Math.random()*5+'s',del:Math.random()*4+'s',op:.25+Math.random()*.5}}},
+    void:{n:20,g:function(){return{l:Math.random()*100+'%',t:Math.random()*100+'%',dx:(Math.random()-.5)*12+'px',dy:(Math.random()-.5)*12+'px',dur:4+Math.random()*5+'s',del:Math.random()*5+'s',op:.2+Math.random()*.45}}}
   };
-  Object.keys(configs).forEach(function(k){
-    var cfg=configs[k];
-    var containers=document.querySelectorAll('[data-elem="'+k+'"]');
-    containers.forEach(function(cont){
+  Object.keys(cfgs).forEach(function(k){
+    var c=cfgs[k];
+    document.querySelectorAll('[data-el="'+k+'"]').forEach(function(el){
       var h='';
-      for(var i=0;i<cfg.count;i++){
-        var p=cfg.gen();
-        h+='<div class="tp" style="left:'+p.left+';top:'+p.top+';--dx:'+p.dx+';--dy:'+p.dy+';--dur:'+p.dur+';--del:'+p.del+';--op:'+p.op+'"></div>';
-      }
-      cont.innerHTML=h;
+      for(var i=0;i<c.n;i++){var p=c.g();h+='<div class="pt" style="left:'+p.l+';top:'+p.t+';--dx:'+p.dx+';--dy:'+p.dy+';--dur:'+p.dur+';--del:'+p.del+';--op:'+p.op+'"></div>'}
+      el.innerHTML=h;
     });
   });
 })();
