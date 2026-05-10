@@ -3,238 +3,270 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Attri's Apothecary</title>
+<title>Dev Attri</title>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-  --wood:#1a1410;--shelf:#231c15;--dark:#0f0b08;
-  --gold:#c9a050;--gold-dim:rgba(201,160,80,.25);--gold-faint:rgba(201,160,80,.08);
-  --parchment:#f5ecd7;--parchment-dim:rgba(245,236,215,.7);
-  --ink:#2c1810;--ink-dim:rgba(44,24,16,.5);
-  --green:#4a6741;--red:#8b3a3a;--purple:#5c3d6e;
+  --leather:#1a1410;--leather-dark:#0f0b08;--gold:#c9a050;--gold-dim:rgba(201,160,80,.3);
+  --paper:#f5f0e8;--paper-dark:#e8e0d5;
+  --ink:#1a1a1a;--red:#cc0000;--grey:#555;--light:#999;--rule:#ccc;
 }
 
 body{
-  background:var(--dark);color:var(--parchment);
+  background:#0a0806;color:var(--ink);
   font-family:'Georgia','Times New Roman',serif;
-  min-height:100vh;display:flex;justify-content:center;
-  padding:2rem 1rem;
-  background-image:
-    repeating-linear-gradient(90deg,transparent,transparent 2px,rgba(255,255,255,.005) 2px,rgba(255,255,255,.005) 4px);
+  width:100vw;height:100vh;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  perspective:2500px;perspective-origin:50% 50%;
 }
 
-/* ===== SHOP ===== */
-.shop{width:100%;max-width:700px;position:relative}
-
-/* ===== SHOP SIGN ===== */
-.sign{
-  text-align:center;margin-bottom:2.5rem;position:relative;
-  padding:1.5rem 1rem;
-  border:2px solid var(--gold-dim);border-radius:4px;
-  background:var(--wood);
-  box-shadow:inset 0 0 40px rgba(0,0,0,.4);
+/* ===== BOOK ===== */
+.book{
+  width:min(900px,95vw);height:min(600px,85vh);
+  position:relative;transform-style:preserve-3d;
+  transition:transform .2s;
 }
-.sign::before,.sign::after{
-  content:'◆';position:absolute;top:50%;transform:translateY(-50%);
-  color:var(--gold-dim);font-size:.5rem;
+
+/* ===== LEFT PAGE (manga) — always visible behind the flipping page ===== */
+.page-left{
+  position:absolute;left:0;top:0;width:50%;height:100%;
+  background:var(--paper);overflow:hidden;
+  border:1px solid #d0c8b8;border-right:none;
+  box-shadow:inset -2px 0 8px rgba(0,0,0,.08);
+  display:flex;flex-direction:column;
 }
-.sign::before{left:.75rem}.sign::after{right:.75rem}
 
-.sign h1{font-size:1.8rem;font-weight:400;letter-spacing:.12em;color:var(--gold);margin-bottom:.3rem}
-.sign .est{font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-dim)}
-.sign .motto{font-size:.55rem;font-style:italic;color:var(--parchment-dim);margin-top:.4rem}
-
-/* ===== SHELF ===== */
-.shelf{margin-bottom:1.5rem;position:relative;padding:1.5rem 0 1rem}
-.shelf::after{
-  content:'';position:absolute;bottom:0;left:-2rem;right:-2rem;height:8px;
-  background:linear-gradient(180deg,var(--shelf),var(--wood));
-  border-top:1px solid var(--gold-faint);border-bottom:1px solid rgba(0,0,0,.5);
+/* ===== FLIPPING PAGE ===== */
+.page-flip{
+  position:absolute;left:0;top:0;width:50%;height:100%;
+  transform-origin:left center;transform-style:preserve-3d;
+  transition:transform 1.2s cubic-bezier(.4,0,.2,1);
+  cursor:pointer;z-index:10;
 }
-.shelf:last-child::after{display:none}
+.book.open .page-flip{transform:rotateY(-180deg)}
 
-.shelf-label{
-  font-size:.45rem;letter-spacing:.28em;text-transform:uppercase;
-  color:var(--gold-dim);margin-bottom:1rem;
-  display:flex;align-items:center;gap:.5rem;
+/* Book spine shadow */
+.page-flip::before{
+  content:'';position:absolute;left:-4px;top:0;bottom:0;width:4px;
+  background:linear-gradient(to right,rgba(0,0,0,.3),transparent);
+  pointer-events:none;z-index:2;
 }
-.shelf-label::after{content:'';flex:1;height:1px;background:var(--gold-faint)}
 
-/* ===== BOTTLES ROW ===== */
-.bottles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem}
-
-.bottle{
-  position:relative;text-align:center;cursor:pointer;
-  transition:transform .35s cubic-bezier(.16,1,.3,1);
-  text-decoration:none;color:inherit;display:block;
-}
-.bottle:hover{transform:translateY(-6px)}
-.bottle:hover .bottle-neck{border-color:var(--gold)}
-.bottle:hover .bottle-label{border-color:var(--gold);color:var(--gold)}
-
-/* Bottle shape */
-.bottle-body{
-  width:60px;height:70px;margin:0 auto .5rem;position:relative;
-  background:rgba(0,0,0,.3);border-radius:6px 6px 3px 3px;
-  border:1px solid var(--gold-faint);
+/* ===== FRONT FACE — COVER ===== */
+.cover{
+  position:absolute;inset:0;backface-visibility:hidden;
+  background:linear-gradient(135deg,var(--leather),var(--leather-dark));
+  border:1px solid #2a2018;
+  display:flex;align-items:center;justify-content:center;
   overflow:hidden;
 }
-.bottle-body::after{
-  content:'';position:absolute;bottom:0;left:15%;right:15%;height:40%;
-  border-radius:3px;
-}
-.bottle.potion .bottle-body::after{background:var(--green);opacity:.3}
-.bottle.tincture .bottle-body::after{background:var(--red);opacity:.25}
-.bottle.elixir .bottle-body::after{background:var(--purple);opacity:.25}
-.bottle.essence .bottle-body::after{background:var(--gold);opacity:.2}
+/* Leather texture */
+.cover::before{content:'';position:absolute;inset:0;opacity:.04;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.1) 3px,rgba(255,255,255,.1) 4px)}
+/* Gold border */
+.cover::after{content:'';position:absolute;inset:12px;border:1.5px solid var(--gold-dim);pointer-events:none}
 
-/* Bottle neck */
-.bottle-neck{
-  width:16px;height:14px;margin:-6px auto 0;border-radius:2px 2px 0 0;
-  border:1px solid var(--gold-faint);border-bottom:none;
-  background:rgba(0,0,0,.25);transition:border-color .3s;
-}
-/* Cork */
-.bottle-neck::after{content:'';position:absolute;top:-4px;left:2px;right:2px;height:6px;
-  background:#8b6914;border-radius:2px 2px 0 0;opacity:.5}
+.cover-content{text-align:center;position:relative;z-index:1}
+.cover-content .author{font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.75rem}
+.cover-content h1{font-size:2rem;font-weight:400;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:.5rem}
+.cover-content .sub{font-size:.55rem;font-style:italic;color:rgba(201,160,80,.4);letter-spacing:.1em}
+.cover-content .hint{font-size:.4rem;letter-spacing:.18em;color:rgba(255,255,255,.15);margin-top:2rem;animation:coverHint 3s ease-in-out infinite}
+@keyframes coverHint{0%,100%{opacity:.3}50%{opacity:.7}}
 
-/* Bottle label */
-.bottle-label{
-  display:block;font-size:.55rem;letter-spacing:.06em;margin-bottom:.08rem;
-  color:var(--parchment-dim);transition:all .3s;
-  font-style:italic;
-}
-.bottle-desc{
-  display:block;font-size:.42rem;color:var(--ink-dim);letter-spacing:.04em;line-height:1.5;
-}
+/* Ornament */
+.ornament{font-size:.8rem;color:var(--gold-dim);margin:.5rem 0}
 
-/* ===== SPECIAL DISPLAY (VEKTOR) ===== */
-.display-jar{
-  grid-column:1/-1;border:1px solid var(--gold-dim);padding:1rem;
-  display:flex;align-items:center;gap:1rem;cursor:pointer;
-  text-decoration:none;color:inherit;transition:all .3s;
-  background:rgba(201,160,80,.03);
+/* ===== BACK FACE — NEWSPAPER ===== */
+.spread-right{
+  position:absolute;inset:0;backface-visibility:hidden;
+  transform:rotateY(180deg);
+  background:var(--paper-dark);
+  border:1px solid #d0c8b8;border-left:none;
+  padding:1rem;overflow-y:auto;
+  box-shadow:inset 2px 0 8px rgba(0,0,0,.06);
 }
-.display-jar:hover{border-color:var(--gold);background:rgba(201,160,80,.06)}
-.display-jar:hover .jar-name{color:var(--gold)}
-.jar-icon{
-  width:50px;height:50px;border:1px solid var(--gold-faint);border-radius:50%;
-  display:flex;align-items:center;justify-content:center;font-size:1.4rem;
-  flex-shrink:0;
+.spread-right .news-masthead{
+  border-bottom:2px double var(--ink);padding-bottom:.3rem;margin-bottom:.5rem;text-align:center;
 }
-.jar-info{flex:1}
-.jar-name{font-size:.7rem;font-weight:700;letter-spacing:.04em;margin-bottom:.15rem;transition:color .3s}
-.jar-desc{font-size:.45rem;color:var(--parchment-dim);line-height:1.5}
-.jar-badge{font-size:.38rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);padding:.15rem .4rem;border:1px solid var(--gold-dim);border-radius:2px}
+.spread-right .news-masthead h3{font-size:.6rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase}
+.spread-right .news-masthead .news-date{font-size:.35rem;color:var(--grey);letter-spacing:.12em;text-transform:uppercase;margin-top:.1rem;font-family:'Inter',sans-serif}
 
-/* ===== WOOD GRAIN TEXTURE ===== */
-.wood-grain{position:absolute;inset:0;pointer-events:none;opacity:.03;
-  background:repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(139,105,20,.3) 3px,rgba(139,105,20,.3) 4px)}
+.news-article{margin-bottom:.7rem;border-bottom:1px solid var(--rule);padding-bottom:.5rem}
+.news-article h4{font-size:.55rem;font-weight:900;line-height:1.15;margin-bottom:.15rem}
+.news-article .by{font-size:.35rem;color:var(--red);text-transform:uppercase;letter-spacing:.08em;font-family:'Inter',sans-serif;margin-bottom:.25rem}
+.news-article p{font-size:.42rem;line-height:1.55;color:var(--grey);font-family:'Inter',sans-serif}
+.news-article a{color:var(--ink);font-weight:700;text-decoration:none;border-bottom:1px dotted var(--ink)}
+.news-article a:hover{color:var(--red)}
+
+.news-classifieds{border-top:1px solid var(--rule);padding-top:.4rem}
+.news-classifieds h5{font-size:.35rem;text-transform:uppercase;letter-spacing:.15em;color:var(--grey);margin-bottom:.3rem;font-family:'Inter',sans-serif}
+.class-row{display:flex;flex-wrap:wrap;gap:.3rem}
+.class-tag{font-size:.35rem;font-family:'Inter',sans-serif;color:var(--ink);text-decoration:none;border:1px solid var(--rule);padding:.15rem .35rem;transition:all .2s}
+.class-tag:hover{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+
+/* ===== LEFT PAGE — MANGA ===== */
+.manga-page{padding:.6rem;height:100%;overflow-y:auto;font-family:'Inter',-apple-system,sans-serif}
+.manga-page .mp-header{text-align:center;border-bottom:2px solid var(--ink);padding-bottom:.3rem;margin-bottom:.5rem}
+.mp-header .ch{font-size:.35rem;letter-spacing:.2em;color:var(--grey);text-transform:uppercase;margin-bottom:.1rem}
+.mp-header h3{font-size:.65rem;font-weight:900;letter-spacing:.04em}
+
+.mp-panel{border:1.5px solid var(--ink);padding:.4rem;margin-bottom:.4rem;position:relative;background:#fafaf6}
+.mp-panel .sfx{position:absolute;font-size:.5rem;font-weight:900;opacity:.1;pointer-events:none}
+.mp-panel .sfx-tr{top:.1rem;right:.2rem}
+.mp-panel .sfx-bl{bottom:.1rem;left:.2rem}
+.mp-panel .label{font-size:.3rem;letter-spacing:.18em;text-transform:uppercase;color:var(--grey);margin-bottom:.2rem}
+.mp-panel p{font-size:.38rem;line-height:1.55;color:var(--ink)}
+.mp-panel .highlight{font-weight:700}
+
+/* Screentone */
+.mp-screentone{position:absolute;inset:0;pointer-events:none;opacity:.03;
+  background-image:radial-gradient(circle,var(--ink) 1px,transparent 1px);background-size:4px 4px}
+
+/* Speed lines panel */
+.mp-panel.action{position:relative}
+.mp-panel.action::after{content:'';position:absolute;top:0;bottom:0;left:0;right:0;pointer-events:none;opacity:.04;
+  background:repeating-linear-gradient(75deg,transparent,transparent 2px,var(--ink) 2px,var(--ink) 3px)}
+
+/* ===== NAVIGATION ===== */
+.nav-btn{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);z-index:100;
+  font-size:.4rem;letter-spacing:.15em;padding:.4rem 1rem;
+  border:1.5px solid var(--gold-dim);background:rgba(0,0,0,.7);color:var(--gold-dim);
+  cursor:pointer;transition:all .3s;text-transform:uppercase;
+  font-family:'Inter',sans-serif;border-radius:2px;
+}
+.nav-btn:hover{background:var(--leather);border-color:var(--gold);color:var(--gold)}
 
 /* ===== RESPONSIVE ===== */
-@media(max-width:500px){
-  .sign h1{font-size:1.2rem}
-  .bottles{grid-template-columns:1fr 1fr}
-  .bottle-body{width:44px;height:52px}
+@media(max-width:700px){
+  .book{height:min(500px,75vh)}
+  .cover-content h1{font-size:1.3rem}
+  .cover-content .author{font-size:.4rem}
+  .mp-header h3{font-size:.5rem}
+  .news-article h4{font-size:.45rem}
+  .news-article p{font-size:.35rem}
 }
 </style>
 </head>
 <body>
 
-<div class="shop">
+<div class="book" id="book">
 
-  <!-- SIGN -->
-  <div class="sign">
-    <div class="wood-grain"></div>
-    <h1>Attri's Apothecary</h1>
-    <div class="est">Established 2026 · Fine Compounds & Curiosities</div>
-    <div class="motto">"What cannot be cured by patience must be endured with craft."</div>
-  </div>
+  <!-- LEFT PAGE — Manga (always visible behind the flip) -->
+  <div class="page-left">
+    <div class="manga-page">
 
-  <!-- SHELF 1: POTIONS — About -->
-  <div class="shelf">
-    <div class="wood-grain"></div>
-    <div class="shelf-label">Shelf I — Potions of the Self</div>
-    <div class="bottles">
-      <div class="bottle potion">
-        <div class="bottle-body"></div><div class="bottle-neck"></div>
-        <span class="bottle-label">Essence of Identity</span>
-        <span class="bottle-desc">Builder. Runner. Lifter. Learner. Based in India.</span>
+      <div class="mp-header">
+        <div class="ch">第1話 · The Self</div>
+        <h3>DEV ATTRI</h3>
       </div>
-      <div class="bottle potion">
-        <div class="bottle-body"></div><div class="bottle-neck"></div>
-        <span class="bottle-label">Tincture of Philosophy</span>
-        <span class="bottle-desc">Ship first. Refine later. Discomfort opens doors.</span>
+
+      <div class="mp-panel action">
+        <div class="mp-screentone"></div>
+        <span class="sfx sfx-tr">WHO?</span>
+        <div class="label">IDENTITY</div>
+        <p>I'm figuring it out. Building things, breaking them, learning. Not polished, not finished — just <span class="highlight">obsessed</span> with making things work.</p>
       </div>
-      <div class="bottle potion">
-        <div class="bottle-body"></div><div class="bottle-neck"></div>
-        <span class="bottle-label">Spirit of the Stack</span>
-        <span class="bottle-desc">TypeScript · Next.js · Prisma · Python · APIs</span>
+
+      <div class="mp-panel">
+        <span class="sfx sfx-bl">SWISH</span>
+        <div class="label">PHILOSOPHY</div>
+        <p>Ship first. Refine later. Hard work beats talent that doesn't work. Everything worth doing is on the other side of <span class="highlight">discomfort</span>.</p>
       </div>
+
+      <div class="mp-panel">
+        <span class="sfx sfx-tr" style="font-size:.35rem">STACK</span>
+        <div class="label">CURRENT FOCUS</div>
+        <p>TypeScript · Next.js · Prisma · APIs · Deep in full-stack architecture. Based in India. <span class="highlight">Learning in public.</span></p>
+      </div>
+
+      <div class="mp-panel">
+        <div class="mp-screentone"></div>
+        <div class="label">POETRY</div>
+        <p style="font-style:italic">"my eyes are where your eyes is — you blinked and i rewired."</p>
+      </div>
+
+      <div class="mp-panel">
+        <span class="sfx sfx-bl">...</span>
+        <div class="label">BELIEFS</div>
+        <p>People remember how you made them feel, not what you said. The best stories are the ones you're scared to tell.</p>
+      </div>
+
     </div>
   </div>
 
-  <!-- SHELF 2: TINCTURES — Tools -->
-  <div class="shelf">
-    <div class="wood-grain"></div>
-    <div class="shelf-label">Shelf II — Tinctures of Creation</div>
-    <div class="bottles">
-      <a href="/grit" class="display-jar">
-        <div class="jar-icon">⚡</div>
-        <div class="jar-info">
-          <div class="jar-name">VEKTOR · Hybrid Athlete OS</div>
-          <div class="jar-desc">Adaptive performance operating system. Track readiness, runs, strength, recovery, injuries.</div>
+  <!-- FLIPPING PAGE -->
+  <div class="page-flip">
+
+    <!-- FRONT — Cover -->
+    <div class="cover">
+      <div class="cover-content">
+        <div class="author">Dev Attri</div>
+        <h1>Attri</h1>
+        <div class="ornament">❦</div>
+        <div class="sub">A book of building, breaking, and becoming</div>
+        <div class="hint">✦ click to open ✦</div>
+      </div>
+    </div>
+
+    <!-- BACK — Newspaper -->
+    <div class="spread-right">
+
+      <div class="news-masthead">
+        <h3>The Daily Attri</h3>
+        <div class="news-date">Sunday Edition · Vol I · No 1</div>
+      </div>
+
+      <div class="news-article">
+        <h4>VEKTOR: Adaptive Performance OS Ships to Public</h4>
+        <div class="by">By Tools Desk</div>
+        <p>Hybrid Athlete Command Center now live. Track readiness, runs, strength, recovery, and injuries in one tactical dashboard. <a href="/grit" target="_blank">→ Open VEKTOR</a></p>
+      </div>
+
+      <div class="news-article">
+        <h4>Stack Report: TypeScript Leads Development Front</h4>
+        <div class="by">By Tech Desk</div>
+        <p>Next.js · Prisma · Python · APIs remain active. Full-stack systems being built at the edge. More tools in development pipeline.</p>
+      </div>
+
+      <div class="news-article">
+        <h4>Workshop Inventory: Five Tools Shipped</h4>
+        <div class="by">By Product Desk</div>
+        <p>VEKTOR · Weather App · Macro Tracker · Max Workspace · attridevv.com. Each one sharper than the last. More compounds brewing.</p>
+      </div>
+
+      <div class="news-article">
+        <h4>Half Marathon Achievement Unlocked</h4>
+        <div class="by">By Sports Desk</div>
+        <p>42.5km weekly average. Hybrid athlete training — running, lifting, recovery. Chess ELO: 1000. The body and mind sharpen together.</p>
+      </div>
+
+      <div class="news-classifieds">
+        <h5>✦ Signal Board</h5>
+        <div class="class-row">
+          <a href="https://github.com/attridevv" target="_blank" class="class-tag">GITHUB</a>
+          <a href="https://x.com/attridevv" target="_blank" class="class-tag">X</a>
+          <a href="https://instagram.com/attridevv" target="_blank" class="class-tag">INSTAGRAM</a>
+          <a href="https://anilist.co/user/Attridevv/" target="_blank" class="class-tag">ANILIST</a>
         </div>
-        <span class="jar-badge">▼ Open</span>
-      </a>
-      <div class="bottle tincture">
-        <div class="bottle-body"></div><div class="bottle-neck"></div>
-        <span class="bottle-label">Weather Extract</span>
-        <span class="bottle-desc">API-driven · Data fetching · States</span>
       </div>
-      <div class="bottle tincture">
-        <div class="bottle-body"></div><div class="bottle-neck"></div>
-        <span class="bottle-label">Macro Compound</span>
-        <span class="bottle-desc">Nutrition tracking · Forms · Persistence</span>
-      </div>
-      <div class="bottle tincture">
-        <div class="bottle-body"></div><div class="bottle-neck"></div>
-        <span class="bottle-label">Workspace Elixir</span>
-        <span class="bottle-desc">Clean browser layouts · Surfaces</span>
-      </div>
-    </div>
-  </div>
 
-  <!-- SHELF 3: COMPOUNDS — Signal -->
-  <div class="shelf">
-    <div class="wood-grain"></div>
-    <div class="shelf-label">Shelf III — Compounds of Connection</div>
-    <div class="bottles">
-      <a href="https://github.com/attridevv" target="_blank" class="bottle essence">
-        <div class="bottle-body"></div><div class="bottle-neck"></div>
-        <span class="bottle-label">GitHub Crystal</span>
-        <span class="bottle-desc">Code · Repositories · Proof</span>
-      </a>
-      <a href="https://x.com/attridevv" target="_blank" class="bottle essence">
-        <div class="bottle-body"></div><div class="bottle-neck"></div>
-        <span class="bottle-label">X Powder</span>
-        <span class="bottle-desc">Thoughts · Signals · Noise</span>
-      </a>
-      <a href="https://instagram.com/attridevv" target="_blank" class="bottle essence">
-        <div class="bottle-body"></div><div class="bottle-neck"></div>
-        <span class="bottle-label">Instagram Dust</span>
-        <span class="bottle-desc">Visual log · Moments captured</span>
-      </a>
-      <a href="https://anilist.co/user/Attridevv/" target="_blank" class="bottle essence">
-        <div class="bottle-body"></div><div class="bottle-neck"></div>
-        <span class="bottle-label">AniList Ash</span>
-        <span class="bottle-desc">Anime · Manga · Tracking</span>
-      </a>
     </div>
+
   </div>
 
 </div>
 
+<button class="nav-btn" id="flipBtn" onclick="toggleBook()">Open Book</button>
+
+<script>
+var open=false;
+function toggleBook(){
+  open=!open;
+  document.getElementById('book').classList.toggle('open',open);
+  document.getElementById('flipBtn').textContent=open?'Close Book':'Open Book';
+}
+document.querySelector('.page-flip').addEventListener('click',toggleBook);
+</script>
 </body>
 </html>
