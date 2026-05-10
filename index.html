@@ -6,525 +6,257 @@
 <title>attridevv</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#000;overflow:hidden;width:100vw;height:100vh}
-canvas{display:block;position:fixed;inset:0}
+body{background:#000;overflow:hidden;width:100vw;height:100vh;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif}
 
-.overlay{position:fixed;inset:0;z-index:10;pointer-events:none;display:flex}
-.zone{flex:1;cursor:pointer;pointer-events:auto;position:relative;text-decoration:none;transition:background .5s}
-.zone-l:hover{background:radial-gradient(ellipse at 30% 50%,rgba(239,68,68,.06),transparent 70%)}
-.zone-r:hover{background:radial-gradient(ellipse at 70% 50%,rgba(59,130,246,.06),transparent 70%)}
-.zone:hover .zone-hint{opacity:1;transform:translateX(-50%)translateY(-6px)}
+.scene{position:fixed;inset:0;display:flex;align-items:flex-end;justify-content:center}
+.dragon-container{position:relative;width:100%;height:100%}
 
-.zone-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);text-align:center;opacity:0;transition:all .5s;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-.zone-l .zone-hint{color:#fca5a5}.zone-r .zone-hint{color:#93c5fd}
-.zone-hint .l1{display:block;font-size:.5rem;letter-spacing:.25em;text-transform:uppercase;font-weight:800;margin-bottom:.1rem}
-.zone-hint .l2{display:block;font-size:.85rem;font-weight:900;letter-spacing:.08em}
-.zone-hint .l3{display:block;font-size:.38rem;letter-spacing:.14em;margin-top:.1rem;opacity:.35}
+/* ===== RED DRAGON (left) ===== */
+.dragon-red{position:absolute;bottom:8%;left:8%;width:45%;height:65%}
+.dragon-red .wing-blur{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 40%,rgba(239,68,68,.08),transparent 60%);animation:redAura 3s ease-in-out infinite alternate}
+@keyframes redAura{0%{opacity:.6}100%{opacity:1}}
+
+/* ===== BLUE DRAGON (right) ===== */
+.dragon-blue{position:absolute;bottom:8%;right:8%;width:45%;height:65%}
+.dragon-blue .wing-blur{position:absolute;inset:0;background:radial-gradient(ellipse at 70% 40%,rgba(59,130,246,.08),transparent 60%);animation:blueAura 3.5s ease-in-out infinite alternate}
+@keyframes blueAura{0%{opacity:.6}100%{opacity:1}}
+
+.dragon-svg{width:100%;height:100%;position:relative;z-index:2}
+
+/* Fire breath particles */
+.fire-particles{position:absolute;bottom:45%;left:52%;z-index:3}
+.fp{position:absolute;width:4px;height:4px;background:#f97316;border-radius:50%;animation:fireRise var(--d) ease-out infinite;animation-delay:var(--del);opacity:0}
+@keyframes fireRise{0%{opacity:1;transform:translate(0,0)scale(1)}100%{opacity:0;transform:translate(var(--tx),var(--ty))scale(0)}}
+
+/* Ice breath particles */
+.ice-particles{position:absolute;bottom:45%;right:52%;z-index:3}
+.ip{position:absolute;width:3px;height:3px;background:#bae6fd;border-radius:1px;animation:iceBlow var(--d) ease-out infinite;animation-delay:var(--del);opacity:0}
+@keyframes iceBlow{0%{opacity:1;transform:translate(0,0)scale(1)}100%{opacity:0;transform:translate(var(--tx),var(--ty))scale(0.3)}}
+
+/* Lightning in sky */
+.sky-lightning{position:absolute;top:0;left:0;right:0;height:45%;z-index:1}
+.lightning-bolt{position:absolute;width:2px;background:linear-gradient(to bottom,transparent,#a855f7,#c084fc,#a855f7,transparent);border-radius:2px;animation:boltFlash var(--d) ease-in-out infinite;animation-delay:var(--del);opacity:0;transform-origin:top center}
+@keyframes boltFlash{0%,90%,100%{opacity:0}45%{opacity:.9}48%{opacity:.2}50%{opacity:.8}52%{opacity:.3}}
+
+.lightning-bolt::after{content:'';position:absolute;inset:-8px;background:inherit;filter:blur(15px);opacity:.5}
+
+/* ===== OVERLAY ===== */
+.overlay{position:fixed;inset:0;z-index:20;pointer-events:none;display:flex}
+.choice{flex:1;cursor:pointer;pointer-events:auto;position:relative;text-decoration:none;transition:background .5s}
+.choice-l:hover{background:radial-gradient(ellipse at 20% 50%,rgba(239,68,68,.05),transparent 60%)}
+.choice-r:hover{background:radial-gradient(ellipse at 80% 50%,rgba(59,130,246,.05),transparent 60%)}
+.choice:hover .choice-hint{opacity:1;transform:translateX(-50%)translateY(-8px)}
+
+.choice-hint{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);text-align:center;opacity:0;transition:all .5s}
+.choice-l .choice-hint{color:#fca5a5}.choice-r .choice-hint{color:#93c5fd}
+.choice-hint .c1{display:block;font-size:.48rem;letter-spacing:.28em;text-transform:uppercase;font-weight:800;margin-bottom:.1rem}
+.choice-hint .c2{display:block;font-size:.82rem;font-weight:900;letter-spacing:.08em}
+.choice-hint .c3{display:block;font-size:.36rem;letter-spacing:.16em;margin-top:.1rem;opacity:.35}
 </style>
 </head>
 <body>
-<canvas id="c"></canvas>
+<canvas id="stars"></canvas>
+
+<div class="scene">
+  <div class="dragon-container">
+
+    <!-- SKY LIGHTNING -->
+    <div class="sky-lightning" id="sky-bolts"></div>
+
+    <!-- RED DRAGON -->
+    <div class="dragon-red">
+      <div class="wing-blur"></div>
+      <svg class="dragon-svg" viewBox="0 0 500 500" preserveAspectRatio="xMidYMax meet">
+        <defs>
+          <radialGradient id="redGlow"><stop offset="0%" stop-color="#ef4444" stop-opacity="0.25"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+          <linearGradient id="fireGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#ff0"/><stop offset="50%" stop-color="#f97316"/><stop offset="100%" stop-color="#ef4444"/></linearGradient>
+        </defs>
+        
+        <!-- Body glow -->
+        <ellipse cx="220" cy="300" rx="180" ry="140" fill="url(#redGlow)"/>
+        
+        <!-- Body curve -->
+        <path d="M80 380 Q120 350 180 320 Q240 290 280 310 Q320 330 350 350 Q380 370 420 360 L400 420 Q350 440 280 430 Q200 420 120 430 Z" fill="#1a0000" stroke="#7f1d1d" stroke-width="1.5"/>
+        <!-- Body underbelly -->
+        <path d="M120 405 Q200 400 280 410 Q350 420 400 405" fill="none" stroke="#450a0a" stroke-width="6" opacity=".6"/>
+
+        <!-- Tail wraps around -->
+        <path d="M420 360 Q470 340 490 370 Q510 400 480 430 Q450 460 400 445 Q350 430 320 440" fill="none" stroke="#7f1d1d" stroke-width="3"/>
+        <path d="M480 430 Q510 400 490 370" fill="none" stroke="#991b1b" stroke-width="2"/>
+        <!-- Tail spikes -->
+        <path d="M470 385 L485 370 L475 380 M490 400 L510 390 L495 395 M480 425 L500 430 L485 420" fill="#450a0a" stroke="#991b1b" stroke-width="1"/>
+
+        <!-- Wing (spread) -->
+        <path d="M200 310 Q160 180 100 120 Q140 160 170 200 Q180 140 200 80 Q210 140 220 180 Q240 120 280 90 Q250 160 240 210 Q260 180 300 140 Q260 200 230 250" fill="rgba(69,10,10,.4)" stroke="#991b1b" stroke-width="1.2"/>
+        <!-- Wing membrane lines -->
+        <path d="M200 310 Q140 200 100 120 M200 310 Q180 160 200 80 M200 310 Q230 160 280 90 M200 310 Q260 190 300 140" fill="none" stroke="#991b1b" stroke-width=".8" opacity=".6"/>
+
+        <!-- Neck -->
+        <path d="M120 380 Q100 340 90 300 Q80 260 100 230 Q120 200 160 190" fill="none" stroke="#7f1d1d" stroke-width="14" stroke-linecap="round"/>
+        <path d="M120 380 Q100 340 90 300 Q80 260 100 230 Q120 200 160 190" fill="none" stroke="#450a0a" stroke-width="8" stroke-linecap="round"/>
+
+        <!-- Head -->
+        <ellipse cx="175" cy="185" rx="22" ry="18" fill="#1a0000" stroke="#991b1b" stroke-width="1.5"/>
+        <!-- Snout -->
+        <path d="M195 185 Q220 180 230 185 Q225 192 195 192 Z" fill="#1a0000" stroke="#991b1b" stroke-width="1.2"/>
+        <!-- Upper jaw line -->
+        <path d="M195 182 Q215 178 230 183" fill="none" stroke="#991b1b" stroke-width="1.5"/>
+        <!-- Lower jaw -->
+        <path d="M195 192 Q215 195 228 189" fill="none" stroke="#991b1b" stroke-width="1.2"/>
+        <!-- Nostril -->
+        <ellipse cx="225" cy="184" rx="2.5" ry="1.5" fill="#450a0a"/>
+        <!-- Eye -->
+        <ellipse cx="182" cy="180" rx="4" ry="3" fill="#fbbf24" stroke="#ef4444" stroke-width=".8"/>
+        <ellipse cx="182" cy="180" rx="1.5" ry="2.5" fill="#000"/>
+
+        <!-- Horns -->
+        <path d="M165 172 Q155 145 140 135 Q150 155 162 170" fill="#991b1b" stroke="#7f1d1d" stroke-width="1"/>
+        <path d="M170 170 Q165 140 155 128 Q163 150 172 167" fill="#7f1d1d" stroke="#991b1b" stroke-width=".8"/>
+
+        <!-- Teeth -->
+        <path d="M200 185 L205 190 L210 185 L215 190 L220 185" fill="none" stroke="#fbbf24" stroke-width=".8"/>
+
+        <!-- Fire breath -->
+        <path d="M230 185 Q255 178 280 185 Q270 192 255 188 Z" fill="url(#fireGrad)" opacity=".7" filter="blur(2px)"/>
+        <path d="M228 187 Q255 175 285 185" fill="none" stroke="#f97316" stroke-width="2" opacity=".6"/>
+
+        <!-- Front leg -->
+        <path d="M160 340 Q150 390 140 420 L155 425 Q165 390 170 340 Z" fill="#1a0000" stroke="#7f1d1d" stroke-width="1.2"/>
+        <!-- Front claws -->
+        <path d="M140 422 L132 428 M145 423 L142 430 M155 425 L158 430" fill="none" stroke="#fbbf24" stroke-width=".8"/>
+
+        <!-- Body spikes -->
+        <path d="M120 325 L110 310 M150 310 L142 295 M190 305 L185 288 M240 308 L238 290 M290 315 L292 298 M340 330 L348 315 M390 355 L400 340" fill="none" stroke="#991b1b" stroke-width="1.2"/>
+
+        <!-- Scales pattern -->
+        <path d="M130 360 Q140 355 150 360 M170 345 Q180 340 190 345 M210 340 Q220 335 230 340 M260 345 Q270 340 280 345 M310 355 Q320 350 330 355 M360 365 Q370 360 380 365" fill="none" stroke="#450a0a" stroke-width=".6" opacity=".5"/>
+
+        <!-- Chest scales -->
+        <path d="M100 350 L115 355 M95 365 L112 368 M105 380 L120 380" fill="none" stroke="#7f1d1d" stroke-width=".8"/>
+      </svg>
+      <div class="fire-particles" id="firepts"></div>
+    </div>
+
+    <!-- BLUE DRAGON -->
+    <div class="dragon-blue">
+      <div class="wing-blur"></div>
+      <svg class="dragon-svg" viewBox="0 0 500 500" preserveAspectRatio="xMidYMax meet">
+        <defs>
+          <radialGradient id="blueGlow"><stop offset="0%" stop-color="#3b82f6" stop-opacity="0.2"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+          <linearGradient id="iceGrad" x1="100%" y1="0%" x2="0%" y2="0%"><stop offset="0%" stop-color="#fff"/><stop offset="50%" stop-color="#7dd3fc"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient>
+        </defs>
+        
+        <!-- Body glow -->
+        <ellipse cx="280" cy="300" rx="180" ry="140" fill="url(#blueGlow)"/>
+
+        <!-- Body curve -->
+        <path d="M420 380 Q380 350 320 320 Q260 290 220 310 Q180 330 150 350 Q120 370 80 360 L100 420 Q150 440 220 430 Q300 420 380 430 Z" fill="#000a14" stroke="#1e3a5f" stroke-width="1.5"/>
+        <path d="M380 405 Q300 400 220 410 Q150 420 100 405" fill="none" stroke="#0c2238" stroke-width="6" opacity=".6"/>
+
+        <!-- Tail wraps -->
+        <path d="M80 360 Q30 340 10 370 Q-10 400 20 430 Q50 460 100 445 Q150 430 180 440" fill="none" stroke="#1e3a5f" stroke-width="3"/>
+        <path d="M20 430 Q-10 400 10 370" fill="none" stroke="#1e40af" stroke-width="2"/>
+        <!-- Tail spikes (ice crystal) -->
+        <path d="M30 385 L15 370 L25 380 M10 400 L-10 390 L5 395 M20 425 L0 430 L15 420" fill="#0c2238" stroke="#1e40af" stroke-width="1"/>
+
+        <!-- Wing (spread) -->
+        <path d="M300 310 Q340 180 400 120 Q360 160 330 200 Q320 140 300 80 Q290 140 280 180 Q260 120 220 90 Q250 160 260 210 Q240 180 200 140 Q240 200 270 250" fill="rgba(12,34,56,.4)" stroke="#1e40af" stroke-width="1.2"/>
+        <path d="M300 310 Q360 200 400 120 M300 310 Q320 160 300 80 M300 310 Q270 160 220 90 M300 310 Q240 190 200 140" fill="none" stroke="#1e40af" stroke-width=".8" opacity=".6"/>
+
+        <!-- Neck -->
+        <path d="M380 380 Q400 340 410 300 Q420 260 400 230 Q380 200 340 190" fill="none" stroke="#1e3a5f" stroke-width="14" stroke-linecap="round"/>
+        <path d="M380 380 Q400 340 410 300 Q420 260 400 230 Q380 200 340 190" fill="none" stroke="#0c2238" stroke-width="8" stroke-linecap="round"/>
+
+        <!-- Head -->
+        <ellipse cx="325" cy="185" rx="22" ry="18" fill="#000a14" stroke="#1e40af" stroke-width="1.5"/>
+        <!-- Snout -->
+        <path d="M305 185 Q280 180 270 185 Q275 192 305 192 Z" fill="#000a14" stroke="#1e40af" stroke-width="1.2"/>
+        <path d="M305 182 Q285 178 270 183" fill="none" stroke="#1e40af" stroke-width="1.5"/>
+        <path d="M305 192 Q285 195 272 189" fill="none" stroke="#1e40af" stroke-width="1.2"/>
+        <!-- Nostril -->
+        <ellipse cx="275" cy="184" rx="2.5" ry="1.5" fill="#0c2238"/>
+        <!-- Eye -->
+        <ellipse cx="318" cy="180" rx="4" ry="3" fill="#7dd3fc" stroke="#3b82f6" stroke-width=".8"/>
+        <ellipse cx="318" cy="180" rx="1.5" ry="2.5" fill="#000"/>
+
+        <!-- Horns (crystal) -->
+        <path d="M335 172 Q345 145 360 135 Q350 155 338 170" fill="#1e3a5f" stroke="#1e40af" stroke-width="1"/>
+        <path d="M330 170 Q335 140 345 128 Q337 150 328 167" fill="#0c2238" stroke="#1e40af" stroke-width=".8"/>
+
+        <!-- Teeth -->
+        <path d="M300 185 L295 190 L290 185 L285 190 L280 185" fill="none" stroke="#7dd3fc" stroke-width=".8"/>
+
+        <!-- Ice breath -->
+        <path d="M270 185 Q245 178 220 185 Q230 192 245 188 Z" fill="url(#iceGrad)" opacity=".6" filter="blur(2px)"/>
+        <path d="M272 187 Q245 175 215 185" fill="none" stroke="#38bdf8" stroke-width="2" opacity=".5"/>
+
+        <!-- Front leg -->
+        <path d="M340 340 Q350 390 360 420 L345 425 Q335 390 330 340 Z" fill="#000a14" stroke="#1e3a5f" stroke-width="1.2"/>
+        <!-- Claws -->
+        <path d="M360 422 L368 428 M355 423 L358 430 M345 425 L342 430" fill="none" stroke="#7dd3fc" stroke-width=".8"/>
+
+        <!-- Body spikes (ice crystals) -->
+        <path d="M380 325 L390 310 M350 310 L358 295 M310 305 L315 288 M260 308 L262 290 M210 315 L208 298 M160 330 L152 315 M110 355 L100 340" fill="none" stroke="#1e40af" stroke-width="1.2"/>
+
+        <!-- Scales -->
+        <path d="M370 360 Q360 355 350 360 M330 345 Q320 340 310 345 M290 340 Q280 335 270 340 M240 345 Q230 340 220 345 M190 355 Q180 350 170 355 M140 365 Q130 360 120 365" fill="none" stroke="#0c2238" stroke-width=".6" opacity=".5"/>
+
+        <!-- Chest -->
+        <path d="M400 350 L385 355 M405 365 L388 368 M395 380 L380 380" fill="none" stroke="#1e3a5f" stroke-width=".8"/>
+      </svg>
+      <div class="ice-particles" id="icepts"></div>
+    </div>
+
+  </div>
+</div>
 
 <div class="overlay">
-  <a href="/fire" class="zone zone-l"><div class="zone-hint"><span class="l1">The Self</span><span class="l2">ABOUT</span><span class="l3">Leo &middot; Identity &middot; Fire</span></div></a>
-  <a href="/water" class="zone zone-r"><div class="zone-hint"><span class="l1">The Work</span><span class="l2">CREATE</span><span class="l3">Tools &middot; Builds &middot; Output</span></div></a>
+  <a href="/fire" class="choice choice-l">
+    <div class="choice-hint"><span class="c1">The Self</span><span class="c2">ABOUT</span><span class="c3">Leo · Identity · Fire</span></div>
+  </a>
+  <a href="/water" class="choice choice-r">
+    <div class="choice-hint"><span class="c1">The Work</span><span class="c2">CREATE</span><span class="c3">Tools · Builds · Output</span></div>
+  </a>
 </div>
 
 <script>
+// Starfield
 (function(){
-var c=document.getElementById('c'),ctx=c.getContext('2d');
-var W,H,t=0;
-
-function R(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+var c=document.getElementById('stars'),ctx=c.getContext('2d'),w,h;
+function R(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}
 R();window.addEventListener('resize',R);
+var stars=[];
+for(var i=0;i<120;i++)stars.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*.8+.1,o:Math.random()*.5+.1,p:Math.random()*Math.PI*2});
+(function D(t){
+if(w!==c.width||h!==c.height)R();
+ctx.clearRect(0,0,w,h);
+stars.forEach(function(s){var b=.4+.6*Math.sin(t*.002+s.p);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,'+(s.o*b)+')';ctx.fill()});
+requestAnimationFrame(D);
+})();
+})();
 
-// ==================== FIRE DRAGON (left) ====================
-function drawFireDragon(x,y,s){
-  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
-  
-  // Body glow
-  for(var g=0;g<3;g++){
-    var grad=ctx.createRadialGradient(0,0,20,0,0,80+g*20);
-    grad.addColorStop(0,'rgba(249,115,22,'+(.12-g*.03)+')');
-    grad.addColorStop(1,'transparent');
-    ctx.fillStyle=grad;ctx.beginPath();ctx.arc(0,0,80+g*20,0,Math.PI*2);ctx.fill();
-  }
+// Fire particles
+(function(){
+var c=document.getElementById('firepts'),h='';
+for(var i=0;i<40;i++)h+='<div class="fp" style="left:'+(Math.random()*40)+'px;top:'+(Math.random()*20)+'px;--tx:'+((Math.random()-.5)*60)+'px;--ty:'+(-20-Math.random()*40)+'px;--d:'+(.8+Math.random()*1.5)+'s;--del:'+(Math.random()*2)+'s"></div>';
+c.innerHTML=h;
+})();
 
-  // Serpentine dragon body
-  ctx.fillStyle='#1a0500';ctx.strokeStyle='rgba(249,115,22,.4)';ctx.lineWidth=2;
-  ctx.beginPath();
-  // Tail (bottom left, sweeping up)
-  ctx.moveTo(-55,20);
-  ctx.bezierCurveTo(-65,5,-50,-15,-35,-25);
-  ctx.bezierCurveTo(-20,-35,-10,-20,0,-30);
-  ctx.bezierCurveTo(10,-40,25,-25,35,-35);
-  ctx.bezierCurveTo(45,-45,50,-30,55,-20);
-  // Head at top
-  ctx.lineTo(58,-25);
-  ctx.bezierCurveTo(62,-30,65,-22,60,-15);
-  ctx.lineTo(55,-10);
-  // Neck down
-  ctx.bezierCurveTo(45,-5,40,0,30,5);
-  ctx.bezierCurveTo(20,10,10,0,0,5);
-  ctx.bezierCurveTo(-10,10,-20,0,-30,5);
-  ctx.bezierCurveTo(-40,10,-45,20,-55,20);
-  ctx.fill();ctx.stroke();
+// Ice particles
+(function(){
+var c=document.getElementById('icepts'),h='';
+for(var i=0;i<40;i++)h+='<div class="ip" style="right:'+(Math.random()*40)+'px;top:'+(Math.random()*20)+'px;--tx:'+((Math.random()-.5)*50)+'px;--ty:'+(-15-Math.random()*35)+'px;--d:'+(.8+Math.random()*1.5)+'s;--del:'+(Math.random()*2)+'s"></div>';
+c.innerHTML=h;
+})();
 
-  // Scales - small strokes along body
-  ctx.strokeStyle='rgba(249,115,22,.25)';ctx.lineWidth=.8;
-  for(var i=0;i<12;i++){
-    var px=-45+i*13,py=-15+Math.sin(i*.8)*8;
-    ctx.beginPath();ctx.moveTo(px-2,py);ctx.lineTo(px+3,py-3);ctx.stroke();
-  }
-
-  // Spines along back
-  ctx.fillStyle='rgba(239,68,68,.4)';ctx.strokeStyle='rgba(239,68,68,.6)';ctx.lineWidth=1;
-  for(var i=0;i<8;i++){
-    var sx=-40+i*15,sy=-20+Math.sin(i*.6)*8;
-    ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(sx-4,sy-18);ctx.lineTo(sx+4,sy-14);ctx.closePath();ctx.fill();ctx.stroke();
-  }
-
-  // Head details
-  ctx.fillStyle='#1a0500';ctx.strokeStyle='rgba(249,115,22,.6)';ctx.lineWidth=2;
-  // Snout
-  ctx.beginPath();ctx.moveTo(55,-20);ctx.lineTo(75,-25);ctx.lineTo(72,-18);ctx.lineTo(58,-15);ctx.closePath();ctx.fill();ctx.stroke();
-  // Jaw
-  ctx.beginPath();ctx.moveTo(58,-15);ctx.lineTo(70,-10);ctx.lineTo(65,-5);ctx.lineTo(55,-10);ctx.closePath();ctx.fill();ctx.stroke();
-  // Eye
-  ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(52,-22,3,0,Math.PI*2);ctx.fill();
-  // Horns
-  ctx.fillStyle='rgba(251,191,36,.5)';ctx.strokeStyle='#f97316';
-  ctx.beginPath();ctx.moveTo(58,-25);ctx.lineTo(72,-45);ctx.lineTo(65,-40);ctx.closePath();ctx.fill();ctx.stroke();
-  ctx.beginPath();ctx.moveTo(60,-20);ctx.lineTo(76,-38);ctx.lineTo(68,-34);ctx.closePath();ctx.fill();ctx.stroke();
-  
-  // Fire breath
-  for(var f=0;f<5;f++){
-    var fx=75+Math.random()*15,fy=-22+(Math.random()-.5)*15;
-    ctx.fillStyle='rgba(251,191,36,'+(.3+Math.random()*.4)+')';
-    ctx.beginPath();ctx.arc(fx,fy,3+Math.random()*5,0,Math.PI*2);ctx.fill();
-  }
-  // Flame tongue
-  ctx.fillStyle='rgba(251,191,36,.5)';ctx.strokeStyle='#f97316';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(73,-18);ctx.lineTo(88,-22);ctx.lineTo(85,-14);ctx.lineTo(75,-13);ctx.closePath();ctx.fill();ctx.stroke();
-
-  // Wing (folded, behind)
-  ctx.fillStyle='rgba(124,45,18,.3)';ctx.strokeStyle='rgba(249,115,22,.25)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(-10,-30);ctx.lineTo(-40,-80);ctx.lineTo(-20,-60);ctx.lineTo(-35,-70);ctx.lineTo(-15,-50);ctx.lineTo(-5,-45);ctx.closePath();ctx.fill();ctx.stroke();
-  // Wing ribs
-  ctx.strokeStyle='rgba(249,115,22,.2)';ctx.lineWidth=.6;
-  ctx.beginPath();ctx.moveTo(-10,-30);ctx.lineTo(-35,-65);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(-10,-30);ctx.lineTo(-20,-55);ctx.stroke();
-
-  ctx.restore();
+// Sky lightning
+(function(){
+var c=document.getElementById('sky-bolts'),h='';
+for(var i=0;i<6;i++){
+  var x=10+Math.random()*80,y=5+Math.random()*15,hgt=30+Math.random()*70;
+  h+='<div class="lightning-bolt" style="left:'+x+'%;top:'+y+'%;height:'+hgt+'px;--d:'+(2+Math.random()*4)+'s;--del:'+(Math.random()*4)+'s;transform:rotate('+((Math.random()-.5)*15)+'deg)"></div>';
 }
-
-// ==================== ICE DRAGON (right) ====================
-function drawIceDragon(x,y,s){
-  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
-
-  // Body glow
-  for(var g=0;g<3;g++){
-    var grad=ctx.createRadialGradient(0,0,20,0,0,80+g*20);
-    grad.addColorStop(0,'rgba(56,189,248,'+(.1-g*.025)+')');
-    grad.addColorStop(1,'transparent');
-    ctx.fillStyle=grad;ctx.beginPath();ctx.arc(0,0,80+g*20,0,Math.PI*2);ctx.fill();
-  }
-
-  // Serpentine body
-  ctx.fillStyle='#000a14';ctx.strokeStyle='rgba(56,189,248,.4)';ctx.lineWidth=2;
-  ctx.beginPath();
-  ctx.moveTo(55,20);
-  ctx.bezierCurveTo(65,5,50,-15,35,-25);
-  ctx.bezierCurveTo(20,-35,10,-20,0,-30);
-  ctx.bezierCurveTo(-10,-40,-25,-25,-35,-35);
-  ctx.bezierCurveTo(-45,-45,-50,-30,-55,-20);
-  ctx.lineTo(-58,-25);
-  ctx.bezierCurveTo(-62,-30,-65,-22,-60,-15);
-  ctx.lineTo(-55,-10);
-  ctx.bezierCurveTo(-45,-5,-40,0,-30,5);
-  ctx.bezierCurveTo(-20,10,-10,0,0,5);
-  ctx.bezierCurveTo(10,10,20,0,30,5);
-  ctx.bezierCurveTo(40,10,45,20,55,20);
-  ctx.fill();ctx.stroke();
-
-  // Ice crystal scales
-  ctx.fillStyle='rgba(186,230,253,.15)';ctx.strokeStyle='rgba(56,189,248,.2)';ctx.lineWidth=.8;
-  for(var i=0;i<10;i++){
-    var px=-45+i*13,py=-18+Math.sin(i*.7)*7;
-    ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px+4,py-5);ctx.lineTo(px+8,py);ctx.lineTo(px+4,py+3);ctx.closePath();ctx.fill();ctx.stroke();
-  }
-
-  // Crystal spines
-  ctx.fillStyle='rgba(186,230,253,.3)';ctx.strokeStyle='rgba(147,197,253,.5)';ctx.lineWidth=1;
-  for(var i=0;i<8;i++){
-    var sx=-40+i*15,sy=-20+Math.sin(i*.6)*8;
-    ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(sx-3,sy-20);ctx.lineTo(sx+5,sy-16);ctx.closePath();ctx.fill();ctx.stroke();
-  }
-
-  // Head
-  ctx.fillStyle='#000a14';ctx.strokeStyle='rgba(56,189,248,.6)';ctx.lineWidth=2;
-  ctx.beginPath();ctx.moveTo(-55,-20);ctx.lineTo(-75,-25);ctx.lineTo(-72,-18);ctx.lineTo(-58,-15);ctx.closePath();ctx.fill();ctx.stroke();
-  ctx.beginPath();ctx.moveTo(-58,-15);ctx.lineTo(-70,-10);ctx.lineTo(-65,-5);ctx.lineTo(-55,-10);ctx.closePath();ctx.fill();ctx.stroke();
-  // Eye
-  ctx.fillStyle='#38bdf8';ctx.beginPath();ctx.arc(-52,-22,3,0,Math.PI*2);ctx.fill();
-  // Horns (ice crystal shape)
-  ctx.fillStyle='rgba(186,230,253,.4)';ctx.strokeStyle='#7dd3fc';
-  ctx.beginPath();ctx.moveTo(-58,-25);ctx.lineTo(-72,-48);ctx.lineTo(-64,-42);ctx.closePath();ctx.fill();ctx.stroke();
-  ctx.beginPath();ctx.moveTo(-60,-20);ctx.lineTo(-76,-40);ctx.lineTo(-68,-36);ctx.closePath();ctx.fill();ctx.stroke();
-
-  // Frost breath
-  for(var f=0;f<5;f++){
-    var fx=-75-Math.random()*15,fy=-22+(Math.random()-.5)*15;
-    ctx.fillStyle='rgba(186,230,253,'+(.25+Math.random()*.35)+')';
-    ctx.beginPath();ctx.arc(fx,fy,3+Math.random()*4,0,Math.PI*2);ctx.fill();
-  }
-
-  // Wing (folded, behind)
-  ctx.fillStyle='rgba(12,74,110,.25)';ctx.strokeStyle='rgba(56,189,248,.2)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(10,-30);ctx.lineTo(40,-84);ctx.lineTo(20,-62);ctx.lineTo(35,-72);ctx.lineTo(15,-52);ctx.lineTo(5,-45);ctx.closePath();ctx.fill();ctx.stroke();
-  ctx.strokeStyle='rgba(56,189,248,.15)';ctx.lineWidth=.6;
-  ctx.beginPath();ctx.moveTo(10,-30);ctx.lineTo(35,-68);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(10,-30);ctx.lineTo(20,-58);ctx.stroke();
-
-  ctx.restore();
-}
-
-// ==================== KIRITO (red, dual swords) ====================
-function drawKirito(x,y,s){
-  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
-
-  // Aura
-  var a=ctx.createRadialGradient(0,-5,10,0,-5,100);
-  a.addColorStop(0,'rgba(239,68,68,.2)');a.addColorStop(.5,'rgba(239,68,68,.04)');a.addColorStop(1,'transparent');
-  ctx.fillStyle=a;ctx.beginPath();ctx.arc(0,-10,100,0,Math.PI*2);ctx.fill();
-
-  var b='#080002';var e='rgba(239,68,68,.3)';
-
-  // === LEGS ===
-  ctx.fillStyle=b;ctx.strokeStyle=e;ctx.lineWidth=.8;
-  // Left
-  ctx.beginPath();ctx.moveTo(-6,-5);ctx.lineTo(-10,28);ctx.lineTo(-4,30);ctx.lineTo(-2,-5);ctx.fill();ctx.stroke();
-  // Right
-  ctx.beginPath();ctx.moveTo(6,-5);ctx.lineTo(10,28);ctx.lineTo(4,30);ctx.lineTo(2,-5);ctx.fill();ctx.stroke();
-  // Boots
-  ctx.fillStyle='#100002';ctx.strokeStyle='rgba(239,68,68,.4)';
-  ctx.beginPath();ctx.moveTo(-12,26);ctx.lineTo(-12,34);ctx.lineTo(12,34);ctx.lineTo(10,26);ctx.lineTo(-10,26);ctx.closePath();ctx.fill();ctx.stroke();
-
-  // === LONG BLACK COAT ===
-  ctx.fillStyle='#040001';ctx.strokeStyle=e;ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(-14,-30);ctx.lineTo(-17,-5);ctx.lineTo(-15,12);ctx.lineTo(-10,24);ctx.lineTo(-4,6);ctx.lineTo(0,8);ctx.lineTo(4,6);ctx.lineTo(10,24);ctx.lineTo(15,12);ctx.lineTo(17,-5);ctx.lineTo(14,-30);ctx.closePath();ctx.fill();ctx.stroke();
-  // Coat center line
-  ctx.strokeStyle='rgba(239,68,68,.12)';ctx.lineWidth=.5;
-  ctx.beginPath();ctx.moveTo(0,-30);ctx.lineTo(0,6);ctx.stroke();
-
-  // === SILVER TRIM on coat === 
-  ctx.strokeStyle='rgba(252,165,165,.2)';ctx.lineWidth=.5;
-  ctx.beginPath();ctx.moveTo(-14,-30);ctx.lineTo(14,-30);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(-15,12);ctx.lineTo(15,12);ctx.stroke();
-
-  // === TORSO ===
-  ctx.fillStyle='#0a0003';ctx.strokeStyle=e;ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(-11,-45);ctx.lineTo(-14,-30);ctx.lineTo(-10,-18);ctx.lineTo(10,-18);ctx.lineTo(14,-30);ctx.lineTo(11,-45);ctx.closePath();ctx.fill();ctx.stroke();
-  // Cross pin on chest
-  ctx.strokeStyle='rgba(252,165,165,.3)';ctx.lineWidth=.8;
-  ctx.beginPath();ctx.moveTo(-4,-38);ctx.lineTo(4,-32);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(4,-38);ctx.lineTo(-4,-32);ctx.stroke();
-
-  // === SHOULDER GUARDS ===
-  ctx.fillStyle='#0a0003';ctx.strokeStyle='rgba(239,68,68,.45)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(-13,-47);ctx.lineTo(-20,-42);ctx.lineTo(-24,-36);ctx.lineTo(-17,-33);ctx.lineTo(-10,-42);ctx.closePath();ctx.fill();ctx.stroke();
-  ctx.beginPath();ctx.moveTo(13,-47);ctx.lineTo(20,-42);ctx.lineTo(24,-36);ctx.lineTo(17,-33);ctx.lineTo(10,-42);ctx.closePath();ctx.fill();ctx.stroke();
-
-  // === ARMS ===
-  ctx.fillStyle=b;ctx.strokeStyle=e;ctx.lineWidth=.8;
-  ctx.beginPath();ctx.moveTo(-16,-40);ctx.lineTo(-22,-26);ctx.lineTo(-18,-24);ctx.lineTo(-12,-38);ctx.fill();ctx.stroke();
-  ctx.beginPath();ctx.moveTo(16,-40);ctx.lineTo(22,-26);ctx.lineTo(18,-24);ctx.lineTo(12,-38);ctx.fill();ctx.stroke();
-
-  // === NECK ===
-  ctx.fillStyle=b;ctx.beginPath();ctx.moveTo(-4,-45);ctx.lineTo(-3,-52);ctx.lineTo(3,-52);ctx.lineTo(4,-45);ctx.fill();
-
-  // === HEAD ===
-  ctx.fillStyle='#0a0005';ctx.strokeStyle=e;ctx.lineWidth=1;
-  ctx.beginPath();ctx.ellipse(0,-62,8,10,0,0,Math.PI*2);ctx.fill();ctx.stroke();
-  // Chin definition
-  ctx.strokeStyle='rgba(239,68,68,.15)';ctx.lineWidth=.5;
-  ctx.beginPath();ctx.moveTo(-4,-56);ctx.lineTo(0,-54);ctx.lineTo(4,-56);ctx.stroke();
-  // Eyes (glowing)
-  ctx.fillStyle='#ef4444';ctx.shadowColor='rgba(239,68,68,.5)';ctx.shadowBlur=3;
-  ctx.beginPath();ctx.ellipse(-3,-64,2,1.2,0,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.ellipse(3,-64,2,1.2,0,0,Math.PI*2);ctx.fill();
-  ctx.shadowBlur=0;
-
-  // === KIRITO HAIR (messy, spiky) ===
-  ctx.fillStyle='#050001';ctx.strokeStyle='rgba(239,68,68,.25)';ctx.lineWidth=.8;
-  ctx.beginPath();ctx.moveTo(-7,-70);ctx.lineTo(-12,-83);ctx.lineTo(-5,-78);ctx.lineTo(-1,-90);ctx.lineTo(4,-79);ctx.lineTo(10,-88);ctx.lineTo(7,-76);ctx.lineTo(14,-82);ctx.lineTo(9,-70);ctx.lineTo(7,-72);ctx.closePath();ctx.fill();ctx.stroke();
-  // Side hair tufts
-  ctx.beginPath();ctx.moveTo(-7,-68);ctx.lineTo(-14,-74);ctx.lineTo(-8,-70);ctx.closePath();ctx.fill();ctx.stroke();
-  ctx.beginPath();ctx.moveTo(7,-68);ctx.lineTo(14,-74);ctx.lineTo(8,-70);ctx.closePath();ctx.fill();ctx.stroke();
-
-  // === ELUCIDATOR (dark sword, right hand) ===
-  ctx.save();ctx.translate(18,-28);ctx.rotate(-.6);
-  ctx.fillStyle='#0a0003';ctx.strokeStyle='#ef4444';ctx.lineWidth=1.2;
-  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(-2.5,42);ctx.lineTo(2.5,42);ctx.closePath();ctx.fill();ctx.stroke();
-  ctx.strokeStyle='rgba(252,165,165,.4)';ctx.lineWidth=.6;
-  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,40);ctx.stroke();
-  // Guard
-  ctx.fillStyle='#1a0005';ctx.strokeStyle='#ef4444';ctx.lineWidth=1;
-  ctx.beginPath();ctx.roundRect(-7,-3,14,5,2);ctx.fill();ctx.stroke();
-  // Handle
-  ctx.fillStyle='#0a0003';ctx.beginPath();ctx.roundRect(-2,-14,4,13,1);ctx.fill();
-  ctx.strokeStyle='rgba(252,165,165,.2)';ctx.lineWidth=.5;
-  ctx.beginPath();ctx.moveTo(-1,-12);ctx.lineTo(1,-12);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(-1,-7);ctx.lineTo(1,-7);ctx.stroke();
-  ctx.restore();
-
-  // === DARK REPULSER (light sword, left hand) ===
-  ctx.save();ctx.translate(-18,-28);ctx.rotate(-2.5);
-  ctx.fillStyle='#050010';ctx.strokeStyle='#93c5fd';ctx.lineWidth=1.2;
-  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(-2,38);ctx.lineTo(2,38);ctx.closePath();ctx.fill();ctx.stroke();
-  ctx.strokeStyle='rgba(191,219,254,.5)';ctx.lineWidth=.5;
-  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,36);ctx.stroke();
-  ctx.fillStyle='#0a0020';ctx.strokeStyle='#93c5fd';ctx.lineWidth=1;
-  ctx.beginPath();ctx.roundRect(-6,-3,12,5,2);ctx.fill();ctx.stroke();
-  ctx.fillStyle='#050010';ctx.beginPath();ctx.roundRect(-2,-12,4,11,1);ctx.fill();
-  ctx.restore();
-
-  ctx.restore();
-}
-
-// ==================== ICHIGO (blue, zanpakuto) ====================
-function drawIchigo(x,y,s){
-  ctx.save();ctx.translate(x,y);ctx.scale(s,s);
-
-  // Aura
-  var a=ctx.createRadialGradient(0,-5,10,0,-5,100);
-  a.addColorStop(0,'rgba(59,130,246,.2)');a.addColorStop(.5,'rgba(59,130,246,.04)');a.addColorStop(1,'transparent');
-  ctx.fillStyle=a;ctx.beginPath();ctx.arc(0,-10,100,0,Math.PI*2);ctx.fill();
-
-  var b='#000610';var e='rgba(59,130,246,.3)';
-
-  // === LEGS (wide stance) ===
-  ctx.fillStyle=b;ctx.strokeStyle=e;ctx.lineWidth=.8;
-  ctx.beginPath();ctx.moveTo(-7,-5);ctx.lineTo(-12,28);ctx.lineTo(-5,30);ctx.lineTo(-2,-5);ctx.fill();ctx.stroke();
-  ctx.beginPath();ctx.moveTo(7,-5);ctx.lineTo(12,28);ctx.lineTo(5,30);ctx.lineTo(2,-5);ctx.fill();ctx.stroke();
-
-  // === SHIHAKUSHO ROBE ===
-  ctx.fillStyle='#000510';ctx.strokeStyle=e;ctx.lineWidth=1;
-  // Wide hakama pants
-  ctx.beginPath();ctx.moveTo(-16,-12);ctx.lineTo(-22,8);ctx.lineTo(-14,24);ctx.lineTo(-5,10);ctx.lineTo(0,12);ctx.lineTo(5,10);ctx.lineTo(14,24);ctx.lineTo(22,8);ctx.lineTo(16,-12);ctx.closePath();ctx.fill();ctx.stroke();
-  // Pleats in hakama
-  ctx.strokeStyle='rgba(59,130,246,.08)';ctx.lineWidth=.4;
-  ctx.beginPath();ctx.moveTo(-8,-12);ctx.lineTo(-6,8);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(8,-12);ctx.lineTo(6,8);ctx.stroke();
-
-  // === KIMONO TOP ===
-  ctx.fillStyle='#00081a';ctx.strokeStyle=e;ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(-14,-48);ctx.lineTo(-16,-12);ctx.lineTo(-8,-2);ctx.lineTo(8,-2);ctx.lineTo(16,-12);ctx.lineTo(14,-48);ctx.closePath();ctx.fill();ctx.stroke();
-  // V-neck opening
-  ctx.strokeStyle='rgba(59,130,246,.1)';ctx.lineWidth=.6;
-  ctx.beginPath();ctx.moveTo(0,-30);ctx.lineTo(-4,-18);ctx.lineTo(0,-12);ctx.lineTo(4,-18);ctx.lineTo(0,-30);ctx.stroke();
-  
-  // === OBI (sash) ===
-  ctx.fillStyle='#000a20';ctx.strokeStyle='rgba(59,130,246,.45)';ctx.lineWidth=1.2;
-  ctx.beginPath();ctx.moveTo(-15,-12);ctx.lineTo(15,-12);ctx.lineTo(14,-6);ctx.lineTo(-14,-6);ctx.closePath();ctx.fill();ctx.stroke();
-  // Obi knot at back
-  ctx.fillStyle='#000820';ctx.beginPath();ctx.moveTo(-6,-6);ctx.lineTo(6,-6);ctx.lineTo(8,2);ctx.lineTo(-8,2);ctx.closePath();ctx.fill();ctx.stroke();
-
-  // === ARMS ===
-  ctx.fillStyle=b;ctx.strokeStyle=e;ctx.lineWidth=.8;
-  // Left arm (forward, ready)
-  ctx.beginPath();ctx.moveTo(-15,-42);ctx.lineTo(-20,-30);ctx.lineTo(-26,-22);ctx.lineTo(-22,-18);ctx.lineTo(-16,-28);ctx.fill();ctx.stroke();
-  // Right arm (back, holding sword)
-  ctx.beginPath();ctx.moveTo(15,-42);ctx.lineTo(20,-32);ctx.lineTo(28,-24);ctx.lineTo(26,-20);ctx.lineTo(18,-28);ctx.fill();ctx.stroke();
-
-  // === SHOULDERS ===
-  ctx.fillStyle='#00081a';ctx.strokeStyle=e;ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(-16,-50);ctx.lineTo(-22,-42);ctx.lineTo(-26,-36);ctx.lineTo(-18,-32);ctx.lineTo(-12,-40);ctx.closePath();ctx.fill();ctx.stroke();
-  ctx.beginPath();ctx.moveTo(16,-50);ctx.lineTo(22,-42);ctx.lineTo(26,-36);ctx.lineTo(18,-32);ctx.lineTo(12,-40);ctx.closePath();ctx.fill();ctx.stroke();
-
-  // === NECK ===
-  ctx.fillStyle=b;ctx.beginPath();ctx.moveTo(-5,-48);ctx.lineTo(-4,-54);ctx.lineTo(4,-54);ctx.lineTo(5,-48);ctx.fill();
-
-  // === HEAD ===
-  ctx.fillStyle='#000610';ctx.strokeStyle=e;ctx.lineWidth=1;
-  ctx.beginPath();ctx.ellipse(0,-64,8,10,0,0,Math.PI*2);ctx.fill();ctx.stroke();
-  // Jaw
-  ctx.strokeStyle='rgba(59,130,246,.12)';ctx.lineWidth=.5;
-  ctx.beginPath();ctx.moveTo(-5,-58);ctx.lineTo(0,-56);ctx.lineTo(5,-58);ctx.stroke();
-  // Eyes
-  ctx.fillStyle='#3b82f6';ctx.shadowColor='rgba(59,130,246,.5)';ctx.shadowBlur=3;
-  ctx.beginPath();ctx.ellipse(-3,-66,2,1.2,0,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.ellipse(3,-66,2,1.2,0,0,Math.PI*2);ctx.fill();
-  ctx.shadowBlur=0;
-
-  // === ICHIGO HAIR (wild, tall spikes) ===
-  ctx.fillStyle='#000510';ctx.strokeStyle='rgba(59,130,246,.25)';ctx.lineWidth=.8;
-  ctx.beginPath();ctx.moveTo(-8,-72);ctx.lineTo(-16,-88);ctx.lineTo(-10,-82);ctx.lineTo(-5,-96);ctx.lineTo(2,-84);ctx.lineTo(8,-94);ctx.lineTo(6,-80);ctx.lineTo(14,-90);ctx.lineTo(12,-78);ctx.lineTo(18,-86);ctx.lineTo(14,-72);ctx.lineTo(10,-74);ctx.closePath();ctx.fill();ctx.stroke();
-
-  // === ZANGETSU (massive cleaver sword) ===
-  ctx.save();ctx.translate(24,-26);ctx.rotate(-.5);
-  // Huge blade - like a giant butcher knife
-  ctx.fillStyle='#000820';ctx.strokeStyle='#3b82f6';ctx.lineWidth=1.5;
-  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(-10,55);ctx.lineTo(10,55);ctx.lineTo(4,0);ctx.closePath();ctx.fill();ctx.stroke();
-  // Blade edge highlight
-  ctx.strokeStyle='rgba(147,197,253,.35)';ctx.lineWidth=.8;
-  ctx.beginPath();ctx.moveTo(-8,5);ctx.lineTo(-5,52);ctx.stroke();
-  // Center ridge
-  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,53);ctx.stroke();
-  // Tip curve
-  ctx.strokeStyle='#3b82f6';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(-10,55);ctx.quadraticCurveTo(0,62,10,55);ctx.stroke();
-  // Tsuba (guard) - rectangular
-  ctx.fillStyle='#000a20';ctx.strokeStyle='#3b82f6';ctx.lineWidth=1.2;
-  ctx.beginPath();ctx.roundRect(-12,-3,24,6,2);ctx.fill();ctx.stroke();
-  // Tsuka with diamond wrap
-  ctx.fillStyle='#000820';ctx.strokeStyle='#3b82f6';ctx.lineWidth=.8;
-  ctx.beginPath();ctx.roundRect(-3,-22,6,20,1);ctx.fill();ctx.stroke();
-  for(var i=0;i<5;i++){
-    ctx.strokeStyle='rgba(59,130,246,.2)';ctx.lineWidth=.4;
-    ctx.beginPath();ctx.moveTo(-3,-19+i*4);ctx.lineTo(3,-17+i*4);ctx.stroke();
-  }
-  ctx.restore();
-
-  ctx.restore();
-}
-
-// ==================== SKY LIGHTNING ====================
-var lightningHistory=[];
-function generateLightningBolt(){
-  var bolts=[];
-  var cx=W/2+(Math.random()-.5)*W*.3;
-  var cy=H*.02;
-  // Main bolt
-  var pts=[{x:cx,y:cy}];
-  var x=cx,y=cy,steps=30;
-  for(var i=0;i<steps;i++){
-    x+=(Math.random()-.5)*35;
-    y+=15+Math.random()*20;
-    pts.push({x:x,y:y});
-    if(Math.random()<.2&&i>5){
-      var forkPts=[{x:x,y:y}];
-      var fx=x,fy=y;
-      for(var j=0;j<12;j++){fx+=(Math.random()-.5)*25;fy+=8+Math.random()*15;forkPts.push({x:fx,y:fy})}
-      pts.push({fork:forkPts});
-    }
-  }
-  bolts.push({pts:pts,alpha:1,life:60});
-  return bolts;
-}
-
-function drawSkyLightning(bolts){
-  if(!bolts)return;
-  bolts.forEach(function(b){
-    b.life--;
-    var a=b.alpha*(b.life/60);
-    // Outer glow
-    ctx.strokeStyle='rgba(168,85,247,'+(a*.25)+')';ctx.lineWidth=10;ctx.lineCap='round';
-    ctx.shadowColor='rgba(168,85,247,'+(a*.5)+')';ctx.shadowBlur=25;
-    ctx.beginPath();drawLPath(b.pts);ctx.stroke();
-    // Purple core
-    ctx.strokeStyle='rgba(192,132,252,'+(a*.5)+')';ctx.lineWidth=4;
-    ctx.shadowBlur=15;
-    ctx.beginPath();drawLPath(b.pts);ctx.stroke();
-    // White center
-    ctx.strokeStyle='rgba(255,255,255,'+(a*.7)+')';ctx.lineWidth=1.5;
-    ctx.shadowBlur=6;
-    ctx.beginPath();drawLPath(b.pts);ctx.stroke();
-    ctx.shadowBlur=0;
-  });
-}
-
-function drawLPath(pts){
-  ctx.moveTo(pts[0].x,pts[0].y);
-  for(var i=1;i<pts.length;i++){
-    if(pts[i].fork){ctx.lineTo(pts[i-1].x,pts[i-1].y);drawLPath(pts[i].fork);ctx.moveTo(pts[i-1].x,pts[i-1].y)}
-    else ctx.lineTo(pts[i].x,pts[i].y);
-  }
-}
-
-// Foot lightning
-function drawFootLightning(x,y,s){
-  ctx.save();ctx.translate(x,y);
-  var g=ctx.createRadialGradient(0,0,0,0,0,s*.5);
-  g.addColorStop(0,'rgba(168,85,247,.35)');g.addColorStop(.5,'rgba(168,85,247,.08)');g.addColorStop(1,'transparent');
-  ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,s*.5,0,Math.PI*2);ctx.fill();
-  for(var i=0;i<5;i++){
-    ctx.strokeStyle='rgba(192,132,252,'+(.4+.3*Math.sin(t*.01+i*1.3))+')';ctx.lineWidth=1.2;
-    ctx.beginPath();var sx=-(s*.3)+Math.random()*s*.6,sy=-(s*.1);
-    ctx.moveTo(sx,sy);
-    for(var j=0;j<6;j++){sx+=(Math.random()-.5)*s*.2;sy+=(Math.random()-.3)*s*.12;ctx.lineTo(sx,sy)}
-    ctx.stroke();
-  }
-  ctx.fillStyle='rgba(255,255,255,.5)';
-  for(var i=0;i<4;i++){ctx.beginPath();ctx.arc((Math.random()-.5)*s*.3,(Math.random()-.2)*s*.2,1.2,0,Math.PI*2);ctx.fill()}
-  ctx.restore();
-}
-
-// Particles
-var stars=[],embers=[],sparks=[];
-for(var i=0;i<80;i++)stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*.8+.2,o:Math.random()*.4+.1,p:Math.random()*Math.PI*2});
-for(var i=0;i<50;i++)embers.push({x:Math.random()*W*.35,y:Math.random()*H,vx:(Math.random()-.3)*.4,vy:-Math.random()*1.5-.5,r:Math.random()*2+.5,o:Math.random()*.4+.15,l:Math.random()*120,ph:Math.random()*Math.PI*2});
-for(var i=0;i<50;i++)sparks.push({x:W*.65+Math.random()*W*.35,y:Math.random()*H,vx:Math.random()*.4-.5,vy:-Math.random()*1.5-.5,r:Math.random()*2+.5,o:Math.random()*.4+.15,l:Math.random()*120,ph:Math.random()*Math.PI*2});
-
-function drawFrame(ts){
-  t=ts;
-  if(W!==c.width||H!==c.height)R();
-
-  ctx.clearRect(0,0,W,H);
-
-  // Background
-  var bg=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.max(W,H));
-  bg.addColorStop(0,'#030308');bg.addColorStop(.7,'#010104');bg.addColorStop(1,'#000');
-  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
-
-  // Stars
-  stars.forEach(function(s){var b=.5+.5*Math.sin(t*.003+s.p);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,'+(s.o*b)+')';ctx.fill()});
-
-  // Embers (left)
-  embers.forEach(function(e){e.y+=e.vy;e.x+=e.vx;e.l--;if(e.y<0||e.l<=0){e.x=Math.random()*W*.35;e.y=H+10;e.l=120+Math.random()*100}var p=.5+.5*Math.sin(t*.012+e.ph);ctx.beginPath();ctx.arc(e.x,e.y,e.r,0,Math.PI*2);ctx.fillStyle='rgba(239,68,68,'+(e.o*p)+')';ctx.fill()});
-
-  // Sparks (right)
-  sparks.forEach(function(s){s.y+=s.vy;s.x+=s.vx;s.l--;if(s.y<0||s.l<=0){s.x=W*.65+Math.random()*W*.35;s.y=H+10;s.l=120+Math.random()*100}var p=.5+.5*Math.sin(t*.012+s.ph);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(59,130,246,'+(s.o*p)+')';ctx.fill()});
-
-  // Subtle center glow
-  var cglow=ctx.createLinearGradient(W*.47,0,W*.53,0);
-  cglow.addColorStop(0,'transparent');cglow.addColorStop(.5,'rgba(168,85,247,.04)');cglow.addColorStop(1,'transparent');
-  ctx.fillStyle=cglow;ctx.fillRect(W*.47,0,W*.06,H);
-
-  // Sky lightning - generate periodically
-  if(Math.random()<.02||lightningHistory.length===0){
-    lightningHistory.push(generateLightningBolt());
-    if(lightningHistory.length>4)lightningHistory.shift();
-  }
-  lightningHistory=lightningHistory.filter(function(b){return b[0].life>0});
-  lightningHistory.forEach(function(b){drawSkyLightning(b)});
-
-  // Positions
-  var dragY=H*.70;
-  var dragScalex=Math.min(1.3,W/750);
-  var dragScaley=Math.min(1.3,W/750);
-  var lx=W*.30,rx=W*.70;
-  var warY=H*.52;
-  var warS=Math.min(1.15,W/750);
-
-  // Draw dragons
-  drawFireDragon(lx,dragY,dragScalex*1.1);
-  drawIceDragon(rx,dragY,dragScalex*1.1);
-
-  // Foot lightning on dragons
-  ctx.globalAlpha=.7+.2*Math.sin(t*.007);
-  drawFootLightning(lx,dragY-30,90);
-  drawFootLightning(rx,dragY-30,90);
-  ctx.globalAlpha=1;
-
-  // Warriors on dragons
-  drawKirito(lx,dragY-55,warS*1.05);
-  drawIchigo(rx,dragY-55,warS*1.05);
-
-  requestAnimationFrame(drawFrame);
-}
-
-requestAnimationFrame(drawFrame);
+c.innerHTML=h;
 })();
 </script>
 </body>
