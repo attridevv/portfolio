@@ -6,307 +6,212 @@
 <title>attridevv</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0d0a14;overflow:hidden;width:100vw;height:100vh;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif}
+
+:root{
+  --pink:#ec4899;--pink-soft:#f9a8d4;--pink-glow:rgba(236,72,153,.15);
+  --blue:#3b82f6;--blue-soft:#93c5fd;--blue-glow:rgba(59,130,246,.12);
+  --gold:#fbbf24;
+}
+
+body{
+  background:#0a0810;color:#e2e8f0;
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  width:100vw;height:100vh;overflow:hidden;
+}
+
+/* ===== LAYERS ===== */
+.stars-canvas{position:fixed;inset:0;z-index:0}
+.ground-mist{position:fixed;bottom:0;left:0;right:0;height:40%;z-index:2;pointer-events:none;
+  background:linear-gradient(to top,rgba(10,8,16,.9),transparent);}
+.ground-mist::before{content:'';position:absolute;left:0;bottom:0;width:45%;height:100%;
+  background:radial-gradient(ellipse at 50% 100%,var(--pink-glow),transparent 70%);}
+.ground-mist::after{content:'';position:absolute;right:0;bottom:0;width:45%;height:100%;
+  background:radial-gradient(ellipse at 50% 100%,var(--blue-glow),transparent 70%);}
 
 /* ===== SCENE ===== */
-.scene{position:fixed;inset:0;display:flex;align-items:flex-end;justify-content:center}
+.scene{position:fixed;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.scene>*{pointer-events:auto}
 
-/* ===== SAKURA TREE (center) ===== */
-.tree{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:50%;height:80%;z-index:5}
-.tree-svg{width:100%;height:100%}
+/* ===== FIGURES ===== */
+.figure{position:absolute;bottom:22%;width:120px;height:200px;transition:all .6s}
+.figure-left{left:22%}.figure-right{right:22%}
 
-/* ===== ZERO TWO (left, red) ===== */
-.zero-two{position:absolute;bottom:0;left:5%;width:35%;height:70%;z-index:4}
-.zero-two .aura{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(236,72,153,.12),transparent 65%);animation:ztAura 3s ease-in-out infinite alternate}
-@keyframes ztAura{0%{opacity:.5}100%{opacity:1}}
+.figure-glow{position:absolute;inset:-40px;border-radius:50%;opacity:.5;transition:opacity .6s}
+.figure-left .figure-glow{background:radial-gradient(ellipse at 50% 60%,var(--pink-glow),transparent 70%)}
+.figure-right .figure-glow{background:radial-gradient(ellipse at 50% 60%,var(--blue-glow),transparent 70%)}
 
-.zt-body{position:absolute;bottom:5%;left:50%;transform:translateX(-50%);width:50%;height:85%}
-.zt-svg{width:100%;height:100%}
+.figure-silhouette{position:relative;width:100%;height:100%}
 
-/* ===== HIRO (right, blue) ===== */
-.hiro{position:absolute;bottom:0;right:5%;width:35%;height:70%;z-index:4}
-.hiro .aura{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(59,130,246,.1),transparent 65%);animation:hiroAura 3.5s ease-in-out infinite alternate}
-@keyframes hiroAura{0%{opacity:.5}100%{opacity:1}}
+/* ===== ZERO TWO silhouette ===== */
+.zt-head{position:absolute;top:0;left:50%;transform:translateX(-50%);width:28px;height:32px;background:rgba(236,72,153,.08);border-radius:50% 50% 45% 45%}
+.zt-horns{position:absolute;top:-8px;left:50%;transform:translateX(-50%)}
+.zt-horn{position:absolute;width:2px;height:18px;background:linear-gradient(to top,rgba(236,72,153,.4),rgba(236,72,153,.15));border-radius:1px}
+.zt-horn-l{left:-8px;transform:rotate(-15deg)}.zt-horn-r{right:-8px;transform:rotate(15deg)}
 
-.hiro-body{position:absolute;bottom:5%;left:50%;transform:translateX(-50%);width:50%;height:85%}
-.hiro-svg{width:100%;height:100%}
+.zt-body{position:absolute;top:30px;left:50%;transform:translateX(-50%);width:34px;height:80px;background:rgba(236,72,153,.05);border-radius:12px 12px 8px 8px}
+.zt-dress{position:absolute;top:90px;left:50%;transform:translateX(-50%);width:50px;height:70px;background:rgba(236,72,153,.04);border-radius:50% 50% 10% 10%}
 
-/* ===== FALLING PETALS ===== */
-.petals{position:fixed;inset:0;z-index:6;pointer-events:none}
-.petal{position:absolute;width:8px;height:12px;background:radial-gradient(ellipse at 30% 30%,#fbcfe8,#f9a8d4);border-radius:50% 0 50% 0;opacity:0;animation:petalFall var(--dur) ease-in infinite;animation-delay:var(--del);left:var(--x)}
-@keyframes petalFall{0%{opacity:.8;transform:translate(0,0)rotate(0deg)}25%{transform:translate(var(--drift),25vh)rotate(90deg)}50%{transform:translate(calc(var(--drift)*-.5),50vh)rotate(180deg)}75%{transform:translate(calc(var(--drift)*.3),75vh)rotate(270deg)}100%{opacity:0;transform:translate(var(--drift),100vh)rotate(360deg)}}
+.zt-arm-l{position:absolute;top:38px;left:14px;width:2px;height:45px;background:rgba(236,72,153,.12);border-radius:1px;transform:rotate(15deg)}
+.zt-arm-r{position:absolute;top:38px;right:14px;width:2px;height:45px;background:rgba(236,72,153,.12);border-radius:1px;transform:rotate(-15deg)}
 
-/* ===== GROUND MIST ===== */
-.mist{position:absolute;bottom:0;left:0;right:0;height:30%;z-index:3;pointer-events:none}
-.mist-l{position:absolute;left:0;bottom:0;width:40%;height:100%;background:linear-gradient(to top,rgba(236,72,153,.06),transparent)}
-.mist-r{position:absolute;right:0;bottom:0;width:40%;height:100%;background:linear-gradient(to top,rgba(59,130,246,.06),transparent)}
+/* ===== HIRO silhouette ===== */
+.h-head{position:absolute;top:0;left:50%;transform:translateX(-50%);width:28px;height:32px;background:rgba(59,130,246,.08);border-radius:50% 50% 45% 45%}
+
+.h-body{position:absolute;top:30px;left:50%;transform:translateX(-50%);width:36px;height:90px;background:rgba(59,130,246,.05);border-radius:10px 10px 6px 6px}
+.h-collar{position:absolute;top:30px;left:50%;transform:translateX(-50%);width:38px;height:6px;background:rgba(59,130,246,.08);border-radius:2px}
+
+.h-arm-l{position:absolute;top:38px;left:14px;width:2px;height:48px;background:rgba(59,130,246,.12);border-radius:1px;transform:rotate(12deg)}
+.h-arm-r{position:absolute;top:38px;right:14px;width:2px;height:48px;background:rgba(59,130,246,.12);border-radius:1px;transform:rotate(-12deg)}
+
+/* ===== RED THREAD OF FATE ===== */
+.thread-container{position:absolute;top:0;left:0;right:0;bottom:0;z-index:4;pointer-events:none}
+.thread-glow{animation:threadPulse 3s ease-in-out infinite}
+@keyframes threadPulse{0%,100%{opacity:.6}50%{opacity:1}}
+
+/* ===== PETALS ===== */
+.petals-layer{position:fixed;inset:0;z-index:8;pointer-events:none}
+.petal{position:absolute;width:6px;height:10px;background:radial-gradient(ellipse at 30% 30%,var(--pink-soft),rgba(236,72,153,.4));border-radius:50% 0 50% 0;opacity:0;
+  animation:petalDrift var(--dur) ease-in-out infinite;animation-delay:var(--del);left:var(--x)}
+@keyframes petalDrift{0%{opacity:.7;transform:translate(0,0)rotate(0deg)}25%{transform:translate(var(--drift),25vh)rotate(90deg)}50%{opacity:.5;transform:translate(calc(var(--drift)*-.4),50vh)rotate(180deg)}75%{transform:translate(calc(var(--drift)*.2),75vh)rotate(270deg)}100%{opacity:0;transform:translate(var(--drift),100vh)rotate(360deg)}}
 
 /* ===== OVERLAY ===== */
 .overlay{position:fixed;inset:0;z-index:20;pointer-events:none;display:flex}
-.choice{flex:1;cursor:pointer;pointer-events:auto;position:relative;text-decoration:none;transition:background .5s}
-.choice-l:hover{background:radial-gradient(ellipse at 25% 60%,rgba(236,72,153,.04),transparent 60%)}
-.choice-r:hover{background:radial-gradient(ellipse at 75% 60%,rgba(59,130,246,.04),transparent 60%)}
+.choice{flex:1;cursor:pointer;pointer-events:auto;position:relative;text-decoration:none;transition:background .6s}
 .choice:hover .choice-hint{opacity:1;transform:translateX(-50%)translateY(-6px)}
+.choice-l:hover{background:radial-gradient(ellipse at 20% 55%,rgba(236,72,153,.03),transparent 55%)}
+.choice-r:hover{background:radial-gradient(ellipse at 80% 55%,rgba(59,130,246,.03),transparent 55%)}
 
-.choice-hint{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);text-align:center;opacity:0;transition:all .5s}
-.choice-l .choice-hint{color:#f9a8d4}.choice-r .choice-hint{color:#93c5fd}
-.choice-hint .c1{display:block;font-size:.48rem;letter-spacing:.25em;text-transform:uppercase;font-weight:800;margin-bottom:.1rem}
-.choice-hint .c2{display:block;font-size:.8rem;font-weight:900;letter-spacing:.06em}
-.choice-hint .c3{display:block;font-size:.35rem;letter-spacing:.14em;margin-top:.1rem;opacity:.35}
+.choice-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);text-align:center;opacity:0;transition:all .6s}
+.choice-l .choice-hint{color:var(--pink-soft)}.choice-r .choice-hint{color:var(--blue-soft)}
+.choice-hint .l1{display:block;font-size:.45rem;letter-spacing:.28em;text-transform:uppercase;font-weight:800;margin-bottom:.08rem;opacity:.6}
+.choice-hint .l2{display:block;font-size:.75rem;font-weight:900;letter-spacing:.06em}
+.choice-hint .l3{display:block;font-size:.34rem;letter-spacing:.16em;margin-top:.08rem;opacity:.3}
+
+/* ===== PARTICLES AROUND FIGURES ===== */
+.spark{position:absolute;border-radius:50%;pointer-events:none;animation:sparkFloat var(--d) ease-in-out infinite;animation-delay:var(--del);opacity:0}
+@keyframes sparkFloat{0%{opacity:.6;transform:translate(0,0)}100%{opacity:0;transform:translate(var(--sx),var(--sy))}}
+.pink-spark{background:var(--pink-soft);width:2px;height:2px}
+.blue-spark{background:var(--blue-soft);width:2px;height:2px}
+
+@media(max-width:768px){
+  .figure{width:80px;height:150px;bottom:25%}
+  .figure-left{left:10%}.figure-right{right:10%}
+  .zt-head,.h-head{width:22px;height:26px}
+  .zt-body{width:26px;height:60px;top:24px}
+  .zt-dress{width:38px;height:55px;top:70px}
+  .h-body{width:28px;height:70px;top:24px}
+}
 </style>
 </head>
 <body>
-<canvas id="stars"></canvas>
 
+<canvas id="stars-canvas" class="stars-canvas"></canvas>
+<div class="ground-mist"></div>
+
+<!-- THREAD OF FATE -->
+<div class="thread-container">
+  <svg width="100%" height="100%" style="position:absolute;inset:0">
+    <defs>
+      <filter id="threadGlow"><feGaussianBlur stdDeviation="3"/></filter>
+      <linearGradient id="threadGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#ec4899" stop-opacity="0"/>
+        <stop offset="25%" stop-color="#ec4899" stop-opacity=".7"/>
+        <stop offset="50%" stop-color="#fbbf24" stop-opacity=".9"/>
+        <stop offset="75%" stop-color="#3b82f6" stop-opacity=".7"/>
+        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <!-- Main thread -->
+    <path d="M0,200 Q200,120 400,100 Q600,80 800,140 Q1000,200 1200,180" 
+          stroke="url(#threadGrad)" stroke-width="1.5" fill="none" filter="url(#threadGlow)" class="thread-glow"/>
+    <!-- Secondary thread (loose, wrapping) -->
+    <path d="M0,220 Q250,160 450,180 Q650,200 850,150 Q1050,100 1200,170" 
+          stroke="url(#threadGrad)" stroke-width=".8" fill="none" opacity=".4" class="thread-glow" style="animation-delay:.8s"/>
+    <!-- Third delicate thread -->
+    <path d="M0,180 Q180,90 380,80 Q580,70 780,110 Q980,150 1200,160" 
+          stroke="url(#threadGrad)" stroke-width=".6" fill="none" opacity=".3" class="thread-glow" style="animation-delay:1.5s"/>
+  </svg>
+</div>
+
+<!-- SCENE -->
 <div class="scene">
 
-  <!-- MIST -->
-  <div class="mist"><div class="mist-l"></div><div class="mist-r"></div></div>
-
   <!-- ZERO TWO (left) -->
-  <div class="zero-two">
-    <div class="aura"></div>
-    <div class="zt-body">
-      <svg class="zt-svg" viewBox="0 0 200 400" preserveAspectRatio="xMidYMax meet">
-        <defs>
-          <radialGradient id="ztGlow"><stop offset="0%" stop-color="#ec4899" stop-opacity=".3"/><stop offset="100%" stop-color="transparent"/></radialGradient>
-        </defs>
-        <!-- Body glow -->
-        <ellipse cx="100" cy="300" rx="80" ry="100" fill="url(#ztGlow)"/>
-
-        <!-- Legs -->
-        <path d="M85 280 Q78 350 75 390 L88 392 Q92 350 95 280 Z" fill="#140510" stroke="rgba(236,72,153,.25)" stroke-width=".8"/>
-        <path d="M115 280 Q122 350 125 390 L112 392 Q108 350 105 280 Z" fill="#140510" stroke="rgba(236,72,153,.25)" stroke-width=".8"/>
-
-        <!-- Body/dress -->
-        <path d="M70 220 Q65 260 75 285 Q85 300 100 305 Q115 300 125 285 Q135 260 130 220 Q120 210 100 208 Q80 210 70 220 Z" fill="#1a0818" stroke="rgba(236,72,153,.35)" stroke-width="1"/>
-        <!-- Dress fold -->
-        <path d="M100 208 Q95 240 100 305" fill="none" stroke="rgba(236,72,153,.1)" stroke-width=".5"/>
-        <!-- Waist ribbon -->
-        <path d="M68 230 Q85 238 100 235 Q115 238 132 230" fill="none" stroke="rgba(236,72,153,.4)" stroke-width="1.2"/>
-
-        <!-- Arms -->
-        <path d="M72 225 Q60 250 55 270 Q52 278 58 280 Q65 275 68 260 Q72 245 80 230 Z" fill="#140510" stroke="rgba(236,72,153,.2)" stroke-width=".6"/>
-        <path d="M128 225 Q140 250 145 270 Q148 278 142 280 Q135 275 132 260 Q128 245 120 230 Z" fill="#140510" stroke="rgba(236,72,153,.2)" stroke-width=".6"/>
-
-        <!-- Neck -->
-        <rect x="93" y="195" width="14" height="18" rx="3" fill="#140510"/>
-
-        <!-- Head -->
-        <ellipse cx="100" cy="185" rx="20" ry="22" fill="#1a0818" stroke="rgba(236,72,153,.3)" stroke-width=".8"/>
-        <!-- Face -->
-        <ellipse cx="100" cy="188" rx="15" ry="17" fill="rgba(236,72,153,.06)"/>
-        <!-- Eyes -->
-        <ellipse cx="93" cy="183" rx="2.5" ry="2" fill="#10b981"/>
-        <ellipse cx="107" cy="183" rx="2.5" ry="2" fill="#10b981"/>
-        <!-- Smile -->
-        <path d="M95 192 Q100 196 105 192" fill="none" stroke="rgba(236,72,153,.3)" stroke-width=".6"/>
-
-        <!-- PINK HAIR (long, flowing) -->
-        <path d="M80 175 Q70 150 65 130 Q72 140 80 155 Q85 120 90 140 Q95 110 100 130 Q105 110 110 140 Q115 120 120 155 Q128 140 135 130 Q130 150 120 175 Q115 170 110 178 Q105 170 100 175 Q95 170 90 178 Q85 170 80 175 Z" fill="#1a0515" stroke="rgba(236,72,153,.35)" stroke-width=".8"/>
-        <!-- Hair falling over shoulders -->
-        <path d="M80 175 Q75 200 78 220 Q80 210 84 200 Q85 190 83 178 Z" fill="#1a0515" stroke="rgba(236,72,153,.2)" stroke-width=".5"/>
-        <path d="M120 175 Q125 200 122 220 Q120 210 116 200 Q115 190 117 178 Z" fill="#1a0515" stroke="rgba(236,72,153,.2)" stroke-width=".5"/>
-
-        <!-- HORNS (Zero Two's signature!) -->
-        <path d="M82 168 Q70 145 62 132 Q72 148 80 165 Z" fill="#ec4899" stroke="#be185d" stroke-width=".8"/>
-        <path d="M118 168 Q130 145 138 132 Q128 148 120 165 Z" fill="#ec4899" stroke="#be185d" stroke-width=".8"/>
-        <!-- Horn glow -->
-        <circle cx="64" cy="135" r="3" fill="#fbcfe8" opacity=".4"/>
-        <circle cx="136" cy="135" r="3" fill="#fbcfe8" opacity=".4"/>
-
-        <!-- Headband with horns -->
-        <path d="M84 172 Q100 168 116 172" fill="none" stroke="rgba(236,72,153,.3)" stroke-width=".8"/>
-      </svg>
+  <div class="figure figure-left">
+    <div class="figure-glow"></div>
+    <div class="figure-silhouette">
+      <div class="zt-head"><div class="zt-horns"><div class="zt-horn zt-horn-l"></div><div class="zt-horn zt-horn-r"></div></div></div>
+      <div class="zt-body"></div>
+      <div class="zt-arm-l"></div><div class="zt-arm-r"></div>
+      <div class="zt-dress"></div>
     </div>
   </div>
 
   <!-- HIRO (right) -->
-  <div class="hiro">
-    <div class="aura"></div>
-    <div class="hiro-body">
-      <svg class="hiro-svg" viewBox="0 0 200 400" preserveAspectRatio="xMidYMax meet">
-        <defs>
-          <radialGradient id="hiroGlow"><stop offset="0%" stop-color="#3b82f6" stop-opacity=".25"/><stop offset="100%" stop-color="transparent"/></radialGradient>
-        </defs>
-        <ellipse cx="100" cy="300" rx="80" ry="100" fill="url(#hiroGlow)"/>
-
-        <!-- Legs -->
-        <path d="M85 280 Q80 340 78 385 L90 388 Q92 340 95 280 Z" fill="#050a15" stroke="rgba(59,130,246,.25)" stroke-width=".8"/>
-        <path d="M115 280 Q120 340 122 385 L110 388 Q108 340 105 280 Z" fill="#050a15" stroke="rgba(59,130,246,.25)" stroke-width=".8"/>
-
-        <!-- Body/uniform -->
-        <path d="M75 230 Q65 270 80 295 Q90 310 100 312 Q110 310 120 295 Q135 270 125 230 Q115 220 100 218 Q85 220 75 230 Z" fill="#050d1a" stroke="rgba(59,130,246,.3)" stroke-width="1"/>
-        <!-- Uniform line -->
-        <path d="M100 218 Q96 260 100 312" fill="none" stroke="rgba(59,130,246,.08)" stroke-width=".5"/>
-        <!-- Belt -->
-        <path d="M74 240 Q90 248 100 245 Q110 248 126 240" fill="none" stroke="rgba(59,130,246,.35)" stroke-width="1"/>
-        <!-- Collar -->
-        <path d="M82 225 Q90 218 100 220 Q110 218 118 225" fill="none" stroke="rgba(59,130,246,.2)" stroke-width=".8"/>
-
-        <!-- Arms -->
-        <path d="M75 235 Q65 260 60 280 Q57 288 63 290 Q70 285 73 270 Q78 255 85 240 Z" fill="#050a15" stroke="rgba(59,130,246,.2)" stroke-width=".6"/>
-        <path d="M125 235 Q135 260 140 280 Q143 288 137 290 Q130 285 127 270 Q122 255 115 240 Z" fill="#050a15" stroke="rgba(59,130,246,.2)" stroke-width=".6"/>
-
-        <!-- Neck -->
-        <rect x="93" y="205" width="14" height="18" rx="3" fill="#050a15"/>
-
-        <!-- Head -->
-        <ellipse cx="100" cy="195" rx="18" ry="20" fill="#050d1a" stroke="rgba(59,130,246,.25)" stroke-width=".8"/>
-        <ellipse cx="100" cy="197" rx="13" ry="15" fill="rgba(59,130,246,.05)"/>
-        <!-- Eyes -->
-        <ellipse cx="94" cy="193" rx="2.2" ry="1.8" fill="#38bdf8"/>
-        <ellipse cx="106" cy="193" rx="2.2" ry="1.8" fill="#38bdf8"/>
-        <!-- Mouth -->
-        <path d="M96 200 Q100 202 104 200" fill="none" stroke="rgba(59,130,246,.2)" stroke-width=".5"/>
-
-        <!-- DARK BLUE HAIR -->
-        <path d="M82 185 Q78 165 75 150 Q82 155 88 168 Q92 140 98 155 Q102 135 108 155 Q112 140 118 168 Q125 155 125 150 Q122 165 118 185 Q114 178 110 185 Q106 178 100 184 Q94 178 90 185 Q86 178 82 185 Z" fill="#030712" stroke="rgba(59,130,246,.25)" stroke-width=".7"/>
-        <!-- Side hair -->
-        <path d="M82 185 Q78 205 80 215 Q82 208 85 198 Q84 192 83 186 Z" fill="#030712" stroke="rgba(59,130,246,.15)" stroke-width=".4"/>
-        <path d="M118 185 Q122 205 120 215 Q118 208 115 198 Q116 192 117 186 Z" fill="#030712" stroke="rgba(59,130,246,.15)" stroke-width=".4"/>
-      </svg>
+  <div class="figure figure-right">
+    <div class="figure-glow"></div>
+    <div class="figure-silhouette">
+      <div class="h-head"></div>
+      <div class="h-body"><div class="h-collar"></div></div>
+      <div class="h-arm-l"></div><div class="h-arm-r"></div>
     </div>
-  </div>
-
-  <!-- SAKURA TREE (center) -->
-  <div class="tree">
-    <svg class="tree-svg" viewBox="0 0 400 500" preserveAspectRatio="xMidYMax meet">
-      <defs>
-        <radialGradient id="sakuraBloom" cx="50%" cy="50%"><stop offset="0%" stop-color="#fce7f3"/><stop offset="40%" stop-color="#f9a8d4"/><stop offset="100%" stop-color="#ec4899" stop-opacity=".6"/></radialGradient>
-        <radialGradient id="sakuraBloom2" cx="50%" cy="50%"><stop offset="0%" stop-color="#fdf2f8"/><stop offset="35%" stop-color="#fbcfe8"/><stop offset="100%" stop-color="#db2777" stop-opacity=".5"/></radialGradient>
-        <filter id="treeGlow"><feGaussianBlur stdDeviation="8"/></filter>
-      </defs>
-
-      <!-- Trunk glow -->
-      <path d="M195 480 Q190 350 185 250 Q180 180 190 130 Q195 100 200 80" stroke="rgba(236,72,153,.12)" stroke-width="40" fill="none" filter="url(#treeGlow)"/>
-
-      <!-- Main trunk -->
-      <path d="M190 500 Q185 400 180 320 Q175 250 185 180 Q190 130 195 90 Q200 60 200 40 L210 40 Q210 60 205 90 Q210 130 215 180 Q225 250 220 320 Q215 400 210 500 Z" fill="#2d1a2a" stroke="#3d1a3a" stroke-width="1"/>
-
-      <!-- Trunk texture lines -->
-      <path d="M192 400 Q188 300 190 200" fill="none" stroke="#4a2040" stroke-width="1" opacity=".4"/>
-      <path d="M200 450 Q198 350 200 250 Q202 150 205 100" fill="none" stroke="#4a2040" stroke-width=".8" opacity=".3"/>
-      <path d="M208 400 Q212 300 210 200" fill="none" stroke="#4a2040" stroke-width="1" opacity=".4"/>
-
-      <!-- Major branches -->
-      <!-- Left branch -->
-      <path d="M188 220 Q150 180 120 150 Q100 135 85 130" stroke="#2d1a2a" stroke-width="12" fill="none" stroke-linecap="round"/>
-      <path d="M85 130 Q80 128 75 130" stroke="#2d1a2a" stroke-width="6" fill="none"/>
-      <!-- Left sub-branch -->
-      <path d="M155 175 Q130 160 110 170" stroke="#2d1a2a" stroke-width="7" fill="none"/>
-
-      <!-- Right branch -->
-      <path d="M212 220 Q250 180 280 150 Q300 135 315 130" stroke="#2d1a2a" stroke-width="12" fill="none" stroke-linecap="round"/>
-      <path d="M315 130 Q320 128 325 130" stroke="#2d1a2a" stroke-width="6" fill="none"/>
-      <!-- Right sub-branch -->
-      <path d="M245 175 Q270 160 290 170" stroke="#2d1a2a" stroke-width="7" fill="none"/>
-
-      <!-- Top branches -->
-      <path d="M195 150 Q190 120 185 100" stroke="#2d1a2a" stroke-width="8" fill="none"/>
-      <path d="M205 140 Q215 110 220 90" stroke="#2d1a2a" stroke-width="8" fill="none"/>
-      <path d="M198 180 Q180 155 165 145" stroke="#2d1a2a" stroke-width="6" fill="none"/>
-      <path d="M202 180 Q220 155 235 145" stroke="#2d1a2a" stroke-width="6" fill="none"/>
-
-      <!-- Middle branch left -->
-      <path d="M188 280 Q155 260 130 265" stroke="#2d1a2a" stroke-width="8" fill="none" stroke-linecap="round"/>
-      <!-- Middle branch right -->
-      <path d="M212 280 Q245 260 270 265" stroke="#2d1a2a" stroke-width="8" fill="none" stroke-linecap="round"/>
-
-      <!-- Roots -->
-      <path d="M190 490 Q170 500 145 505" stroke="#2d1a2a" stroke-width="6" fill="none"/>
-      <path d="M210 490 Q230 500 255 505" stroke="#2d1a2a" stroke-width="6" fill="none"/>
-      <path d="M195 495 Q185 510 175 510" stroke="#2d1a2a" stroke-width="4" fill="none"/>
-
-      <!-- === SAKURA BLOOMS === -->
-      <!-- Top cluster -->
-      <circle cx="195" cy="90" r="30" fill="url(#sakuraBloom)" opacity=".85"/>
-      <circle cx="175" cy="110" r="25" fill="url(#sakuraBloom2)" opacity=".8"/>
-      <circle cx="215" cy="105" r="25" fill="url(#sakuraBloom)" opacity=".8"/>
-
-      <!-- Left cluster -->
-      <circle cx="140" cy="150" r="28" fill="url(#sakuraBloom2)" opacity=".85"/>
-      <circle cx="120" cy="160" r="22" fill="url(#sakuraBloom)" opacity=".75"/>
-      <circle cx="155" cy="170" r="20" fill="url(#sakuraBloom2)" opacity=".7"/>
-      <circle cx="100" cy="150" r="18" fill="url(#sakuraBloom)" opacity=".65"/>
-
-      <!-- Right cluster -->
-      <circle cx="260" cy="150" r="28" fill="url(#sakuraBloom2)" opacity=".85"/>
-      <circle cx="280" cy="160" r="22" fill="url(#sakuraBloom)" opacity=".75"/>
-      <circle cx="245" cy="170" r="20" fill="url(#sakuraBloom2)" opacity=".7"/>
-      <circle cx="300" cy="150" r="18" fill="url(#sakuraBloom)" opacity=".65"/>
-
-      <!-- Middle clusters -->
-      <circle cx="165" cy="200" r="22" fill="url(#sakuraBloom)" opacity=".7"/>
-      <circle cx="235" cy="200" r="22" fill="url(#sakuraBloom2)" opacity=".7"/>
-      <circle cx="200" cy="70" r="20" fill="url(#sakuraBloom)" opacity=".9"/>
-
-      <!-- Lower clusters -->
-      <circle cx="140" cy="260" r="18" fill="url(#sakuraBloom2)" opacity=".6"/>
-      <circle cx="260" cy="260" r="18" fill="url(#sakuraBloom)" opacity=".6"/>
-      <circle cx="180" cy="250" r="15" fill="url(#sakuraBloom2)" opacity=".55"/>
-      <circle cx="220" cy="250" r="15" fill="url(#sakuraBloom)" opacity=".55"/>
-
-      <!-- Small accent blooms -->
-      <circle cx="155" cy="130" r="12" fill="url(#sakuraBloom)" opacity=".6"/>
-      <circle cx="245" cy="130" r="12" fill="url(#sakuraBloom2)" opacity=".6"/>
-      <circle cx="185" cy="140" r="14" fill="url(#sakuraBloom2)" opacity=".65"/>
-      <circle cx="215" cy="140" r="14" fill="url(#sakuraBloom)" opacity=".65"/>
-
-      <!-- Branch ending blooms -->
-      <circle cx="75" cy="128" r="15" fill="url(#sakuraBloom)" opacity=".6"/>
-      <circle cx="325" cy="128" r="15" fill="url(#sakuraBloom2)" opacity=".6"/>
-
-      <!-- Particle dots within blooms -->
-      <circle cx="195" cy="88" r="3" fill="#fdf2f8" opacity=".5"/>
-      <circle cx="260" cy="148" r="2.5" fill="#fdf2f8" opacity=".4"/>
-      <circle cx="140" cy="148" r="2.5" fill="#fdf2f8" opacity=".4"/>
-      <circle cx="175" cy="108" r="2" fill="#fdf2f8" opacity=".5"/>
-      <circle cx="215" cy="103" r="2" fill="#fdf2f8" opacity=".5"/>
-    </svg>
   </div>
 
 </div>
 
-<!-- FALLING PETALS -->
-<div class="petals" id="petals"></div>
+<!-- PETALS -->
+<div class="petals-layer" id="petals"></div>
+
+<!-- SPARKS -->
+<div class="petals-layer" id="sparks"></div>
 
 <div class="overlay">
   <a href="/fire" class="choice choice-l">
-    <div class="choice-hint"><span class="c1">The Self</span><span class="c2">ABOUT</span><span class="c3">Leo · Identity · Fire</span></div>
+    <div class="choice-hint"><span class="l1">The Self</span><span class="l2">ABOUT</span><span class="l3">Leo · Identity · Fire</span></div>
   </a>
   <a href="/water" class="choice choice-r">
-    <div class="choice-hint"><span class="c1">The Work</span><span class="c2">CREATE</span><span class="c3">Tools · Builds · Output</span></div>
+    <div class="choice-hint"><span class="l1">The Work</span><span class="l2">CREATE</span><span class="l3">Tools · Builds · Output</span></div>
   </a>
 </div>
 
 <script>
 // Stars
 (function(){
-var c=document.getElementById('stars'),ctx=c.getContext('2d'),w,h;
+var c=document.getElementById('stars-canvas'),ctx=c.getContext('2d'),w,h;
 function R(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}
 R();window.addEventListener('resize',R);
 var stars=[];
-for(var i=0;i<80;i++)stars.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*.7+.1,o:Math.random()*.3+.08,p:Math.random()*Math.PI*2});
+for(var i=0;i<60;i++)stars.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*.6+.08,o:Math.random()*.25+.05,p:Math.random()*Math.PI*2});
 (function D(t){
 if(w!==c.width||h!==c.height)R();
 ctx.clearRect(0,0,w,h);
-stars.forEach(function(s){var b=.5+.5*Math.sin(t*.0015+s.p);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,'+(s.o*b)+')';ctx.fill()});
+stars.forEach(function(s){var b=.4+.6*Math.sin(t*.0012+s.p);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,'+(s.o*b)+')';ctx.fill()});
 requestAnimationFrame(D);
 })();
 })();
 
-// Falling petals
+// Cherry blossom petals
 (function(){
 var p=document.getElementById('petals'),h='';
-for(var i=0;i<35;i++){
-  var x=10+Math.random()*80;
-  var dur=6+Math.random()*10;
-  var del=Math.random()*12;
-  var drift=(Math.random()-.5)*200;
+for(var i=0;i<40;i++){
+  var x=5+Math.random()*90,dur=7+Math.random()*12,del=Math.random()*14,drift=(Math.random()-.5)*250;
   h+='<div class="petal" style="--x:'+x+'%;--dur:'+dur+'s;--del:'+del+'s;--drift:'+drift+'px"></div>';
 }
 p.innerHTML=h;
+})();
+
+// Ambient sparks around figures
+(function(){
+var s=document.getElementById('sparks'),h='';
+for(var i=0;i<20;i++){
+  var l=15+Math.random()*25,sx=(Math.random()-.5)*40,sy=-10-Math.random()*30,d=2+Math.random()*3,del=Math.random()*3;
+  h+='<div class="spark pink-spark" style="left:'+l+'%;bottom:35%;--sx:'+sx+'px;--sy:'+sy+'px;--d:'+d+'s;--del:'+del+'s"></div>';
+}
+for(var i=0;i<20;i++){
+  var l=65+Math.random()*25,sx=(Math.random()-.5)*40,sy=-10-Math.random()*30,d=2+Math.random()*3,del=Math.random()*3;
+  h+='<div class="spark blue-spark" style="left:'+l+'%;bottom:35%;--sx:'+sx+'px;--sy:'+sy+'px;--d:'+d+'s;--del:'+del+'s"></div>';
+}
+s.innerHTML=h;
 })();
 </script>
 </body>
