@@ -3,226 +3,235 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>DEV ATTRI · ARCADE</title>
+<title>Attri's Apothecary</title>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-  --bg:#0a0a14;--screen:#0d0d1a;
-  --pink:#ff6b9d;--cyan:#00e5ff;--yellow:#ffd740;--green:#69f0ae;--white:#e0e0e0;
+  --wood:#1a1410;--shelf:#231c15;--dark:#0f0b08;
+  --gold:#c9a050;--gold-dim:rgba(201,160,80,.25);--gold-faint:rgba(201,160,80,.08);
+  --parchment:#f5ecd7;--parchment-dim:rgba(245,236,215,.7);
+  --ink:#2c1810;--ink-dim:rgba(44,24,16,.5);
+  --green:#4a6741;--red:#8b3a3a;--purple:#5c3d6e;
 }
 
 body{
-  background:#050510;color:var(--white);
-  font-family:'Press Start 2P','Courier New',monospace;
-  min-height:100vh;display:flex;align-items:center;justify-content:center;
-  padding:1.5rem;overflow-x:hidden;
+  background:var(--dark);color:var(--parchment);
+  font-family:'Georgia','Times New Roman',serif;
+  min-height:100vh;display:flex;justify-content:center;
+  padding:2rem 1rem;
+  background-image:
+    repeating-linear-gradient(90deg,transparent,transparent 2px,rgba(255,255,255,.005) 2px,rgba(255,255,255,.005) 4px);
 }
 
-/* ===== ARCADE CABINET ===== */
-.cabinet{
-  width:100%;max-width:680px;
-  border:4px solid #1a1a3a;border-radius:12px;
-  background:linear-gradient(180deg,#151530,#0d0d22);
-  box-shadow:0 0 40px rgba(100,100,255,.1),0 0 80px rgba(0,0,0,.6),inset 0 0 60px rgba(0,0,0,.3);
-  padding:.5rem;position:relative;overflow:hidden;
-}
+/* ===== SHOP ===== */
+.shop{width:100%;max-width:700px;position:relative}
 
-/* ===== CABINET DECORATIONS ===== */
-.cabinet::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--pink),var(--cyan),var(--yellow),var(--green),var(--pink));
-  animation:borderRace 3s linear infinite;
+/* ===== SHOP SIGN ===== */
+.sign{
+  text-align:center;margin-bottom:2.5rem;position:relative;
+  padding:1.5rem 1rem;
+  border:2px solid var(--gold-dim);border-radius:4px;
+  background:var(--wood);
+  box-shadow:inset 0 0 40px rgba(0,0,0,.4);
 }
-@keyframes borderRace{from{background-position:0 0}to{background-position:680px 0}}
+.sign::before,.sign::after{
+  content:'◆';position:absolute;top:50%;transform:translateY(-50%);
+  color:var(--gold-dim);font-size:.5rem;
+}
+.sign::before{left:.75rem}.sign::after{right:.75rem}
 
-.cabinet::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--pink),var(--cyan),var(--yellow),var(--green),var(--pink));
-  animation:borderRace 3s linear infinite reverse;
-}
+.sign h1{font-size:1.8rem;font-weight:400;letter-spacing:.12em;color:var(--gold);margin-bottom:.3rem}
+.sign .est{font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-dim)}
+.sign .motto{font-size:.55rem;font-style:italic;color:var(--parchment-dim);margin-top:.4rem}
 
-/* Cabinet header */
-.cabinet-header{
-  text-align:center;padding:.8rem .5rem;
-  border-bottom:2px solid rgba(255,255,255,.06);
-  display:flex;align-items:center;justify-content:center;gap:.5rem;
+/* ===== SHELF ===== */
+.shelf{margin-bottom:1.5rem;position:relative;padding:1.5rem 0 1rem}
+.shelf::after{
+  content:'';position:absolute;bottom:0;left:-2rem;right:-2rem;height:8px;
+  background:linear-gradient(180deg,var(--shelf),var(--wood));
+  border-top:1px solid var(--gold-faint);border-bottom:1px solid rgba(0,0,0,.5);
 }
-.cabinet-header .neon-text{
-  font-size:.5rem;letter-spacing:.25em;
-  color:var(--pink);text-shadow:0 0 10px rgba(255,107,157,.6),0 0 20px rgba(255,107,157,.3);
-  animation:neonFlicker 3s ease-in-out infinite;
-}
-@keyframes neonFlicker{0%,100%{opacity:1}92%{opacity:1}93%{opacity:.5}94%{opacity:1}96%{opacity:.6}97%{opacity:1}}
+.shelf:last-child::after{display:none}
 
-/* ===== CRT SCREEN ===== */
-.screen{
-  background:var(--screen);
-  border:12px solid #1a1a30;border-radius:8px;
-  padding:1.5rem;position:relative;overflow:hidden;
+.shelf-label{
+  font-size:.45rem;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--gold-dim);margin-bottom:1rem;
+  display:flex;align-items:center;gap:.5rem;
 }
+.shelf-label::after{content:'';flex:1;height:1px;background:var(--gold-faint)}
 
-/* Scanlines */
-.screen::after{
-  content:'';position:absolute;inset:0;pointer-events:none;
-  background:repeating-linear-gradient(0deg,
-    transparent,transparent 2px,
-    rgba(0,0,0,.05) 2px,rgba(0,0,0,.05) 4px);
-  z-index:50;
-}
+/* ===== BOTTLES ROW ===== */
+.bottles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem}
 
-/* CRT vignette */
-.screen::before{
-  content:'';position:absolute;inset:0;pointer-events:none;z-index:49;
-  background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(0,0,0,.4) 100%);
-}
-
-/* ===== TITLE SCREEN ===== */
-.title-screen{text-align:center;margin-bottom:2rem;position:relative;z-index:1}
-.title-screen h1{
-  font-size:1.6rem;font-weight:400;letter-spacing:.15em;line-height:1.3;
-  color:var(--yellow);text-shadow:0 0 20px rgba(255,215,64,.4),0 0 40px rgba(255,215,64,.2);
-}
-.title-screen .subtitle{
-  font-size:.4rem;letter-spacing:.2em;color:var(--cyan);text-shadow:0 0 8px rgba(0,229,255,.4);
-  margin-top:.5rem;
-}
-.title-screen .blink{
-  font-size:.5rem;color:var(--pink);text-shadow:0 0 10px rgba(255,107,157,.5);
-  animation:blink 1s step-end infinite;margin-top:.75rem;
-}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-
-/* ===== CHARACTER SELECT ===== */
-.char-select{position:relative;z-index:1}
-.char-select h2{
-  font-size:.45rem;letter-spacing:.2em;color:var(--cyan);text-shadow:0 0 8px rgba(0,229,255,.3);
-  text-align:center;margin-bottom:1rem;
-}
-
-.char-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
-.char-card{
-  border:2px solid rgba(255,255,255,.06);padding:.7rem;text-align:center;
-  cursor:pointer;transition:all .2s;
+.bottle{
+  position:relative;text-align:center;cursor:pointer;
+  transition:transform .35s cubic-bezier(.16,1,.3,1);
   text-decoration:none;color:inherit;display:block;
-  background:rgba(255,255,255,.015);
 }
-.char-card:hover{border-color:var(--cyan);background:rgba(0,229,255,.04);transform:scale(1.03)}
-.char-card:hover .char-avatar{border-color:var(--cyan);box-shadow:0 0 15px rgba(0,229,255,.3)}
-.char-card:hover .char-name{color:var(--cyan)}
+.bottle:hover{transform:translateY(-6px)}
+.bottle:hover .bottle-neck{border-color:var(--gold)}
+.bottle:hover .bottle-label{border-color:var(--gold);color:var(--gold)}
 
-.char-avatar{
-  width:40px;height:40px;border:2px solid rgba(255,255,255,.1);
-  margin:0 auto .5rem;display:flex;align-items:center;justify-content:center;
-  font-size:1.2rem;transition:all .3s;
+/* Bottle shape */
+.bottle-body{
+  width:60px;height:70px;margin:0 auto .5rem;position:relative;
+  background:rgba(0,0,0,.3);border-radius:6px 6px 3px 3px;
+  border:1px solid var(--gold-faint);
+  overflow:hidden;
 }
-.char-name{font-size:.5rem;letter-spacing:.08em;margin-bottom:.2rem;transition:color .3s}
-.char-desc{font-size:.35rem;color:rgba(255,255,255,.3);line-height:1.5;letter-spacing:.04em}
+.bottle-body::after{
+  content:'';position:absolute;bottom:0;left:15%;right:15%;height:40%;
+  border-radius:3px;
+}
+.bottle.potion .bottle-body::after{background:var(--green);opacity:.3}
+.bottle.tincture .bottle-body::after{background:var(--red);opacity:.25}
+.bottle.elixir .bottle-body::after{background:var(--purple);opacity:.25}
+.bottle.essence .bottle-body::after{background:var(--gold);opacity:.2}
 
-/* ===== HIGH SCORES ===== */
-.high-scores{position:relative;z-index:1;margin-top:1.5rem}
-.high-scores h2{
-  font-size:.42rem;letter-spacing:.22em;color:var(--yellow);text-shadow:0 0 8px rgba(255,215,64,.3);
-  text-align:center;margin-bottom:.75rem;
+/* Bottle neck */
+.bottle-neck{
+  width:16px;height:14px;margin:-6px auto 0;border-radius:2px 2px 0 0;
+  border:1px solid var(--gold-faint);border-bottom:none;
+  background:rgba(0,0,0,.25);transition:border-color .3s;
+}
+/* Cork */
+.bottle-neck::after{content:'';position:absolute;top:-4px;left:2px;right:2px;height:6px;
+  background:#8b6914;border-radius:2px 2px 0 0;opacity:.5}
+
+/* Bottle label */
+.bottle-label{
+  display:block;font-size:.55rem;letter-spacing:.06em;margin-bottom:.08rem;
+  color:var(--parchment-dim);transition:all .3s;
+  font-style:italic;
+}
+.bottle-desc{
+  display:block;font-size:.42rem;color:var(--ink-dim);letter-spacing:.04em;line-height:1.5;
 }
 
-.score-row{
-  display:flex;align-items:center;gap:.5rem;padding:.35rem 0;
-  border-bottom:1px solid rgba(255,255,255,.04);font-size:.4rem;
-  letter-spacing:.06em;
+/* ===== SPECIAL DISPLAY (VEKTOR) ===== */
+.display-jar{
+  grid-column:1/-1;border:1px solid var(--gold-dim);padding:1rem;
+  display:flex;align-items:center;gap:1rem;cursor:pointer;
+  text-decoration:none;color:inherit;transition:all .3s;
+  background:rgba(201,160,80,.03);
 }
-.score-rank{color:var(--yellow);font-weight:700;width:20px}
-.score-name{flex:1;color:var(--white)}
-.score-val{color:var(--green);text-shadow:0 0 6px rgba(105,240,174,.3)}
+.display-jar:hover{border-color:var(--gold);background:rgba(201,160,80,.06)}
+.display-jar:hover .jar-name{color:var(--gold)}
+.jar-icon{
+  width:50px;height:50px;border:1px solid var(--gold-faint);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;
+  flex-shrink:0;
+}
+.jar-info{flex:1}
+.jar-name{font-size:.7rem;font-weight:700;letter-spacing:.04em;margin-bottom:.15rem;transition:color .3s}
+.jar-desc{font-size:.45rem;color:var(--parchment-dim);line-height:1.5}
+.jar-badge{font-size:.38rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);padding:.15rem .4rem;border:1px solid var(--gold-dim);border-radius:2px}
 
-/* ===== COIN SLOT ===== */
-.coin-slot{text-align:center;margin-top:1.5rem;position:relative;z-index:1}
-.coin-slot p{font-size:.38rem;color:rgba(255,255,255,.2);letter-spacing:.12em;animation:blink 2s step-end infinite}
-
-/* ===== CREDITS ===== */
-.credits{position:relative;z-index:1;margin-top:1rem;text-align:center}
-.credits p{font-size:.3rem;color:rgba(255,255,255,.15);letter-spacing:.12em;line-height:2}
-.credits a{color:var(--cyan);text-decoration:none;transition:color .2s}
-.credits a:hover{color:var(--pink);text-shadow:0 0 8px rgba(255,107,157,.4)}
+/* ===== WOOD GRAIN TEXTURE ===== */
+.wood-grain{position:absolute;inset:0;pointer-events:none;opacity:.03;
+  background:repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(139,105,20,.3) 3px,rgba(139,105,20,.3) 4px)}
 
 /* ===== RESPONSIVE ===== */
 @media(max-width:500px){
-  .title-screen h1{font-size:1.1rem}
-  .char-grid{grid-template-columns:1fr}
-  .cabinet{padding:.3rem}
-  .screen{padding:1rem;border-width:8px}
+  .sign h1{font-size:1.2rem}
+  .bottles{grid-template-columns:1fr 1fr}
+  .bottle-body{width:44px;height:52px}
 }
 </style>
 </head>
 <body>
 
-<div class="cabinet">
+<div class="shop">
 
-  <div class="cabinet-header">
-    <span class="neon-text">✦ ARCADE CABINET v3.0 ✦</span>
+  <!-- SIGN -->
+  <div class="sign">
+    <div class="wood-grain"></div>
+    <h1>Attri's Apothecary</h1>
+    <div class="est">Established 2026 · Fine Compounds & Curiosities</div>
+    <div class="motto">"What cannot be cured by patience must be endured with craft."</div>
   </div>
 
-  <div class="screen">
-
-    <!-- TITLE SCREEN -->
-    <div class="title-screen">
-      <h1>DEV ATTRI</h1>
-      <div class="subtitle">BUILDER · RUNNER · LIFTER · LEARNER</div>
-      <div class="blink">▼ PRESS START ▼</div>
-    </div>
-
-    <!-- CHARACTER SELECT -->
-    <div class="char-select">
-      <h2>✦ SELECT CHARACTER ✦</h2>
-      <div class="char-grid">
-        <div class="char-card">
-          <div class="char-avatar">⚔️</div>
-          <div class="char-name">THE BUILDER</div>
-          <div class="char-desc">TypeScript · Next.js · Prisma<br>Full-stack systems</div>
-        </div>
-        <div class="char-card">
-          <div class="char-avatar">🏃</div>
-          <div class="char-name">THE RUNNER</div>
-          <div class="char-desc">40km/week · Half marathon<br>Hybrid athlete</div>
-        </div>
-        <div class="char-card">
-          <div class="char-avatar">🏋️</div>
-          <div class="char-name">THE LIFTER</div>
-          <div class="char-desc">Strength training · Volume<br>Getting stronger daily</div>
-        </div>
-        <a href="/grit" class="char-card" style="text-decoration:none">
-          <div class="char-avatar" style="font-size:1.5rem">⚡</div>
-          <div class="char-name">VEKTOR ▶ PLAY</div>
-          <div class="char-desc">Hybrid Athlete OS<br>Track readiness & recovery</div>
-        </a>
+  <!-- SHELF 1: POTIONS — About -->
+  <div class="shelf">
+    <div class="wood-grain"></div>
+    <div class="shelf-label">Shelf I — Potions of the Self</div>
+    <div class="bottles">
+      <div class="bottle potion">
+        <div class="bottle-body"></div><div class="bottle-neck"></div>
+        <span class="bottle-label">Essence of Identity</span>
+        <span class="bottle-desc">Builder. Runner. Lifter. Learner. Based in India.</span>
+      </div>
+      <div class="bottle potion">
+        <div class="bottle-body"></div><div class="bottle-neck"></div>
+        <span class="bottle-label">Tincture of Philosophy</span>
+        <span class="bottle-desc">Ship first. Refine later. Discomfort opens doors.</span>
+      </div>
+      <div class="bottle potion">
+        <div class="bottle-body"></div><div class="bottle-neck"></div>
+        <span class="bottle-label">Spirit of the Stack</span>
+        <span class="bottle-desc">TypeScript · Next.js · Prisma · Python · APIs</span>
       </div>
     </div>
+  </div>
 
-    <!-- HIGH SCORES -->
-    <div class="high-scores">
-      <h2>✦ HIGH SCORES ✦</h2>
-      <div class="score-row"><span class="score-rank">1ST</span><span class="score-name">Projects Shipped</span><span class="score-val">5+</span></div>
-      <div class="score-row"><span class="score-rank">2ND</span><span class="score-name">Weekly Kilometers</span><span class="score-val">42.5</span></div>
-      <div class="score-row"><span class="score-rank">3RD</span><span class="score-name">Languages</span><span class="score-val">TS·PY·JS</span></div>
-      <div class="score-row"><span class="score-rank">4TH</span><span class="score-name">Current Streak</span><span class="score-val">∞</span></div>
+  <!-- SHELF 2: TINCTURES — Tools -->
+  <div class="shelf">
+    <div class="wood-grain"></div>
+    <div class="shelf-label">Shelf II — Tinctures of Creation</div>
+    <div class="bottles">
+      <a href="/grit" class="display-jar">
+        <div class="jar-icon">⚡</div>
+        <div class="jar-info">
+          <div class="jar-name">VEKTOR · Hybrid Athlete OS</div>
+          <div class="jar-desc">Adaptive performance operating system. Track readiness, runs, strength, recovery, injuries.</div>
+        </div>
+        <span class="jar-badge">▼ Open</span>
+      </a>
+      <div class="bottle tincture">
+        <div class="bottle-body"></div><div class="bottle-neck"></div>
+        <span class="bottle-label">Weather Extract</span>
+        <span class="bottle-desc">API-driven · Data fetching · States</span>
+      </div>
+      <div class="bottle tincture">
+        <div class="bottle-body"></div><div class="bottle-neck"></div>
+        <span class="bottle-label">Macro Compound</span>
+        <span class="bottle-desc">Nutrition tracking · Forms · Persistence</span>
+      </div>
+      <div class="bottle tincture">
+        <div class="bottle-body"></div><div class="bottle-neck"></div>
+        <span class="bottle-label">Workspace Elixir</span>
+        <span class="bottle-desc">Clean browser layouts · Surfaces</span>
+      </div>
     </div>
+  </div>
 
-    <!-- INSERT COIN -->
-    <div class="coin-slot">
-      <p>◇ INSERT COIN TO CONTINUE ◇</p>
+  <!-- SHELF 3: COMPOUNDS — Signal -->
+  <div class="shelf">
+    <div class="wood-grain"></div>
+    <div class="shelf-label">Shelf III — Compounds of Connection</div>
+    <div class="bottles">
+      <a href="https://github.com/attridevv" target="_blank" class="bottle essence">
+        <div class="bottle-body"></div><div class="bottle-neck"></div>
+        <span class="bottle-label">GitHub Crystal</span>
+        <span class="bottle-desc">Code · Repositories · Proof</span>
+      </a>
+      <a href="https://x.com/attridevv" target="_blank" class="bottle essence">
+        <div class="bottle-body"></div><div class="bottle-neck"></div>
+        <span class="bottle-label">X Powder</span>
+        <span class="bottle-desc">Thoughts · Signals · Noise</span>
+      </a>
+      <a href="https://instagram.com/attridevv" target="_blank" class="bottle essence">
+        <div class="bottle-body"></div><div class="bottle-neck"></div>
+        <span class="bottle-label">Instagram Dust</span>
+        <span class="bottle-desc">Visual log · Moments captured</span>
+      </a>
+      <a href="https://anilist.co/user/Attridevv/" target="_blank" class="bottle essence">
+        <div class="bottle-body"></div><div class="bottle-neck"></div>
+        <span class="bottle-label">AniList Ash</span>
+        <span class="bottle-desc">Anime · Manga · Tracking</span>
+      </a>
     </div>
-
-    <!-- CREDITS -->
-    <div class="credits">
-      <p>
-        <a href="https://github.com/attridevv" target="_blank">GITHUB</a> ·
-        <a href="https://x.com/attridevv" target="_blank">X</a> ·
-        <a href="https://instagram.com/attridevv" target="_blank">INSTAGRAM</a> ·
-        <a href="https://anilist.co/user/Attridevv/" target="_blank">ANILIST</a>
-      </p>
-      <p style="margin-top:.5rem">© 2026 ATTRI SOFT · ALL RIGHTS RESERVED</p>
-    </div>
-
   </div>
 
 </div>
