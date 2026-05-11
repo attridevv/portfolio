@@ -10,7 +10,6 @@
 :root{
   --red:#dc2626;--red-glow:rgba(220,38,38,.4);--red-deep:#1a0202;
   --blue:#2563eb;--blue-glow:rgba(37,99,235,.4);--blue-deep:#020a1a;
-  --gold:#fbbf24;--gold-dim:rgba(251,191,36,.5);
 }
 
 body{
@@ -19,7 +18,7 @@ body{
   background:#000;color:#e2e8f0;
 }
 
-/* ===== HORIZON (landing) ===== */
+/* ===== HORIZON ===== */
 .horizon{
   position:fixed;inset:0;z-index:1;display:flex;
   transition:opacity .8s,filter .8s;
@@ -32,7 +31,6 @@ body{
   transition:all .8s cubic-bezier(.16,1,.3,1);
 }
 
-/* Red world half */
 .red-half{
   background:linear-gradient(180deg,#1a0202 0%,#2d0505 30%,#1a0202 60%,#0d0101 100%);
   border-right:1px solid rgba(220,38,38,.15);
@@ -41,7 +39,6 @@ body{
   background:radial-gradient(ellipse at 50% 30%,rgba(239,68,68,.12),transparent 50%),
     radial-gradient(ellipse at 30% 70%,rgba(220,38,38,.06),transparent 40%);}
 
-/* Blue world half */
 .blue-half{
   background:linear-gradient(180deg,#020a1a 0%,#051530 30%,#020a1a 60%,#010510 100%);
 }
@@ -49,160 +46,155 @@ body{
   background:radial-gradient(ellipse at 50% 30%,rgba(59,130,246,.12),transparent 50%),
     radial-gradient(ellipse at 70% 70%,rgba(37,99,235,.06),transparent 40%);}
 
-/* World label on each side */
 .world-label{position:relative;z-index:5;text-align:center;transition:transform .6s cubic-bezier(.16,1,.3,1)}
 .world-half:hover .world-label{transform:translateY(-8px)}
-.world-label .wl-char{display:block;font-size:3rem;margin-bottom:.5rem;transition:all .5s}
+.wl-char{display:block;font-size:3rem;margin-bottom:.5rem;transition:all .5s}
 .red-half .wl-char{color:rgba(239,68,68,.4);text-shadow:0 0 40px rgba(239,68,68,.2)}.red-half:hover .wl-char{color:rgba(239,68,68,.7);text-shadow:0 0 60px rgba(239,68,68,.4)}
 .blue-half .wl-char{color:rgba(59,130,246,.4);text-shadow:0 0 40px rgba(59,130,246,.2)}.blue-half:hover .wl-char{color:rgba(59,130,246,.7);text-shadow:0 0 60px rgba(59,130,246,.4)}
-
-.world-label .wl-name{display:block;font-size:.85rem;font-weight:900;letter-spacing:.12em;margin-bottom:.2rem}
+.wl-name{display:block;font-size:.85rem;font-weight:900;letter-spacing:.12em;margin-bottom:.2rem}
 .red-half .wl-name{color:#fca5a5}.blue-half .wl-name{color:#93c5fd}
-
-.world-label .wl-sub{display:block;font-size:.45rem;letter-spacing:.15em;text-transform:uppercase;opacity:.4}
+.wl-sub{display:block;font-size:.45rem;letter-spacing:.15em;text-transform:uppercase;opacity:.4}
 .red-half .wl-sub{color:#fca5a5}.blue-half .wl-sub{color:#93c5fd}
 
-/* Center divider */
 .divider-line{position:fixed;top:0;bottom:0;left:50%;width:1px;z-index:10;pointer-events:none;
   background:linear-gradient(to bottom,transparent,rgba(255,255,255,.1) 30%,rgba(255,255,255,.2) 50%,rgba(255,255,255,.1) 70%,transparent);
   animation:divPulse 3s ease-in-out infinite;transition:opacity .6s}
 @keyframes divPulse{0%,100%{opacity:.5}50%{opacity:1}}
 
-/* ===== CANVAS PARTICLES ===== */
 canvas.p-canvas{position:absolute;inset:0;pointer-events:none;z-index:2}
 
-/* ===== PORTAL VORTEX OVERLAY ===== */
-.vortex{
-  position:fixed;inset:0;z-index:50;pointer-events:none;opacity:0;
-  transition:opacity .3s;
-}
+/* ===== VORTEX ===== */
+.vortex{position:fixed;inset:0;z-index:50;pointer-events:none;opacity:0;transition:opacity .3s}
 .vortex.active{opacity:1}
-
-.vortex-ring{position:absolute;border-radius:50%;border:1px solid transparent;animation:vrSpin 1s linear infinite}
+.vr{position:absolute;border-radius:50%;border:1px solid transparent;animation:vrSpin 1s linear infinite}
 @keyframes vrSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-/* ===== EXPANDED WORLD (fullscreen) ===== */
+/* ===== EXPANDED WORLD ===== */
 .expanded-world{
   position:fixed;inset:0;z-index:40;display:none;overflow-y:auto;
-  opacity:0;transform:scale(1.1);
+  opacity:0;transform:scale(1.05);
   transition:opacity .6s,transform .6s cubic-bezier(.16,1,.3,1);
 }
 .expanded-world.active{display:block;animation:worldEnter .6s cubic-bezier(.16,1,.3,1) forwards}
 @keyframes worldEnter{to{opacity:1;transform:scale(1)}}
 
-.expanded-world.red-expand{background:linear-gradient(180deg,#0d0202,#1a0404,#0d0202)}
-.expanded-world.blue-expand{background:linear-gradient(180deg,#020810,#041020,#020810)}
+.red-expand{background:linear-gradient(180deg,#0d0202,#1a0404,#0d0202)}
+.blue-expand{background:linear-gradient(180deg,#020810,#041020,#020810)}
 
-/* Close button */
-.close-btn{
-  position:fixed;top:1rem;right:1rem;z-index:60;
-  width:40px;height:40px;border-radius:50%;
-  background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);
-  font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:all .3s;backdrop-filter:blur(4px);
-}
-.close-btn:hover{background:rgba(0,0,0,.7);border-color:rgba(255,255,255,.2);color:#fff}
+/* Close */
+.close-btn{position:fixed;top:1rem;right:1rem;z-index:60;width:38px;height:38px;border-radius:50%;
+  background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.35);
+  font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;
+  backdrop-filter:blur(4px);}
+.close-btn:hover{background:rgba(0,0,0,.6);border-color:rgba(255,255,255,.15);color:#fff}
 
-/* ===== EXPANDED CONTENT ===== */
+/* Content */
 .expanded-content{max-width:680px;margin:0 auto;padding:4rem 1.5rem 3rem}
 
-.expanded-content .world-header{text-align:center;margin-bottom:2rem}
-.expanded-content .world-header .ch{font-size:.45rem;letter-spacing:.25em;text-transform:uppercase;margin-bottom:.3rem;opacity:.4}
-.expanded-content .world-header h2{font-size:1.8rem;font-weight:900;letter-spacing:.04em}
+.world-header{text-align:center;margin-bottom:2.5rem}
+.world-header .ch{font-size:.45rem;letter-spacing:.25em;text-transform:uppercase;margin-bottom:.3rem;opacity:.35}
+.world-header h2{font-size:1.8rem;font-weight:900;letter-spacing:.04em}
 
-.expanded-content .section{margin-bottom:2rem}
-.expanded-content .section-title{font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;margin-bottom:.75rem;opacity:.4;font-weight:700}
+/* Section reveal */
+.section{opacity:0;transform:translateY(20px);transition:all .7s cubic-bezier(.16,1,.3,1);margin-bottom:2.2rem}
+.section.visible{opacity:1;transform:translateY(0)}
+.section-title{font-size:.48rem;letter-spacing:.22em;text-transform:uppercase;margin-bottom:.7rem;opacity:.3;font-weight:700}
 
 /* Cards */
-.card-grid{display:grid;gap:.5rem}
-.card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);padding:.75rem 1rem;border-radius:8px;transition:all .3s}
-.card:hover{background:rgba(255,255,255,.04);transform:translateY(-2px)}
-.card h4{font-size:.65rem;font-weight:700;margin-bottom:.2rem}
-.card p{font-size:.5rem;line-height:1.65;opacity:.6}
-.red-expand .card h4{color:#fca5a5}.blue-expand .card h4{color:#93c5fd}
+.card-grid{display:grid;gap:.45rem}
+.card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);padding:.7rem .9rem;border-radius:8px;transition:all .35s}
+.card:hover{background:rgba(255,255,255,.035);transform:translateY(-1px)}
+.card h4{font-size:.62rem;font-weight:700;margin-bottom:.15rem}
+.card p{font-size:.47rem;line-height:1.65;opacity:.55}
+.card strong{opacity:.9}
+.red-expand .card h4,.red-expand .card strong{color:#fca5a5}
+.blue-expand .card h4,.blue-expand .card strong{color:#93c5fd}
 
-.card-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
-.card-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem}
+.card-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
+.card-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.45rem}
 
-.live-badge{display:inline-flex;align-items:center;gap:.3rem;font-size:.4rem;font-weight:700;letter-spacing:.08em;padding:.15rem .45rem;border-radius:3px}
-.red-expand .live-badge{background:rgba(220,38,38,.15);color:#fca5a5;border:1px solid rgba(220,38,38,.2)}
-.blue-expand .live-badge{background:rgba(37,99,235,.15);color:#93c5fd;border:1px solid rgba(37,99,235,.2)}
-.live-badge .dot{width:5px;height:5px;border-radius:50%;animation:dotBlink 2s infinite}
-.red-expand .dot{background:#fca5a5}.blue-expand .dot{background:#93c5fd}
+.live-badge{display:inline-flex;align-items:center;gap:.25rem;font-size:.38rem;font-weight:700;letter-spacing:.06em;padding:.12rem .4rem;border-radius:3px}
+.blue-expand .live-badge{background:rgba(37,99,235,.12);color:#93c5fd;border:1px solid rgba(37,99,235,.15)}
+.live-dot{width:5px;height:5px;border-radius:50%;animation:dotBlink 2s infinite}
+.blue-expand .live-dot{background:#93c5fd}
 @keyframes dotBlink{0%,100%{opacity:1}50%{opacity:.2}}
 
-.poem{font-style:italic;line-height:1.8;opacity:.6}
-.quote{font-style:italic;border-left:2px solid rgba(255,255,255,.08);padding-left:1rem;font-size:.45rem;opacity:.4;margin-top:2rem}
+/* Poetry */
+.poem-block{padding:.6rem .9rem;border-left:2px solid rgba(252,165,165,.15);margin-bottom:.5rem;transition:all .35s}
+.poem-block:hover{border-left-color:rgba(252,165,165,.35);background:rgba(252,165,165,.02)}
+.poem-block p{font-style:italic;font-size:.5rem;line-height:1.9;opacity:.65}
+.poem-block .poem-title{font-size:.4rem;letter-spacing:.15em;text-transform:uppercase;opacity:.25;margin-bottom:.4rem;font-style:normal}
 
-.links-row{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-top:1rem}
-.link-pill{padding:.3rem .7rem;border-radius:20px;font-size:.42rem;letter-spacing:.08em;text-decoration:none;transition:all .25s}
-.red-expand .link-pill{color:rgba(252,165,165,.5);border:1px solid rgba(252,165,165,.1)}
-.red-expand .link-pill:hover{color:#fca5a5;border-color:rgba(252,165,165,.3)}
-.blue-expand .link-pill{color:rgba(147,197,253,.5);border:1px solid rgba(147,197,253,.1)}
-.blue-expand .link-pill:hover{color:#93c5fd;border-color:rgba(147,197,253,.3)}
+/* Quote */
+.quote{font-style:italic;border-left:2px solid rgba(255,255,255,.05);padding-left:1rem;font-size:.42rem;opacity:.3;margin-top:2rem;line-height:1.7}
+
+/* Links */
+.links-row{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin-top:.8rem}
+.link-pill{padding:.25rem .6rem;border-radius:20px;font-size:.4rem;letter-spacing:.06em;text-decoration:none;transition:all .25s}
+.red-expand .link-pill{color:rgba(252,165,165,.4);border:1px solid rgba(252,165,165,.08)}
+.red-expand .link-pill:hover{color:#fca5a5;border-color:rgba(252,165,165,.25)}
+.blue-expand .link-pill{color:rgba(147,197,253,.4);border:1px solid rgba(147,197,253,.08)}
+.blue-expand .link-pill:hover{color:#93c5fd;border-color:rgba(147,197,253,.25)}
+
+/* Favorites grid */
+.fav-grid{display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
+.fav-card{background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.03);padding:.45rem .65rem;border-radius:6px}
+.fav-card .fav-label{font-size:.35rem;letter-spacing:.12em;text-transform:uppercase;opacity:.25;margin-bottom:.15rem}
+.fav-card .fav-val{font-size:.45rem;opacity:.6;line-height:1.5}
+.fav-card .fav-val a{color:inherit;text-decoration:underline;text-underline-offset:3px;opacity:.7}
+
+/* Expanded canvas bg */
+canvas.exp-canvas{position:fixed;inset:0;z-index:39;pointer-events:none}
 
 @media(max-width:700px){
   .horizon{flex-direction:column}
   .world-half{height:50vh}
   .divider-line{top:50%;left:0;right:0;bottom:auto;width:auto;height:1px}
-  .card-grid-2,.card-grid-3{grid-template-columns:1fr}
+  .card-grid-2,.card-grid-3,.fav-grid{grid-template-columns:1fr}
   .wl-char{font-size:2rem}
+  .world-header h2{font-size:1.3rem}
 }
 </style>
 </head>
 <body>
 
-<!-- ===== LANDING: SPLIT HORIZON ===== -->
+<!-- ===== HORIZON ===== -->
 <div class="horizon" id="horizon">
-
-  <!-- Red World -->
   <div class="world-half red-half" onclick="enterWorld('red')">
-    <canvas class="p-canvas" id="red-canvas"></canvas>
+    <canvas class="p-canvas" id="rc"></canvas>
     <div class="world-label">
-      <span class="wl-char">火</span>
-      <span class="wl-name">AZUMA</span>
-      <span class="wl-sub">The Self · Personal</span>
+      <span class="wl-char">火</span><span class="wl-name">AZUMA</span><span class="wl-sub">The Self · Personal</span>
     </div>
   </div>
-
-  <!-- Blue World -->
   <div class="world-half blue-half" onclick="enterWorld('blue')">
-    <canvas class="p-canvas" id="blue-canvas"></canvas>
+    <canvas class="p-canvas" id="bc"></canvas>
     <div class="world-label">
-      <span class="wl-char">水</span>
-      <span class="wl-name">CREATE</span>
-      <span class="wl-sub">The Work · Tools</span>
+      <span class="wl-char">水</span><span class="wl-name">CREATE</span><span class="wl-sub">The Work · Tools</span>
     </div>
   </div>
-
 </div>
-
-<div class="divider-line" id="divider-line"></div>
-
-<!-- ===== PORTAL VORTEX ===== -->
+<div class="divider-line" id="dline"></div>
 <div class="vortex" id="vortex"></div>
 
-<!-- ===== EXPANDED: RED WORLD ===== -->
+<!-- ===== RED WORLD ===== -->
 <div class="expanded-world red-expand" id="red-expand">
-  <button class="close-btn" onclick="closeWorld()">×</button>
+  <canvas class="exp-canvas" id="red-bg"></canvas>
+  <button class="close-btn" onclick="closeWorld()">&times;</button>
   <div class="expanded-content">
-
     <div class="world-header">
       <div class="ch">第一章 · Chapter One</div>
       <h2 style="color:#fca5a5">AZUMA · 東</h2>
     </div>
 
     <div class="section">
-      <div class="section-title">Identity</div>
-      <div class="card">
-        <p><strong>Dev Attri.</strong> Builder. Runner. Lifter. Learner. Based in India. I'm figuring it out — one build, one rep, one kilometer at a time. Learning in public. Not polished. Not finished. Just obsessed with making things that actually work.</p>
-      </div>
+      <div class="section-title">Who I Am</div>
+      <div class="card"><p><strong>Dev Attri.</strong> Builder. Runner. Lifter. Learner. Based in India. I'm figuring it out — one build, one rep, one kilometer at a time. Learning in public. Not polished, not finished. Just obsessed with making things work.</p></div>
     </div>
 
     <div class="section">
-      <div class="section-title">Philosophy</div>
+      <div class="section-title">Things I Believe</div>
       <div class="card-grid-2">
-        <div class="card"><p>I don't believe in waiting until I'm ready. <strong>Ship first, then refine.</strong></p></div>
+        <div class="card"><p>I don't believe in waiting until I'm ready. <strong>I ship first, then refine.</strong></p></div>
         <div class="card"><p>Everything worth doing is on the other side of <strong>discomfort.</strong></p></div>
         <div class="card"><p><strong>Hard work</strong> beats talent when talent doesn't work hard.</p></div>
         <div class="card"><p>People remember how you made them <strong>feel,</strong> not what you said.</p></div>
@@ -211,26 +203,44 @@ canvas.p-canvas{position:absolute;inset:0;pointer-events:none;z-index:2}
 
     <div class="section">
       <div class="section-title">Poetry</div>
-      <div class="card-grid-2">
-        <div class="card"><p class="poem">"my eyes are where your eyes is — you blinked and i rewired."</p></div>
-        <div class="card"><p class="poem">"i don't believe in god but i prayed when you held me."</p></div>
+      <div class="poem-block">
+        <div class="poem-title">I · Blue Eyes</div>
+        <p>my eyes are where your eyes is —<br>you blinked and i rewired.</p>
+      </div>
+      <div class="poem-block">
+        <div class="poem-title">II · Consumed</div>
+        <p>i want to be consumed by you completely<br>to the point where i forget<br>that i ever existed without you.</p>
+      </div>
+      <div class="poem-block">
+        <div class="poem-title">III · Prayer</div>
+        <p>i don't believe in god<br>but i prayed when you held me.</p>
       </div>
     </div>
 
     <div class="section">
       <div class="section-title">Questions I Sit With</div>
-      <div class="card"><p><strong>What is the meaning of life?</strong> The meaning is emotion. The highest highs, the lowest lows. To feel everything. If you die having felt it all — you lived right.</p></div>
-      <div class="card" style="margin-top:.5rem"><p><strong>When did we stop asking?</strong> When asking stopped being rewarded. School teaches answers, not curiosity.</p></div>
-      <div class="card" style="margin-top:.5rem"><p><strong>Why does being drunk make us happy?</strong> It quiets the voice. The one that worries about tomorrow. The real question: why do we need relief from ourselves?</p></div>
+      <div class="card"><p><strong>What is the meaning of life?</strong> The meaning is emotion. The highest highs, the lowest lows — that's why we're here. To feel everything. Joy, grief, love, heartbreak, adrenaline, stillness. The full spectrum. If you die having felt it all, you lived right.</p></div>
+      <div class="card" style="margin-top:.45rem"><p><strong>When did we stop asking questions?</strong> When asking stopped being rewarded. School teaches answers, not curiosity. Society likes boxes. But the best things come from people who never stopped asking why.</p></div>
+      <div class="card" style="margin-top:.45rem"><p><strong>Why does being drunk make us happy?</strong> Because it quiets the voice. The one that worries about tomorrow, judges every move, keeps us small. Being drunk isn't happiness — it's relief from self-awareness. The real question is: why do we need relief from ourselves?</p></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Favorites</div>
+      <div class="fav-grid">
+        <div class="fav-card"><span class="fav-label">Books</span><span class="fav-val">The Old Man of the Moon</span></div>
+        <div class="fav-card"><span class="fav-label">Anime</span><span class="fav-val">One Piece, Your Lie in April</span></div>
+        <div class="fav-card"><span class="fav-label">Music</span><span class="fav-val">Radiohead — OK Computer</span></div>
+        <div class="fav-card"><span class="fav-label">Place</span><span class="fav-val">Tolka, Nepal</span></div>
+      </div>
     </div>
 
     <div class="section">
       <div class="section-title">Small Wins</div>
       <div class="card-grid-2">
-        <div class="card"><p>→ Ran a half marathon</p></div>
-        <div class="card"><p>→ Hit 1000 ELO in chess</p></div>
-        <div class="card"><p>→ Visited Nepal</p></div>
-        <div class="card"><p>→ Built this website</p></div>
+        <div class="card"><p>→ Ran a <strong>half marathon</strong></p></div>
+        <div class="card"><p>→ Hit <strong>1000 ELO</strong> in chess</p></div>
+        <div class="card"><p>→ Visited <strong>Nepal</strong></p></div>
+        <div class="card"><p>→ Built <strong>this website</strong></p></div>
       </div>
     </div>
 
@@ -244,46 +254,60 @@ canvas.p-canvas{position:absolute;inset:0;pointer-events:none;z-index:2}
   </div>
 </div>
 
-<!-- ===== EXPANDED: BLUE WORLD ===== -->
+<!-- ===== BLUE WORLD ===== -->
 <div class="expanded-world blue-expand" id="blue-expand">
-  <button class="close-btn" onclick="closeWorld()">×</button>
+  <canvas class="exp-canvas" id="blue-bg"></canvas>
+  <button class="close-btn" onclick="closeWorld()">&times;</button>
   <div class="expanded-content">
-
     <div class="world-header">
       <div class="ch">第二章 · Chapter Two</div>
       <h2 style="color:#93c5fd">CREATE · 創造</h2>
     </div>
 
     <div class="section">
-      <div class="section-title">Live Project</div>
-      <a href="/grit" style="text-decoration:none;color:inherit;display:block">
-        <div class="card" style="cursor:pointer;background:rgba(37,99,235,.06);border-color:rgba(37,99,235,.15)">
-          <h4 style="display:flex;align-items:center;gap:.4rem"><span class="live-badge"><span class="dot"></span>LIVE</span> VEKTOR →</h4>
-          <p>Hybrid Athlete Command Center. Adaptive performance OS. Track readiness, runs, strength, recovery & injuries. Built for athletes who track everything.</p>
+      <div class="section-title">Live Projects</div>
+      <div class="card-grid">
+        <a href="https://gritier.attridevv.com" target="_blank" style="text-decoration:none;color:inherit;display:block">
+          <div class="card" style="cursor:pointer;background:rgba(37,99,235,.04);border-color:rgba(37,99,235,.1)">
+            <h4 style="display:flex;align-items:center;gap:.35rem"><span class="live-badge"><span class="live-dot"></span>LIVE</span> Gritier &rarr;</h4>
+            <p>Hybrid Athlete Command Center. Adaptive performance OS for tracking readiness, runs, strength, recovery & injuries. Built for athletes who track everything.</p>
+          </div>
+        </a>
+        <div class="card">
+          <h4>Calorified</h4>
+          <p>Calorie tracker app. Nutrition logging, macro tracking, food database. Built for precision nutrition.</p>
         </div>
-      </a>
+        <div class="card">
+          <h4>Weather App</h4>
+          <p>API-driven weather interface. Clean data fetching, error handling, readable UI states.</p>
+        </div>
+      </div>
     </div>
 
     <div class="section">
       <div class="section-title">Stack</div>
-      <div class="card"><p><strong>TypeScript</strong> · Next.js · Prisma · Python · APIs · Git · Databases. Deep in full-stack architecture.</p></div>
+      <div class="card"><p><strong>TypeScript</strong> · Next.js · Prisma · Python · APIs · Git · Databases · Tailwind · React. Deep in <strong>full-stack architecture.</strong></p></div>
     </div>
 
     <div class="section">
-      <div class="section-title">Tools Built</div>
-      <div class="card-grid-3">
-        <div class="card"><h4>Weather App</h4><p>API-driven · Data, states, errors</p></div>
-        <div class="card"><h4>Macro Tracker</h4><p>Nutrition · Forms · Persistence</p></div>
-        <div class="card"><h4>Max Workspace</h4><p>Clean layouts · Browser surfaces</p></div>
+      <div class="section-title">More Tools</div>
+      <div class="card-grid-2">
+        <div class="card"><h4>Macro Tracker</h4><p>Nutrition tracking experiment. Forms, persistence, health tooling exploration.</p></div>
+        <div class="card"><h4>Max Workspace</h4><p>Clean workspace concept. Browser layouts, useful surfaces, shipping browser experiences.</p></div>
       </div>
     </div>
 
     <div class="section">
       <div class="section-title">Goals</div>
       <div class="card-grid-2">
-        <div class="card"><h4>Race Target</h4><p>Sub-1:30 Half Marathon · Building base at 40km/week</p></div>
-        <div class="card"><h4>Learning Path</h4><p>Now: TypeScript · System Design. Next: Rust · WASM. Always: Getting stronger.</p></div>
+        <div class="card"><h4>Race Target</h4><p>Sub-1:30 Half Marathon. Building base at 40km/week. Consistency over intensity.</p></div>
+        <div class="card"><h4>Learning Path</h4><p>Now: TypeScript · System Design · Architecture. Next: Rust · WASM. Always: Getting stronger, faster, sharper.</p></div>
       </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Currently</div>
+      <div class="card"><p>Running 40km/week. Lifting 4x/week. Building full-stack systems. Learning in public. The body and the mind sharpen together. <strong>One better rep — every single day.</strong></p></div>
     </div>
 
     <div class="links-row">
@@ -298,78 +322,54 @@ canvas.p-canvas{position:absolute;inset:0;pointer-events:none;z-index:2}
 </div>
 
 <script>
-// Particles on each half
-(function gen(id,color,count,dir){
-var c=document.getElementById(id),ctx=c.getContext('2d'),w,h;
-function R(){w=c.width=c.parentElement.offsetWidth;h=c.height=c.parentElement.offsetHeight}
-R();window.addEventListener('resize',R);
-var pts=[];
-for(var i=0;i<count;i++)pts.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.3,vy:dir*(.3+Math.random()*.8),r:Math.random()*1.5+.5,o:Math.random()*.4+.15,life:Math.random()*200});
-(function D(t){
-if(w!==c.parentElement.offsetWidth||h!==c.parentElement.offsetHeight)R();
-ctx.clearRect(0,0,w,h);
-pts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.life--;if(p.y<-10||p.y>h+10||p.life<=0){p.x=Math.random()*w;p.y=dir>0?h+10:-10;p.life=200+Math.random()*100}ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba('+color+','+(p.o*(p.life/200))+')';ctx.fill()});
-requestAnimationFrame(D);
-})();
-})('red-canvas','239,68,68',45,-1);
-(function gen(id,color,count,dir){
-var c=document.getElementById(id),ctx=c.getContext('2d'),w,h;
-function R(){w=c.width=c.parentElement.offsetWidth;h=c.height=c.parentElement.offsetHeight}
-R();window.addEventListener('resize',R);
-var pts=[];
-for(var i=0;i<count;i++)pts.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.3,vy:dir*(.3+Math.random()*.8),r:Math.random()*1.5+.5,o:Math.random()*.4+.15,life:Math.random()*200});
-(function D(t){
-if(w!==c.parentElement.offsetWidth||h!==c.parentElement.offsetHeight)R();
-ctx.clearRect(0,0,w,h);
-pts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.life--;if(p.y<-10||p.y>h+10||p.life<=0){p.x=Math.random()*w;p.y=dir>0?h+10:-10;p.life=200+Math.random()*100}ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba('+color+','+(p.o*(p.life/200))+')';ctx.fill()});
-requestAnimationFrame(D);
-})();
-})('blue-canvas','59,130,246',45,-1);
+// Horizon particles
+(function(id,col,ct,dir){var c=document.getElementById(id),ctx=c.getContext('2d'),w,h;
+function R(){w=c.width=c.parentElement.offsetWidth;h=c.height=c.parentElement.offsetHeight}R();window.addEventListener('resize',R);
+var p=[];for(var i=0;i<ct;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.3,vy:dir*(.3+Math.random()*.8),r:Math.random()*1.5+.4,o:Math.random()*.35+.15,l:Math.random()*200});
+(function D(t){if(w!==c.parentElement.offsetWidth||h!==c.parentElement.offsetHeight)R();ctx.clearRect(0,0,w,h);
+p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.y>h+10||pp.l<=0){pp.x=Math.random()*w;pp.y=dir>0?h+10:-10;pp.l=200+Math.random()*100}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/200))+')';ctx.fill()});requestAnimationFrame(D)})();
+})('rc','239,68,68',40,-1);
+(function(id,col,ct,dir){var c=document.getElementById(id),ctx=c.getContext('2d'),w,h;
+function R(){w=c.width=c.parentElement.offsetWidth;h=c.height=c.parentElement.offsetHeight}R();window.addEventListener('resize',R);
+var p=[];for(var i=0;i<ct;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.3,vy:dir*(.3+Math.random()*.8),r:Math.random()*1.5+.4,o:Math.random()*.35+.15,l:Math.random()*200});
+(function D(t){if(w!==c.parentElement.offsetWidth||h!==c.parentElement.offsetHeight)R();ctx.clearRect(0,0,w,h);
+p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.y>h+10||pp.l<=0){pp.x=Math.random()*w;pp.y=dir>0?h+10:-10;pp.l=200+Math.random()*100}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/200))+')';ctx.fill()});requestAnimationFrame(D)})();
+})('bc','59,130,246',40,-1);
 
-// Enter world with portal effect
-function enterWorld(world){
-  var h=document.getElementById('horizon');
-  var d=document.getElementById('divider-line');
-  var v=document.getElementById('vortex');
+// Expanded world background particles
+(function(id,col,ct){var c=document.getElementById(id),ctx=c.getContext('2d'),w,h;
+function R(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}R();window.addEventListener('resize',R);
+var p=[];for(var i=0;i<ct;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.15,vy:-.2-Math.random()*.4,r:Math.random()*1.2+.3,o:Math.random()*.2+.08,l:Math.random()*300});
+(function D(t){if(w!==c.width||h!==c.height)R();ctx.clearRect(0,0,w,h);
+p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.l<=0){pp.x=Math.random()*w;pp.y=h+10;pp.l=300+Math.random()*200}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/300))+')';ctx.fill()});requestAnimationFrame(D)})();
+})('red-bg','239,68,68',55);
+(function(id,col,ct){var c=document.getElementById(id),ctx=c.getContext('2d'),w,h;
+function R(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}R();window.addEventListener('resize',R);
+var p=[];for(var i=0;i<ct;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.15,vy:-.2-Math.random()*.4,r:Math.random()*1.2+.3,o:Math.random()*.2+.08,l:Math.random()*300});
+(function D(t){if(w!==c.width||h!==c.height)R();ctx.clearRect(0,0,w,h);
+p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.l<=0){pp.x=Math.random()*w;pp.y=h+10;pp.l=300+Math.random()*200}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/300))+')';ctx.fill()});requestAnimationFrame(D)})();
+})('blue-bg','59,130,246',55);
 
-  // Fade horizon
-  h.classList.add('fading');
-  d.style.opacity='0';
+// Scroll reveal
+(function(){var secs=document.querySelectorAll('.section');
+function check(){secs.forEach(function(s){var r=s.getBoundingClientRect();if(r.top<window.innerHeight*.85)s.classList.add('visible')})}
+check();document.querySelectorAll('.expanded-world').forEach(function(w){w.addEventListener('scroll',check)})})();
 
-  // Create vortex rings
-  v.innerHTML='';
-  for(var i=0;i<6;i++){
-    var ring=document.createElement('div');
-    ring.className='vortex-ring';
-    var size=50+i*80;
-    ring.style.width=size+'px';ring.style.height=size+'px';
-    ring.style.left=world==='red'?'25%':'75%';
-    ring.style.top='50%';
-    ring.style.transform='translate(-50%,-50%)';
-    ring.style.borderColor=world==='red'?'rgba(239,68,68,'+(.15-i*.02)+')':'rgba(59,130,246,'+(.15-i*.02)+')';
-    ring.style.animationDuration=(.8+i*.2)+'s';
-    ring.style.animationDirection=i%2===0?'normal':'reverse';
-    v.appendChild(ring);
-  }
+// Enter world
+function enterWorld(w){
+  document.getElementById('horizon').classList.add('fading');
+  document.getElementById('dline').style.opacity='0';
+  var v=document.getElementById('vortex');v.innerHTML='';
+  for(var i=0;i<6;i++){var r=document.createElement('div');r.className='vr';var s=50+i*80;r.style.cssText='width:'+s+'px;height:'+s+'px;left:'+(w==='red'?'25%':'75%')+';top:50%;transform:translate(-50%,-50%);border-color:'+(w==='red'?'rgba(239,68,68,'+(.15-i*.02)+')':'rgba(59,130,246,'+(.15-i*.02)+')')+';animation-duration:'+(.8+i*.2)+'s;animation-direction:'+(i%2?'reverse':'normal');v.appendChild(r)}
   v.classList.add('active');
-
-  // After delay, show expanded world
-  setTimeout(function(){
-    v.classList.remove('active');
-    var expand=document.getElementById(world==='red'?'red-expand':'blue-expand');
-    expand.classList.add('active');
-    document.body.style.overflow='auto';
+  setTimeout(function(){v.classList.remove('active');document.getElementById(w==='red'?'red-expand':'blue-expand').classList.add('active');document.body.style.overflow='auto';
+  setTimeout(function(){document.querySelectorAll('.section').forEach(function(s){s.classList.add('visible')})},200);
   },900);
 }
-
-// Close world
 function closeWorld(){
-  document.getElementById('red-expand').classList.remove('active');
-  document.getElementById('blue-expand').classList.remove('active');
-  document.getElementById('horizon').classList.remove('fading');
-  document.getElementById('divider-line').style.opacity='';
-  document.getElementById('vortex').classList.remove('active');
-  document.body.style.overflow='hidden';
+  document.getElementById('red-expand').classList.remove('active');document.getElementById('blue-expand').classList.remove('active');
+  document.getElementById('horizon').classList.remove('fading');document.getElementById('dline').style.opacity='';
+  document.body.style.overflow='hidden';document.querySelectorAll('.section').forEach(function(s){s.classList.remove('visible')});
 }
 </script>
 </body>
