@@ -8,339 +8,369 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-  --paper:#faf8f4;--ink:#1a1a1a;--grey:#444;--mid:#888;--light:#bbb;
-  --pink:#ec4899;--pink-light:#f9a8d4;--pink-glow:rgba(236,72,153,.06);
-  --red:#dc2626;--red-light:#fca5a5;
-  --blue:#3b82f6;--blue-light:#93c5fd;--blue-glow:rgba(59,130,246,.06);
+  --red:#dc2626;--red-glow:rgba(220,38,38,.4);--red-deep:#1a0202;
+  --blue:#2563eb;--blue-glow:rgba(37,99,235,.4);--blue-deep:#020a1a;
+  --gold:#fbbf24;--gold-dim:rgba(251,191,36,.5);
 }
 
 body{
-  background:#1a1a1a;color:var(--ink);
-  font-family:'Georgia','Times New Roman',serif;
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   width:100vw;height:100vh;overflow:hidden;
+  background:#000;color:#e2e8f0;
+}
+
+/* ===== HORIZON (landing) ===== */
+.horizon{
+  position:fixed;inset:0;z-index:1;display:flex;
+  transition:opacity .8s,filter .8s;
+}
+.horizon.fading{opacity:0;filter:blur(20px)}
+
+.world-half{
+  flex:1;position:relative;overflow:hidden;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
-  padding:.75rem;
+  transition:all .8s cubic-bezier(.16,1,.3,1);
 }
 
-/* ===== OPEN BOOK ===== */
-.book{
-  width:100%;max-width:1100px;height:100%;
-  display:flex;position:relative;
-  box-shadow:0 4px 40px rgba(0,0,0,.5),0 0 0 1px rgba(0,0,0,.3);
+/* Red world half */
+.red-half{
+  background:linear-gradient(180deg,#1a0202 0%,#2d0505 30%,#1a0202 60%,#0d0101 100%);
+  border-right:1px solid rgba(220,38,38,.15);
 }
+.red-half::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 30%,rgba(239,68,68,.12),transparent 50%),
+    radial-gradient(ellipse at 30% 70%,rgba(220,38,38,.06),transparent 40%);}
 
-/* ===== PAGE ===== */
-.page{flex:1;position:relative;overflow-y:auto;overflow-x:hidden}
-
-/* ===== LEFT PAGE — Azuma / Personal / Cherry blossom ===== */
-.page-left{background:linear-gradient(180deg,#fef9fb,#faf4f6,#fef9fb)}
-.page-left::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.03;
-  background-image:radial-gradient(circle at 30% 20%,var(--pink) 1px,transparent 1px),
-    radial-gradient(circle at 70% 60%,var(--pink) 1px,transparent 1px),
-    radial-gradient(circle at 50% 80%,var(--pink) .5px,transparent .5px);
-  background-size:60px 60px,80px 80px,40px 40px;animation:bgShift 20s linear infinite;}
-@keyframes bgShift{from{background-position:0 0,0 0,0 0}to{background-position:60px 60px,80px 80px,40px 40px}}
-
-/* ===== RIGHT PAGE — Professional / Ice ===== */
-.page-right{background:linear-gradient(180deg,#f8fafd,#f4f6fa,#f8fafd)}
-.page-right::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.02;
-  background-image:linear-gradient(45deg,var(--blue) 1px,transparent 1px),
-    linear-gradient(-45deg,var(--blue) .5px,transparent .5px);
-  background-size:50px 50px,70px 70px;animation:bgShift2 25s linear infinite;}
-@keyframes bgShift2{from{background-position:0 0,0 0}to{background-position:50px 50px,70px 70px}}
-
-/* ===== SPINE ===== */
-.spine{
-  width:8px;background:linear-gradient(90deg,#d0c8b8,#e8e0d5 30%,#fff 50%,#e8e0d5 70%,#d0c8b8);
-  position:relative;flex-shrink:0;
-  box-shadow:inset -2px 0 4px rgba(0,0,0,.08),inset 2px 0 4px rgba(0,0,0,.08);
+/* Blue world half */
+.blue-half{
+  background:linear-gradient(180deg,#020a1a 0%,#051530 30%,#020a1a 60%,#010510 100%);
 }
+.blue-half::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 30%,rgba(59,130,246,.12),transparent 50%),
+    radial-gradient(ellipse at 70% 70%,rgba(37,99,235,.06),transparent 40%);}
 
-/* ===== PAGE CONTENT ===== */
-.page-content{padding:.8rem;height:100%;overflow-y:auto}
+/* World label on each side */
+.world-label{position:relative;z-index:5;text-align:center;transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.world-half:hover .world-label{transform:translateY(-8px)}
+.world-label .wl-char{display:block;font-size:3rem;margin-bottom:.5rem;transition:all .5s}
+.red-half .wl-char{color:rgba(239,68,68,.4);text-shadow:0 0 40px rgba(239,68,68,.2)}.red-half:hover .wl-char{color:rgba(239,68,68,.7);text-shadow:0 0 60px rgba(239,68,68,.4)}
+.blue-half .wl-char{color:rgba(59,130,246,.4);text-shadow:0 0 40px rgba(59,130,246,.2)}.blue-half:hover .wl-char{color:rgba(59,130,246,.7);text-shadow:0 0 60px rgba(59,130,246,.4)}
 
-/* ===== PAGE HEADER ===== */
-.page-header{text-align:center;border-bottom:2px solid var(--ink);padding-bottom:.3rem;margin-bottom:.6rem}
-.page-header .ch{font-size:.38rem;letter-spacing:.2em;color:var(--mid);text-transform:uppercase;margin-bottom:.1rem;font-family:'Inter',sans-serif}
-.page-header h2{font-size:.7rem;font-weight:900;letter-spacing:.04em}
+.world-label .wl-name{display:block;font-size:.85rem;font-weight:900;letter-spacing:.12em;margin-bottom:.2rem}
+.red-half .wl-name{color:#fca5a5}.blue-half .wl-name{color:#93c5fd}
 
-/* ===== MANGA PANEL GRID ===== */
-.panels{display:grid;gap:.4rem}
+.world-label .wl-sub{display:block;font-size:.45rem;letter-spacing:.15em;text-transform:uppercase;opacity:.4}
+.red-half .wl-sub{color:#fca5a5}.blue-half .wl-sub{color:#93c5fd}
 
-/* ===== PANEL ===== */
-.panel{
-  border:1.8px solid var(--ink);padding:.5rem;position:relative;
-  background:#fff;transition:all .35s cubic-bezier(.16,1,.3,1);
-  overflow:hidden;cursor:default;
+/* Center divider */
+.divider-line{position:fixed;top:0;bottom:0;left:50%;width:1px;z-index:10;pointer-events:none;
+  background:linear-gradient(to bottom,transparent,rgba(255,255,255,.1) 30%,rgba(255,255,255,.2) 50%,rgba(255,255,255,.1) 70%,transparent);
+  animation:divPulse 3s ease-in-out infinite;transition:opacity .6s}
+@keyframes divPulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+/* ===== CANVAS PARTICLES ===== */
+canvas.p-canvas{position:absolute;inset:0;pointer-events:none;z-index:2}
+
+/* ===== PORTAL VORTEX OVERLAY ===== */
+.vortex{
+  position:fixed;inset:0;z-index:50;pointer-events:none;opacity:0;
+  transition:opacity .3s;
 }
-.panel:hover{transform:translateY(-2px);box-shadow:2px 3px 0 rgba(0,0,0,.08)}
-.panel:hover .panel-glow{opacity:1}
+.vortex.active{opacity:1}
 
-.panel-glow{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s}
-.page-left .panel-glow{background:radial-gradient(ellipse at var(--mx,50%) var(--my,50%),rgba(236,72,153,.04),transparent 60%)}
-.page-right .panel-glow{background:radial-gradient(ellipse at var(--mx,50%) var(--my,50%),rgba(59,130,246,.04),transparent 60%)}
+.vortex-ring{position:absolute;border-radius:50%;border:1px solid transparent;animation:vrSpin 1s linear infinite}
+@keyframes vrSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-/* ===== PANEL ELEMENTS ===== */
-.panel-label{font-size:.36rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);margin-bottom:.2rem;font-family:'Inter',sans-serif;font-weight:700}
+/* ===== EXPANDED WORLD (fullscreen) ===== */
+.expanded-world{
+  position:fixed;inset:0;z-index:40;display:none;overflow-y:auto;
+  opacity:0;transform:scale(1.1);
+  transition:opacity .6s,transform .6s cubic-bezier(.16,1,.3,1);
+}
+.expanded-world.active{display:block;animation:worldEnter .6s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes worldEnter{to{opacity:1;transform:scale(1)}}
 
-.panel h3{font-size:.65rem;font-weight:900;letter-spacing:-.01em;line-height:1.1;margin-bottom:.15rem}
-.panel h4{font-size:.5rem;font-weight:700;line-height:1.2;margin-bottom:.1rem}
-.panel p{font-size:.45rem;line-height:1.6;color:var(--grey)}
-.panel .em{font-style:italic}
-.panel .bold{font-weight:700;color:var(--ink)}
+.expanded-world.red-expand{background:linear-gradient(180deg,#0d0202,#1a0404,#0d0202)}
+.expanded-world.blue-expand{background:linear-gradient(180deg,#020810,#041020,#020810)}
 
-.panel a{color:var(--ink);font-weight:700;text-decoration:none;border-bottom:1.5px solid var(--ink);transition:all .2s;font-size:.45rem}
-.panel a:hover{opacity:.7}
+/* Close button */
+.close-btn{
+  position:fixed;top:1rem;right:1rem;z-index:60;
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);
+  font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .3s;backdrop-filter:blur(4px);
+}
+.close-btn:hover{background:rgba(0,0,0,.7);border-color:rgba(255,255,255,.2);color:#fff}
 
-/* ===== SFX ===== */
-.sfx{position:absolute;font-weight:900;pointer-events:none;letter-spacing:.06em}
-.sfx-lg{font-size:1.4rem;opacity:.04}
-.sfx-md{font-size:.8rem;opacity:.06}
-.sfx-sm{font-size:.5rem;opacity:.08}
-.sfx-tr{top:.1rem;right:.2rem}.sfx-tl{top:.1rem;left:.2rem}
-.sfx-br{bottom:.1rem;right:.2rem}.sfx-bl{bottom:.1rem;left:.2rem}
+/* ===== EXPANDED CONTENT ===== */
+.expanded-content{max-width:680px;margin:0 auto;padding:4rem 1.5rem 3rem}
 
-/* ===== SCREENTONE ===== */
-.screentone{position:absolute;inset:0;pointer-events:none;opacity:.025;
-  background-image:radial-gradient(circle,var(--ink) 1px,transparent 1px);background-size:4px 4px}
+.expanded-content .world-header{text-align:center;margin-bottom:2rem}
+.expanded-content .world-header .ch{font-size:.45rem;letter-spacing:.25em;text-transform:uppercase;margin-bottom:.3rem;opacity:.4}
+.expanded-content .world-header h2{font-size:1.8rem;font-weight:900;letter-spacing:.04em}
 
-/* ===== SPEED LINES ===== */
-.speedlines{position:absolute;inset:0;pointer-events:none;opacity:.03;
-  background:repeating-linear-gradient(70deg,transparent,transparent 2px,var(--ink) 2px,var(--ink) 3px)}
+.expanded-content .section{margin-bottom:2rem}
+.expanded-content .section-title{font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;margin-bottom:.75rem;opacity:.4;font-weight:700}
 
-/* ===== FIRE TEXT ACCENT ===== */
-.fire-text{color:var(--red);font-weight:700}
-.ice-text{color:var(--blue);font-weight:700}
+/* Cards */
+.card-grid{display:grid;gap:.5rem}
+.card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);padding:.75rem 1rem;border-radius:8px;transition:all .3s}
+.card:hover{background:rgba(255,255,255,.04);transform:translateY(-2px)}
+.card h4{font-size:.65rem;font-weight:700;margin-bottom:.2rem}
+.card p{font-size:.5rem;line-height:1.65;opacity:.6}
+.red-expand .card h4{color:#fca5a5}.blue-expand .card h4{color:#93c5fd}
 
-/* ===== LIVE DOT ===== */
-.live-dot{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:.2rem;animation:dotPulse 2s infinite}
-.page-left .live-dot{background:var(--red)}.page-right .live-dot{background:var(--blue)}
-@keyframes dotPulse{0%,100%{opacity:1}50%{opacity:.25}}
+.card-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.card-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem}
 
-/* ===== STAT BARS ===== */
-.stat-row{display:flex;align-items:center;gap:.3rem;margin:.15rem 0}
-.stat-row .stat-lbl{font-size:.38rem;color:var(--mid);min-width:45px;font-family:'Inter',sans-serif;text-transform:uppercase;letter-spacing:.05em}
-.stat-row .stat-bar{flex:1;height:6px;background:var(--light);position:relative}
-.stat-row .stat-bar::after{content:'';position:absolute;left:0;top:0;bottom:0;width:var(--pct);transition:width 1s}
-.page-left .stat-bar::after{background:var(--red)}
-.page-right .stat-bar::after{background:var(--blue)}
-.stat-row .stat-val{font-size:.38rem;font-weight:700;font-family:'Inter',sans-serif}
+.live-badge{display:inline-flex;align-items:center;gap:.3rem;font-size:.4rem;font-weight:700;letter-spacing:.08em;padding:.15rem .45rem;border-radius:3px}
+.red-expand .live-badge{background:rgba(220,38,38,.15);color:#fca5a5;border:1px solid rgba(220,38,38,.2)}
+.blue-expand .live-badge{background:rgba(37,99,235,.15);color:#93c5fd;border:1px solid rgba(37,99,235,.2)}
+.live-badge .dot{width:5px;height:5px;border-radius:50%;animation:dotBlink 2s infinite}
+.red-expand .dot{background:#fca5a5}.blue-expand .dot{background:#93c5fd}
+@keyframes dotBlink{0%,100%{opacity:1}50%{opacity:.2}}
 
-/* ===== PANEL LAYOUTS ===== */
-.p-full{grid-column:1/-1}
-.row-2{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
-.row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.4rem}
+.poem{font-style:italic;line-height:1.8;opacity:.6}
+.quote{font-style:italic;border-left:2px solid rgba(255,255,255,.08);padding-left:1rem;font-size:.45rem;opacity:.4;margin-top:2rem}
 
-/* ===== CHERRY PETAL OVERLAY ===== */
-.petals{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:5}
-.petal{position:absolute;width:4px;height:7px;border-radius:50% 0 50% 0;opacity:0;
-  animation:petalFall var(--dur) ease-in-out infinite;animation-delay:var(--del);left:var(--x)}
-.petal.pk{background:linear-gradient(135deg,var(--pink-light),rgba(236,72,153,.3))}
-.petal.wh{background:linear-gradient(135deg,#fff,rgba(249,168,212,.2));width:3px;height:5px}
-@keyframes petalFall{0%{opacity:.6;transform:translate(0,0)rotate(0)}25%{transform:translate(var(--drift),25vh)rotate(90deg)}50%{opacity:.4;transform:translate(calc(var(--drift)*-.2),50vh)rotate(180deg)}75%{transform:translate(calc(var(--drift)*.3),75vh)rotate(270deg)}100%{opacity:0;transform:translate(var(--drift),100vh)rotate(360deg)}}
+.links-row{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-top:1rem}
+.link-pill{padding:.3rem .7rem;border-radius:20px;font-size:.42rem;letter-spacing:.08em;text-decoration:none;transition:all .25s}
+.red-expand .link-pill{color:rgba(252,165,165,.5);border:1px solid rgba(252,165,165,.1)}
+.red-expand .link-pill:hover{color:#fca5a5;border-color:rgba(252,165,165,.3)}
+.blue-expand .link-pill{color:rgba(147,197,253,.5);border:1px solid rgba(147,197,253,.1)}
+.blue-expand .link-pill:hover{color:#93c5fd;border-color:rgba(147,197,253,.3)}
 
-/* ===== RESPONSIVE ===== */
 @media(max-width:700px){
-  .book{flex-direction:column}
-  .spine{width:100%;height:6px}
-  .page-header h2{font-size:.6rem}
-  .panel h3{font-size:.55rem}
-  .row-2,.row-3{grid-template-columns:1fr}
+  .horizon{flex-direction:column}
+  .world-half{height:50vh}
+  .divider-line{top:50%;left:0;right:0;bottom:auto;width:auto;height:1px}
+  .card-grid-2,.card-grid-3{grid-template-columns:1fr}
+  .wl-char{font-size:2rem}
 }
 </style>
 </head>
 <body>
 
-<div class="book">
+<!-- ===== LANDING: SPLIT HORIZON ===== -->
+<div class="horizon" id="horizon">
 
-  <!-- ===== LEFT PAGE — AZUMA / PERSONAL ===== -->
-  <div class="page page-left">
-    <div class="petals" id="petals-left"></div>
-    <div class="page-content">
-
-      <div class="page-header">
-        <div class="ch">第零話 · Chapter Zero</div>
-        <h2>AZUMA <span class="fire-text">· 東</span></h2>
-      </div>
-
-      <div class="panels">
-
-        <!-- IDENTITY -->
-        <div class="panel p-full">
-          <div class="panel-glow"></div>
-          <span class="sfx sfx-lg sfx-tr">WHO</span>
-          <div class="panel-label">IDENTITY · 自己</div>
-          <p><span class="fire-text bold">Dev Attri.</span> Builder. Runner. Lifter. Learner. Based in India. I'm figuring it out — one build, one rep, one kilometer at a time. <span class="fire-text bold">Learning in public.</span> Not polished. Not finished. Just obsessed with making things that actually work.</p>
-        </div>
-
-        <!-- PHILOSOPHY + POETRY -->
-        <div class="row-2">
-          <div class="panel">
-            <div class="screentone"></div>
-            <div class="panel-label">PHILOSOPHY · 哲学</div>
-            <p>I don't believe in waiting until I'm <span class="fire-text bold">ready.</span> I ship first, then refine.</p>
-            <p style="margin-top:.3rem">Everything worth doing is on the other side of <span class="fire-text bold">discomfort.</span></p>
-            <p style="margin-top:.3rem"><span class="fire-text bold">Hard work</span> beats talent when talent doesn't work hard.</p>
-          </div>
-          <div class="panel">
-            <span class="sfx sfx-sm sfx-bl">poem</span>
-            <div class="panel-label">POETRY · 詩</div>
-            <p class="em" style="font-size:.42rem;line-height:1.7">
-              "my eyes are where your eyes is —<br>you blinked and i rewired."
-            </p>
-            <p class="em" style="font-size:.4rem;line-height:1.7;margin-top:.4rem">
-              "i don't believe in god<br>but i prayed when you held me."
-            </p>
-          </div>
-        </div>
-
-        <!-- QUESTIONS -->
-        <div class="panel p-full">
-          <span class="sfx sfx-md sfx-tr">?</span>
-          <div class="panel-label">QUESTIONS I SIT WITH · 問い</div>
-          <p><span class="fire-text bold">What is the meaning of life?</span> The meaning is emotion. The highest highs, the lowest lows. To feel everything. If you die having felt it all — you lived right.</p>
-          <p style="margin-top:.3rem"><span class="fire-text bold">When did we stop asking questions?</span> When asking stopped being rewarded. School teaches answers, not curiosity. The best things come from people who never stopped asking why.</p>
-          <p style="margin-top:.3rem"><span class="fire-text bold">Why does being drunk make us happy?</span> It quiets the voice. The one that worries about tomorrow. The real question is: why do we need relief from ourselves?</p>
-        </div>
-
-        <!-- BELIEFS + SMALL WINS -->
-        <div class="row-2">
-          <div class="panel">
-            <div class="speedlines"></div>
-            <div class="panel-label">BELIEFS · 信念</div>
-            <p>01. People remember how you made them <span class="fire-text bold">feel.</span></p>
-            <p>02. The best stories are the ones you're <span class="fire-text bold">scared</span> to tell.</p>
-            <p>03. <span class="fire-text bold">Small wins</span> compound. Keep showing up.</p>
-          </div>
-          <div class="panel">
-            <div class="screentone"></div>
-            <div class="panel-label">SMALL WINS · 成果</div>
-            <p>→ Ran a <span class="fire-text bold">half marathon</span></p>
-            <p>→ Hit 1000 ELO in <span class="fire-text bold">chess</span></p>
-            <p>→ Visited <span class="fire-text bold">Nepal</span></p>
-            <p>→ Built this <span class="fire-text bold">website</span></p>
-          </div>
-        </div>
-
-      </div>
+  <!-- Red World -->
+  <div class="world-half red-half" onclick="enterWorld('red')">
+    <canvas class="p-canvas" id="red-canvas"></canvas>
+    <div class="world-label">
+      <span class="wl-char">火</span>
+      <span class="wl-name">AZUMA</span>
+      <span class="wl-sub">The Self · Personal</span>
     </div>
   </div>
 
-  <!-- ===== SPINE ===== -->
-  <div class="spine"></div>
-
-  <!-- ===== RIGHT PAGE — PROFESSIONAL / WORK ===== -->
-  <div class="page page-right">
-    <div class="page-content">
-
-      <div class="page-header">
-        <div class="ch">第壱話 · Chapter One</div>
-        <h2><span class="ice-text">CREATE</span> · 創造</h2>
-      </div>
-
-      <div class="panels">
-
-        <!-- VEKTOR -->
-        <a href="/grit" class="panel p-full" style="text-decoration:none;color:inherit;display:block">
-          <div class="panel-glow"></div>
-          <div class="speedlines"></div>
-          <span class="sfx sfx-lg sfx-tr">NOW</span>
-          <div class="panel-label"><span class="live-dot"></span>LIVE · 稼働中</div>
-          <h3>VEKTOR <span class="ice-text">→</span></h3>
-          <p>Hybrid Athlete Command Center. Adaptive performance OS. Track <span class="ice-text bold">readiness, runs, strength, recovery & injuries</span> in one tactical dashboard. Built for athletes who track everything.</p>
-        </a>
-
-        <!-- STACK + STATS -->
-        <div class="row-2">
-          <div class="panel">
-            <div class="panel-label">STACK · 技術</div>
-            <p><span class="ice-text bold">TypeScript</span> · Next.js · Prisma</p>
-            <p>Python · APIs · Git · Databases</p>
-            <p style="margin-top:.3rem">Deep in <span class="ice-text bold">full-stack architecture.</span></p>
-          </div>
-          <div class="panel">
-            <div class="screentone"></div>
-            <div class="panel-label">STATS · 統計</div>
-            <div class="stat-row"><span class="stat-lbl">Running</span><span class="stat-bar" style="--pct:85%"></span><span class="stat-val">42.5km</span></div>
-            <div class="stat-row"><span class="stat-lbl">Lifting</span><span class="stat-bar" style="--pct:70%"></span><span class="stat-val">12.4K kg</span></div>
-            <div class="stat-row"><span class="stat-lbl">Coding</span><span class="stat-bar" style="--pct:90%"></span><span class="stat-val">5+ tools</span></div>
-            <div class="stat-row"><span class="stat-lbl">Sleep</span><span class="stat-bar" style="--pct:72%"></span><span class="stat-val">7.2h</span></div>
-          </div>
-        </div>
-
-        <!-- TOOLS -->
-        <div class="row-3">
-          <div class="panel">
-            <span class="sfx sfx-sm sfx-bl">01</span>
-            <div class="panel-label">TOOL</div>
-            <p><span class="ice-text bold">Weather App</span><br>API-driven · States · Errors · Clean UI</p>
-          </div>
-          <div class="panel">
-            <div class="panel-label">TOOL</div>
-            <p><span class="ice-text bold">Macro Tracker</span><br>Nutrition · Forms · Persistence · Health</p>
-          </div>
-          <div class="panel">
-            <div class="panel-label">TOOL</div>
-            <p><span class="ice-text bold">Max Workspace</span><br>Clean layouts · Browser surfaces</p>
-          </div>
-        </div>
-
-        <!-- GOALS -->
-        <div class="row-2">
-          <div class="panel">
-            <div class="speedlines"></div>
-            <div class="panel-label">RACE GOAL · 目標</div>
-            <p><span class="ice-text bold">Sub-1:30 Half Marathon</span></p>
-            <p>Building base. 40km/week. Consistency over intensity.</p>
-          </div>
-          <div class="panel">
-            <div class="screentone"></div>
-            <div class="panel-label">LEARNING · 学習</div>
-            <p>Now: <span class="ice-text bold">TypeScript · System Design</span></p>
-            <p>Next: Rust · WASM · Real-time</p>
-            <p>Always: Getting <span class="ice-text bold">stronger, faster, sharper.</span></p>
-          </div>
-        </div>
-
-        <!-- LINKS -->
-        <div class="panel p-full" style="text-align:center">
-          <div class="panel-label">SIGNAL · 信号</div>
-          <p style="display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin-top:.2rem">
-            <a href="https://github.com/attridevv" target="_blank">GitHub</a>
-            <a href="https://x.com/attridevv" target="_blank">X</a>
-            <a href="https://instagram.com/attridevv" target="_blank">Instagram</a>
-            <a href="https://anilist.co/user/Attridevv/" target="_blank">AniList</a>
-            <a href="https://youtube.com/@attridevv" target="_blank">YouTube</a>
-          </p>
-        </div>
-
-      </div>
+  <!-- Blue World -->
+  <div class="world-half blue-half" onclick="enterWorld('blue')">
+    <canvas class="p-canvas" id="blue-canvas"></canvas>
+    <div class="world-label">
+      <span class="wl-char">水</span>
+      <span class="wl-name">CREATE</span>
+      <span class="wl-sub">The Work · Tools</span>
     </div>
   </div>
 
 </div>
 
-<script>
-// Cherry blossom petals on left page
-(function(){
-var p=document.getElementById('petals-left'),h='';
-for(var i=0;i<25;i++){
-  var x=Math.random()*90,dur=8+Math.random()*12,del=Math.random()*14,drift=(Math.random()-.5)*80;
-  h+='<div class="petal '+(Math.random()>.3?'pk':'wh')+'" style="--x:'+x+'%;--dur:'+dur+'s;--del:'+del+'s;--drift:'+drift+'px"></div>';
-}
-p.innerHTML=h;
-})();
+<div class="divider-line" id="divider-line"></div>
 
-// Mouse-follow glow on panels
-document.querySelectorAll('.panel').forEach(function(panel){
-  panel.addEventListener('mousemove',function(e){
-    var r=panel.getBoundingClientRect();
-    var x=((e.clientX-r.left)/r.width*100).toFixed(1);
-    var y=((e.clientY-r.top)/r.height*100).toFixed(1);
-    panel.style.setProperty('--mx',x+'%');
-    panel.style.setProperty('--my',y+'%');
-  });
-});
+<!-- ===== PORTAL VORTEX ===== -->
+<div class="vortex" id="vortex"></div>
+
+<!-- ===== EXPANDED: RED WORLD ===== -->
+<div class="expanded-world red-expand" id="red-expand">
+  <button class="close-btn" onclick="closeWorld()">×</button>
+  <div class="expanded-content">
+
+    <div class="world-header">
+      <div class="ch">第一章 · Chapter One</div>
+      <h2 style="color:#fca5a5">AZUMA · 東</h2>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Identity</div>
+      <div class="card">
+        <p><strong>Dev Attri.</strong> Builder. Runner. Lifter. Learner. Based in India. I'm figuring it out — one build, one rep, one kilometer at a time. Learning in public. Not polished. Not finished. Just obsessed with making things that actually work.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Philosophy</div>
+      <div class="card-grid-2">
+        <div class="card"><p>I don't believe in waiting until I'm ready. <strong>Ship first, then refine.</strong></p></div>
+        <div class="card"><p>Everything worth doing is on the other side of <strong>discomfort.</strong></p></div>
+        <div class="card"><p><strong>Hard work</strong> beats talent when talent doesn't work hard.</p></div>
+        <div class="card"><p>People remember how you made them <strong>feel,</strong> not what you said.</p></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Poetry</div>
+      <div class="card-grid-2">
+        <div class="card"><p class="poem">"my eyes are where your eyes is — you blinked and i rewired."</p></div>
+        <div class="card"><p class="poem">"i don't believe in god but i prayed when you held me."</p></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Questions I Sit With</div>
+      <div class="card"><p><strong>What is the meaning of life?</strong> The meaning is emotion. The highest highs, the lowest lows. To feel everything. If you die having felt it all — you lived right.</p></div>
+      <div class="card" style="margin-top:.5rem"><p><strong>When did we stop asking?</strong> When asking stopped being rewarded. School teaches answers, not curiosity.</p></div>
+      <div class="card" style="margin-top:.5rem"><p><strong>Why does being drunk make us happy?</strong> It quiets the voice. The one that worries about tomorrow. The real question: why do we need relief from ourselves?</p></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Small Wins</div>
+      <div class="card-grid-2">
+        <div class="card"><p>→ Ran a half marathon</p></div>
+        <div class="card"><p>→ Hit 1000 ELO in chess</p></div>
+        <div class="card"><p>→ Visited Nepal</p></div>
+        <div class="card"><p>→ Built this website</p></div>
+      </div>
+    </div>
+
+    <div class="links-row">
+      <a href="https://github.com/attridevv" target="_blank" class="link-pill">GitHub</a>
+      <a href="https://x.com/attridevv" target="_blank" class="link-pill">X</a>
+      <a href="https://instagram.com/attridevv" target="_blank" class="link-pill">Instagram</a>
+    </div>
+
+    <p class="quote">"You are under no obligation to be the same person you were five minutes ago."</p>
+  </div>
+</div>
+
+<!-- ===== EXPANDED: BLUE WORLD ===== -->
+<div class="expanded-world blue-expand" id="blue-expand">
+  <button class="close-btn" onclick="closeWorld()">×</button>
+  <div class="expanded-content">
+
+    <div class="world-header">
+      <div class="ch">第二章 · Chapter Two</div>
+      <h2 style="color:#93c5fd">CREATE · 創造</h2>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Live Project</div>
+      <a href="/grit" style="text-decoration:none;color:inherit;display:block">
+        <div class="card" style="cursor:pointer;background:rgba(37,99,235,.06);border-color:rgba(37,99,235,.15)">
+          <h4 style="display:flex;align-items:center;gap:.4rem"><span class="live-badge"><span class="dot"></span>LIVE</span> VEKTOR →</h4>
+          <p>Hybrid Athlete Command Center. Adaptive performance OS. Track readiness, runs, strength, recovery & injuries. Built for athletes who track everything.</p>
+        </div>
+      </a>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Stack</div>
+      <div class="card"><p><strong>TypeScript</strong> · Next.js · Prisma · Python · APIs · Git · Databases. Deep in full-stack architecture.</p></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Tools Built</div>
+      <div class="card-grid-3">
+        <div class="card"><h4>Weather App</h4><p>API-driven · Data, states, errors</p></div>
+        <div class="card"><h4>Macro Tracker</h4><p>Nutrition · Forms · Persistence</p></div>
+        <div class="card"><h4>Max Workspace</h4><p>Clean layouts · Browser surfaces</p></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Goals</div>
+      <div class="card-grid-2">
+        <div class="card"><h4>Race Target</h4><p>Sub-1:30 Half Marathon · Building base at 40km/week</p></div>
+        <div class="card"><h4>Learning Path</h4><p>Now: TypeScript · System Design. Next: Rust · WASM. Always: Getting stronger.</p></div>
+      </div>
+    </div>
+
+    <div class="links-row">
+      <a href="https://github.com/attridevv" target="_blank" class="link-pill">GitHub</a>
+      <a href="https://x.com/attridevv" target="_blank" class="link-pill">X</a>
+      <a href="https://youtube.com/@attridevv" target="_blank" class="link-pill">YouTube</a>
+      <a href="https://anilist.co/user/Attridevv/" target="_blank" class="link-pill">AniList</a>
+    </div>
+
+    <p class="quote">"The mystery of human existence lies not in just staying alive, but in finding something to live for." — Dostoevsky</p>
+  </div>
+</div>
+
+<script>
+// Particles on each half
+(function gen(id,color,count,dir){
+var c=document.getElementById(id),ctx=c.getContext('2d'),w,h;
+function R(){w=c.width=c.parentElement.offsetWidth;h=c.height=c.parentElement.offsetHeight}
+R();window.addEventListener('resize',R);
+var pts=[];
+for(var i=0;i<count;i++)pts.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.3,vy:dir*(.3+Math.random()*.8),r:Math.random()*1.5+.5,o:Math.random()*.4+.15,life:Math.random()*200});
+(function D(t){
+if(w!==c.parentElement.offsetWidth||h!==c.parentElement.offsetHeight)R();
+ctx.clearRect(0,0,w,h);
+pts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.life--;if(p.y<-10||p.y>h+10||p.life<=0){p.x=Math.random()*w;p.y=dir>0?h+10:-10;p.life=200+Math.random()*100}ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba('+color+','+(p.o*(p.life/200))+')';ctx.fill()});
+requestAnimationFrame(D);
+})();
+})('red-canvas','239,68,68',45,-1);
+(function gen(id,color,count,dir){
+var c=document.getElementById(id),ctx=c.getContext('2d'),w,h;
+function R(){w=c.width=c.parentElement.offsetWidth;h=c.height=c.parentElement.offsetHeight}
+R();window.addEventListener('resize',R);
+var pts=[];
+for(var i=0;i<count;i++)pts.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.3,vy:dir*(.3+Math.random()*.8),r:Math.random()*1.5+.5,o:Math.random()*.4+.15,life:Math.random()*200});
+(function D(t){
+if(w!==c.parentElement.offsetWidth||h!==c.parentElement.offsetHeight)R();
+ctx.clearRect(0,0,w,h);
+pts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.life--;if(p.y<-10||p.y>h+10||p.life<=0){p.x=Math.random()*w;p.y=dir>0?h+10:-10;p.life=200+Math.random()*100}ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba('+color+','+(p.o*(p.life/200))+')';ctx.fill()});
+requestAnimationFrame(D);
+})();
+})('blue-canvas','59,130,246',45,-1);
+
+// Enter world with portal effect
+function enterWorld(world){
+  var h=document.getElementById('horizon');
+  var d=document.getElementById('divider-line');
+  var v=document.getElementById('vortex');
+
+  // Fade horizon
+  h.classList.add('fading');
+  d.style.opacity='0';
+
+  // Create vortex rings
+  v.innerHTML='';
+  for(var i=0;i<6;i++){
+    var ring=document.createElement('div');
+    ring.className='vortex-ring';
+    var size=50+i*80;
+    ring.style.width=size+'px';ring.style.height=size+'px';
+    ring.style.left=world==='red'?'25%':'75%';
+    ring.style.top='50%';
+    ring.style.transform='translate(-50%,-50%)';
+    ring.style.borderColor=world==='red'?'rgba(239,68,68,'+(.15-i*.02)+')':'rgba(59,130,246,'+(.15-i*.02)+')';
+    ring.style.animationDuration=(.8+i*.2)+'s';
+    ring.style.animationDirection=i%2===0?'normal':'reverse';
+    v.appendChild(ring);
+  }
+  v.classList.add('active');
+
+  // After delay, show expanded world
+  setTimeout(function(){
+    v.classList.remove('active');
+    var expand=document.getElementById(world==='red'?'red-expand':'blue-expand');
+    expand.classList.add('active');
+    document.body.style.overflow='auto';
+  },900);
+}
+
+// Close world
+function closeWorld(){
+  document.getElementById('red-expand').classList.remove('active');
+  document.getElementById('blue-expand').classList.remove('active');
+  document.getElementById('horizon').classList.remove('fading');
+  document.getElementById('divider-line').style.opacity='';
+  document.getElementById('vortex').classList.remove('active');
+  document.body.style.overflow='hidden';
+}
 </script>
 </body>
 </html>
