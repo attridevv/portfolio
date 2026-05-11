@@ -7,9 +7,10 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{--red:#dc2626;--red-glow:rgba(220,38,38,.4);--red-deep:#1a0202;--blue:#2563eb;--blue-glow:rgba(37,99,235,.4);--blue-deep:#020a1a}
+
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;width:100vw;height:100vh;overflow:hidden;background:#000;color:#e2e8f0}
 
-/* HORIZON */
+/* ===== HORIZON ===== */
 .horizon{position:fixed;inset:0;z-index:1;display:flex;transition:opacity .8s,filter .8s}
 .horizon.fading{opacity:0;filter:blur(20px)}
 .world-half{flex:1;position:relative;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .8s cubic-bezier(.16,1,.3,1)}
@@ -17,7 +18,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .red-half::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 30%,rgba(239,68,68,.12),transparent 50%),radial-gradient(ellipse at 30% 70%,rgba(220,38,38,.06),transparent 40%)}
 .blue-half{background:linear-gradient(180deg,#020a1a 0%,#051530 30%,#020a1a 60%,#010510 100%)}
 .blue-half::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 30%,rgba(59,130,246,.12),transparent 50%),radial-gradient(ellipse at 70% 70%,rgba(37,99,235,.06),transparent 40%)}
-.world-label{position:relative;z-index:5;text-align:center;transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.world-label{position:relative;z-index:5;text-align:center;transition:transform .6s}
 .world-half:hover .world-label{transform:translateY(-8px)}
 .wl-char{display:block;font-size:3rem;margin-bottom:.5rem;transition:all .5s}
 .red-half .wl-char{color:rgba(239,68,68,.4);text-shadow:0 0 40px rgba(239,68,68,.2)}.red-half:hover .wl-char{color:rgba(239,68,68,.7);text-shadow:0 0 60px rgba(239,68,68,.4)}
@@ -25,77 +26,121 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .wl-name{display:block;font-size:.85rem;font-weight:900;letter-spacing:.12em;margin-bottom:.2rem}
 .red-half .wl-name{color:#fca5a5}.blue-half .wl-name{color:#93c5fd}
 .wl-sub{display:block;font-size:.45rem;letter-spacing:.15em;text-transform:uppercase;opacity:.4}
-.red-half .wl-sub{color:#fca5a5}.blue-half .wl-sub{color:#93c5fd}
 .divider-line{position:fixed;top:0;bottom:0;left:50%;width:1px;z-index:10;pointer-events:none;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.1) 30%,rgba(255,255,255,.2) 50%,rgba(255,255,255,.1) 70%,transparent);animation:divPulse 3s ease-in-out infinite;transition:opacity .6s}
 @keyframes divPulse{0%,100%{opacity:.5}50%{opacity:1}}
 canvas.p-canvas{position:absolute;inset:0;pointer-events:none;z-index:2}
 
-/* VORTEX */
+/* ===== VORTEX ===== */
 .vortex{position:fixed;inset:0;z-index:50;pointer-events:none;opacity:0;transition:opacity .3s}
 .vortex.active{opacity:1}
 .vr{position:absolute;border-radius:50%;border:1px solid transparent;animation:vrSpin 1s linear infinite}
 @keyframes vrSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-/* EXPANDED */
-.expanded-world{position:fixed;inset:0;z-index:40;display:none;overflow-y:auto;opacity:0;transform:scale(1.05);transition:opacity .6s,transform .6s cubic-bezier(.16,1,.3,1)}
+/* ===== EXPANDED ===== */
+.expanded-world{position:fixed;inset:0;z-index:40;display:none;overflow-y:auto;opacity:0;transform:scale(1.05);transition:opacity .6s,transform .6s}
 .expanded-world.active{display:block;animation:worldEnter .6s cubic-bezier(.16,1,.3,1) forwards}
 @keyframes worldEnter{to{opacity:1;transform:scale(1)}}
 .red-expand{background:linear-gradient(180deg,#0d0202,#1a0404,#0d0202)}
 .blue-expand{background:linear-gradient(180deg,#020810,#041020,#020810)}
+.canvas-bg{position:fixed;inset:0;z-index:39;pointer-events:none}
 .close-btn{position:fixed;top:1rem;right:1rem;z-index:60;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.35);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;backdrop-filter:blur(4px)}
 .close-btn:hover{background:rgba(0,0,0,.6);border-color:rgba(255,255,255,.15);color:#fff}
 
-.expanded-content{max-width:680px;margin:0 auto;padding:4rem 1.5rem 3rem}
+/* ================================================ */
+/* ===== AZUMA — MANGA PAGE ===== */
+/* ================================================ */
+.manga-page{max-width:750px;margin:0 auto;padding:2rem 1.5rem 3rem;position:relative;z-index:41}
+.manga-page .page-header{text-align:center;margin-bottom:2rem}
+.manga-page .page-header .mag{font-size:.4rem;letter-spacing:.25em;text-transform:uppercase;opacity:.3;margin-bottom:.3rem;font-family:'Inter',sans-serif}
+.manga-page .page-header h2{font-size:1.6rem;font-weight:900;letter-spacing:.06em;color:#fca5a5}
+.manga-page .page-header .ch{font-size:.42rem;letter-spacing:.2em;opacity:.25;margin-top:.2rem}
+
+/* Panel grid */
+.panels{display:grid;gap:.5rem}
+.p-full{grid-column:1/-1}
+.p-row2{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.p-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem}
+.p-row21{display:grid;grid-template-columns:2fr 1fr;gap:.5rem}
+
+/* Manga Panel */
+.mpanel{border:1.8px solid #332020;padding:.6rem .75rem;position:relative;overflow:hidden;background:rgba(0,0,0,.2);transition:all .35s;cursor:default}
+.mpanel:hover{transform:translateY(-2px);border-color:rgba(239,68,68,.3);box-shadow:3px 4px 0 rgba(239,68,68,.06)}
+.mpanel .plabel{font-size:.35rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(252,165,165,.3);margin-bottom:.25rem;font-family:'Inter',sans-serif;font-weight:700}
+.mpanel h3{font-size:.65rem;font-weight:900;letter-spacing:.02em;color:#fca5a5;margin-bottom:.15rem}
+.mpanel h4{font-size:.48rem;font-weight:700;color:#fca5a5;margin-bottom:.1rem}
+.mpanel p{font-size:.44rem;line-height:1.6;opacity:.55}
+.mpanel strong{opacity:.8;color:#fca5a5}
+
+/* SFX */
+.mpanel .sfx{position:absolute;font-weight:900;pointer-events:none;opacity:.04;letter-spacing:.06em}
+.sfx-lg{font-size:1.4rem}.sfx-md{font-size:.8rem}.sfx-sm{font-size:.5rem}
+.sfx-tr{top:.1rem;right:.2rem}.sfx-tl{top:.1rem;left:.2rem}.sfx-br{bottom:.1rem;right:.2rem}.sfx-bl{bottom:.1rem;left:.2rem}
+.mpanel .sfx-red{color:#ef4444}
+
+/* Screentone */
+.mpanel .screentone{position:absolute;inset:0;pointer-events:none;opacity:.03;background-image:radial-gradient(circle,#fca5a5 1px,transparent 1px);background-size:5px 5px}
+.mpanel .speedlines{position:absolute;inset:0;pointer-events:none;opacity:.03;background:repeating-linear-gradient(70deg,transparent,transparent 2px,#fca5a5 2px,#fca5a5 3px)}
+
+/* ===== EXPANDABLE POEM CARD ===== */
+.poem-card{cursor:pointer;transition:all .4s;position:relative;overflow:hidden}
+.poem-card .preview{transition:all .3s}
+.poem-card .expanded{max-height:0;overflow:hidden;transition:max-height .6s cubic-bezier(.16,1,.3,1),opacity .4s;opacity:0}
+.poem-card.open .expanded{max-height:2000px;opacity:1}
+.poem-card.open .preview-hint{opacity:0}
+.poem-card .preview-hint{font-size:.35rem;opacity:.25;transition:opacity .3s;margin-top:.3rem;font-style:italic}
+.poem-card::after{content:'+';position:absolute;bottom:.4rem;right:.6rem;font-size:.6rem;opacity:.2;transition:all .3s}
+.poem-card.open::after{content:'−';opacity:.4}
+.poem-card:hover::after{opacity:.5}
+
+.poem-preview{font-style:italic;font-size:.48rem;line-height:1.8;opacity:.55}
+.poem-full{font-style:italic;font-size:.46rem;line-height:1.9;opacity:.65;white-space:pre-line;margin-top:.5rem;padding-top:.5rem;border-top:1px dashed rgba(252,165,165,.08)}
+
+/* ===== QUESTION PANEL ===== */
+.qpanel .q{font-weight:700;font-size:.5rem;color:#fca5a5;margin-bottom:.3rem}
+.qpanel .a{font-size:.44rem;line-height:1.6;opacity:.5;font-style:italic}
+.qpanel .a.placeholder{opacity:.25}
+
+/* ===== LINKS ===== */
+.links-row{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin-top:1rem}
+.link-pill{padding:.25rem .6rem;border-radius:20px;font-size:.4rem;letter-spacing:.06em;text-decoration:none;transition:all .25s;color:rgba(252,165,165,.4);border:1px solid rgba(252,165,165,.08)}
+.link-pill:hover{color:#fca5a5;border-color:rgba(252,165,165,.25)}
+
+/* ===== QUOTE ===== */
+.quote{font-style:italic;border-left:2px solid rgba(255,255,255,.05);padding-left:1rem;font-size:.42rem;opacity:.25;margin-top:2rem;line-height:1.7}
+
+/* ===== FAVORITES MINI CARDS ===== */
+.fav-mini{display:grid;grid-template-columns:1fr 1fr;gap:.3rem}
+.fav-mini .fm{background:rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.03);padding:.35rem .5rem;border-radius:4px}
+.fav-mini .fm .fml{font-size:.32rem;letter-spacing:.1em;text-transform:uppercase;opacity:.2;margin-bottom:.1rem}
+.fav-mini .fm .fmv{font-size:.4rem;opacity:.5;line-height:1.5}
+
+/* ===== BLUE WORLD STYLES ===== */
+.blue-content{max-width:680px;margin:0 auto;padding:4rem 1.5rem 3rem;position:relative;z-index:41}
 .world-header{text-align:center;margin-bottom:2.5rem}
 .world-header .ch{font-size:.45rem;letter-spacing:.25em;text-transform:uppercase;margin-bottom:.3rem;opacity:.35}
 .world-header h2{font-size:1.8rem;font-weight:900;letter-spacing:.04em}
-
-.section{opacity:0;transform:translateY(20px);transition:all .7s cubic-bezier(.16,1,.3,1);margin-bottom:2.2rem}
-.section.visible{opacity:1;transform:translateY(0)}
-.section-title{font-size:.48rem;letter-spacing:.22em;text-transform:uppercase;margin-bottom:.7rem;opacity:.3;font-weight:700}
-
-.card-grid{display:grid;gap:.45rem}
-.card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);padding:.7rem .9rem;border-radius:8px;transition:all .35s}
-.card:hover{background:rgba(255,255,255,.035);transform:translateY(-1px)}
-.card h4{font-size:.62rem;font-weight:700;margin-bottom:.15rem}
-.card p{font-size:.47rem;line-height:1.65;opacity:.55}
-.card strong{opacity:.9}
-.red-expand .card h4,.red-expand .card strong,.red-expand .poem-title{color:#fca5a5}
-.blue-expand .card h4,.blue-expand .card strong{color:#93c5fd}
-.card-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
-.card-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.45rem}
-
+.bsection{opacity:0;transform:translateY(20px);transition:all .7s cubic-bezier(.16,1,.3,1);margin-bottom:2.2rem}
+.bsection.visible{opacity:1;transform:translateY(0)}
+.bsection-title{font-size:.48rem;letter-spacing:.22em;text-transform:uppercase;margin-bottom:.7rem;opacity:.3;font-weight:700}
+.bcard-grid{display:grid;gap:.45rem}
+.bcard{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);padding:.7rem .9rem;border-radius:8px;transition:all .35s}
+.bcard:hover{background:rgba(255,255,255,.035);transform:translateY(-1px)}
+.bcard h4{font-size:.62rem;font-weight:700;margin-bottom:.15rem;color:#93c5fd}
+.bcard p{font-size:.47rem;line-height:1.65;opacity:.55}
+.bcard strong{opacity:.9;color:#93c5fd}
+.bcard-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
 .live-badge{display:inline-flex;align-items:center;gap:.25rem;font-size:.38rem;font-weight:700;letter-spacing:.06em;padding:.12rem .4rem;border-radius:3px;background:rgba(37,99,235,.12);color:#93c5fd;border:1px solid rgba(37,99,235,.15)}
 .live-dot{width:5px;height:5px;border-radius:50%;background:#93c5fd;animation:dotBlink 2s infinite}
 @keyframes dotBlink{0%,100%{opacity:1}50%{opacity:.2}}
-
-/* Poetry */
-.poem-block{padding:.6rem .9rem;border-left:2px solid rgba(252,165,165,.15);margin-bottom:.5rem;transition:all .35s}
-.poem-block:hover{border-left-color:rgba(252,165,165,.35);background:rgba(252,165,165,.02)}
-.poem-block p{font-style:italic;font-size:.5rem;line-height:1.9;opacity:.65;white-space:pre-line}
-.poem-title{font-size:.4rem;letter-spacing:.15em;text-transform:uppercase;opacity:.25;margin-bottom:.4rem;font-style:normal}
-
-.quote{font-style:italic;border-left:2px solid rgba(255,255,255,.05);padding-left:1rem;font-size:.42rem;opacity:.3;margin-top:2rem;line-height:1.7}
-
-.links-row{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin-top:.8rem}
-.link-pill{padding:.25rem .6rem;border-radius:20px;font-size:.4rem;letter-spacing:.06em;text-decoration:none;transition:all .25s}
-.red-expand .link-pill{color:rgba(252,165,165,.4);border:1px solid rgba(252,165,165,.08)}
-.red-expand .link-pill:hover{color:#fca5a5;border-color:rgba(252,165,165,.25)}
-.blue-expand .link-pill{color:rgba(147,197,253,.4);border:1px solid rgba(147,197,253,.08)}
-.blue-expand .link-pill:hover{color:#93c5fd;border-color:rgba(147,197,253,.25)}
-
-.fav-grid{display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
-.fav-card{background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.03);padding:.45rem .65rem;border-radius:6px}
-.fav-card .fav-label{font-size:.35rem;letter-spacing:.12em;text-transform:uppercase;opacity:.25;margin-bottom:.15rem}
-.fav-card .fav-val{font-size:.45rem;opacity:.6;line-height:1.5}
-
-canvas.exp-canvas{position:fixed;inset:0;z-index:39;pointer-events:none}
+.blinks-row{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin-top:.8rem}
+.blink-pill{padding:.25rem .6rem;border-radius:20px;font-size:.4rem;letter-spacing:.06em;text-decoration:none;transition:all .25s;color:rgba(147,197,253,.4);border:1px solid rgba(147,197,253,.08)}
+.blink-pill:hover{color:#93c5fd;border-color:rgba(147,197,253,.25)}
+.bquote{font-style:italic;border-left:2px solid rgba(255,255,255,.05);padding-left:1rem;font-size:.42rem;opacity:.25;margin-top:2rem;line-height:1.7}
 
 @media(max-width:700px){
-  .horizon{flex-direction:column}.world-half{height:50vh}
-  .divider-line{top:50%;left:0;right:0;bottom:auto;width:auto;height:1px}
-  .card-grid-2,.card-grid-3,.fav-grid{grid-template-columns:1fr}
-  .wl-char{font-size:2rem}.world-header h2{font-size:1.3rem}
+  .horizon{flex-direction:column}.world-half{height:50vh}.divider-line{top:50%;left:0;right:0;bottom:auto;width:auto;height:1px}
+  .p-row2,.p-row3,.p-row21{grid-template-columns:1fr}.fav-mini{grid-template-columns:1fr}
+  .wl-char{font-size:2rem}.manga-page .page-header h2{font-size:1.2rem}.bcard-grid-2{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -110,60 +155,82 @@ canvas.exp-canvas{position:fixed;inset:0;z-index:39;pointer-events:none}
 <div class="divider-line" id="dline"></div>
 <div class="vortex" id="vortex"></div>
 
-<!-- ===== RED WORLD ===== -->
+<!-- =========================== -->
+<!-- ===== AZUMA · MANGA PAGE ===== -->
+<!-- =========================== -->
 <div class="expanded-world red-expand" id="red-expand">
-  <canvas class="exp-canvas" id="red-bg"></canvas>
+  <canvas class="canvas-bg" id="red-bg"></canvas>
   <button class="close-btn" onclick="closeWorld()">&times;</button>
-  <div class="expanded-content">
-    <div class="world-header"><div class="ch">第一章 · Chapter One</div><h2 style="color:#fca5a5">AZUMA · 東</h2></div>
 
-    <div class="section">
-      <div class="section-title">Dev Attri</div>
-      <div class="card"><p>Builder. Runner. Lifter. Learner. Based in India. Learning in public — one build, one rep, one kilometer at a time.</p></div>
+  <div class="manga-page">
+
+    <div class="page-header">
+      <div class="mag">週刊アトリ · Weekly Attri</div>
+      <h2>AZUMA · 東</h2>
+      <div class="ch">第1話 — The Self</div>
     </div>
 
-    <div class="section">
-      <div class="section-title">Questions I Ask Myself</div>
-      <div class="card"><p><strong>Why does being drunk make us happy?</strong></p><p style="margin-top:.3rem;opacity:.4">— Answer coming soon.</p></div>
-      <div class="card" style="margin-top:.45rem"><p><strong>When did we stop asking questions?</strong> Where did your curiosity go?</p><p style="margin-top:.3rem;opacity:.4">— Answer coming soon.</p></div>
-      <div class="card" style="margin-top:.45rem"><p><strong>What is the meaning / purpose of life?</strong></p><p style="margin-top:.3rem;opacity:.4">— Answer coming soon.</p></div>
-    </div>
+    <div class="panels">
 
-    <div class="section"><div class="section-title">Poetry</div>
-      <div class="poem-block"><div class="poem-title">Blue Eyes</div>
-        <p>What beautiful colour of your eyes,
+      <!-- ROW: INTRO + FAVORITES -->
+      <div class="p-row21">
+        <div class="mpanel">
+          <div class="speedlines"></div>
+          <span class="sfx sfx-lg sfx-tr sfx-red">火</span>
+          <div class="plabel">IDENTITY · 自己</div>
+          <h3>Dev Attri</h3>
+          <p>Learning in public. One build. One rep. One kilometer. <strong>Always becoming.</strong> Based in India. The work is the proof.</p>
+        </div>
+        <div class="mpanel">
+          <div class="screentone"></div>
+          <div class="plabel">FAVORITES · 好み</div>
+          <div class="fav-mini">
+            <div class="fm"><span class="fml">Books</span><span class="fmv">The Old Man of the Moon</span></div>
+            <div class="fm"><span class="fml">Anime</span><span class="fmv">One Piece, Your Lie in April</span></div>
+            <div class="fm"><span class="fml">Music</span><span class="fmv">Radiohead · OK Computer</span></div>
+            <div class="fm"><span class="fml">Place</span><span class="fmv">Tolka, Nepal</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW: 3 POEMS — EXPANDABLE CARDS -->
+      <div class="p-row3">
+        <!-- Poem 1 -->
+        <div class="mpanel poem-card" onclick="this.classList.toggle('open')">
+          <span class="sfx sfx-sm sfx-tr">poem</span>
+          <div class="plabel">POETRY · 詩 I</div>
+          <h4>Blue Eyes</h4>
+          <div class="preview">
+            <p class="poem-preview">What beautiful colour of your eyes,<br>that a boy loses his perception of time...</p>
+            <p class="preview-hint">— click to read full poem —</p>
+          </div>
+          <div class="expanded">
+            <p class="poem-full">What beautiful colour of your eyes,
 that a boy loses his perception of time
 
 i have seen the endless seas but i see depth in your eyes farseen
 blessed were my eyes to have met yours
 i have seen moon on a cloudless night,
 but the flight through your eyes was so much bright
-Lucky is that guy who can see through your
-eyes,
+Lucky is that guy who can see through your eyes,
 
 Flower meant a thing to me, now it means things to me
-is it Rose that you like,
-or cherry blossom alike
+is it Rose that you like, or cherry blossom alike
 what is that your eyes like to see
 violet yellow or green,
 
 I used to think Sober was drunk,
 no it was just that i was drunk,
-I didnt knew a thing,
-but i acted like i did
+I didnt knew a thing, but i acted like i did
 your secrets were just too damn hard to drink,
 
-I didn't like descent not because it was easy,
-but too damn fast,
-apple cider was not that what i liked,
-it was what you seemed to like
-Animals are what seemed to fascinate you,
-Goat is what fascinates me
+I didn't like descent not because it was easy, but too damn fast,
+apple cider was not that what i liked, it was what you seemed to like
+Animals are what seemed to fascinate you, Goat is what fascinates me
 i like dogs because they seem to get what i feel
 and you would have been the only one to whom i would kneel
 
-my heart and eyes are at war,
-but it seems to be a losing war
+my heart and eyes are at war, but it seems to be a losing war
 Delhi to Darwin seems to be my next flight
 and your eyes seems to be my only sight,
 God was real for the first time when it rained,
@@ -174,21 +241,28 @@ its represent that we fight two battles,
 a battle to be in your arms, and a war to be in your centre of heart
 Battle is not to be won or lost, it was to get what was your's-
 i usually take what is mine,
-you like to fly, i love to swim
-but i am just a penguin
+you like to fly, i love to swim, but i am just a penguin
 
-In the day sky, i try to find the moon,
-again i am just a fool
+In the day sky, i try to find the moon, again i am just a fool
 but it seems, i try to get what is mine but there's no moon in daylight
 home is not a house- house is just a building full of bricks
 home is where the heart is,
 and eyes are where your eyes is
 
-
 ~Dev</p>
-      </div>
-      <div class="poem-block"><div class="poem-title">In the Gray Between Dreams</div>
-        <p>Oh shades of light, show me the way,
+          </div>
+        </div>
+
+        <!-- Poem 2 -->
+        <div class="mpanel poem-card" onclick="this.classList.toggle('open')">
+          <div class="plabel">POETRY · 詩 II</div>
+          <h4>In the Gray Between Dreams</h4>
+          <div class="preview">
+            <p class="poem-preview">Oh shades of light, show me the way,<br>Through darkness that swallows...</p>
+            <p class="preview-hint">— click to read full poem —</p>
+          </div>
+          <div class="expanded">
+            <p class="poem-full">Oh shades of light, show me the way,
 Through darkness that swallows and night that turns gray.
 When I can't seem to breathe, let me dance in the dawn,
 And find in the shadows the strength to go on.
@@ -207,9 +281,19 @@ White is not always warm, and black not always stark,
 There's a darkness that's white, there's a whiteness in dark.
 In the contrast we find all the shades in between,
 In the gray of our dreams, all our truths can be seen.</p>
-      </div>
-      <div class="poem-block"><div class="poem-title">Life Happened</div>
-        <p>Life happened, me waiting.
+          </div>
+        </div>
+
+        <!-- Poem 3 -->
+        <div class="mpanel poem-card" onclick="this.classList.toggle('open')">
+          <div class="plabel">POETRY · 詩 III</div>
+          <h4>Life Happened</h4>
+          <div class="preview">
+            <p class="poem-preview">Life happened, me waiting.<br>Believing it would stop...</p>
+            <p class="preview-hint">— click to read full poem —</p>
+          </div>
+          <div class="expanded">
+            <p class="poem-full">Life happened, me waiting.
 Believing it would stop, it would wait.
 Life happening and happening,
 Consistent like spring water.
@@ -230,25 +314,39 @@ Oh water, let's start again.
 Guide me, let's start again.
 Take me away to the far sea,
 Where I can sleep once again.</p>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="section"><div class="section-title">Favorites</div>
-      <div class="fav-grid">
-        <div class="fav-card"><span class="fav-label">Books</span><span class="fav-val">The Old Man of the Moon</span></div>
-        <div class="fav-card"><span class="fav-label">Anime</span><span class="fav-val">One Piece, Your Lie in April</span></div>
-        <div class="fav-card"><span class="fav-label">Music</span><span class="fav-val">Radiohead — OK Computer</span></div>
-        <div class="fav-card"><span class="fav-label">Place</span><span class="fav-val">Tolka, Nepal</span></div>
+      <!-- ROW: QUESTIONS + SMALL WINS -->
+      <div class="p-row2">
+        <div class="mpanel qpanel">
+          <span class="sfx sfx-md sfx-tr">?</span>
+          <div class="plabel">QUESTIONS I SIT WITH · 問い</div>
+          <div style="margin-bottom:.6rem">
+            <div class="q">Why does being drunk make us happy?</div>
+            <div class="a placeholder">— Answer coming soon.</div>
+          </div>
+          <div style="margin-bottom:.6rem">
+            <div class="q">When did we stop asking questions?</div>
+            <div class="a placeholder">— Answer coming soon.</div>
+          </div>
+          <div>
+            <div class="q">What is the meaning of life?</div>
+            <div class="a placeholder">— Answer coming soon.</div>
+          </div>
+        </div>
+        <div class="mpanel">
+          <div class="screentone"></div>
+          <span class="sfx sfx-sm sfx-bl">WIN</span>
+          <div class="plabel">SMALL WINS · 成果</div>
+          <p>→ Ran a <strong>half marathon</strong></p>
+          <p>→ Hit <strong>1000 ELO</strong> in chess</p>
+          <p>→ Visited <strong>Nepal</strong></p>
+          <p>→ Built <strong>this website</strong></p>
+        </div>
       </div>
-    </div>
 
-    <div class="section"><div class="section-title">Small Wins</div>
-      <div class="card-grid-2">
-        <div class="card"><p>→ Ran a <strong>half marathon</strong></p></div>
-        <div class="card"><p>→ Hit <strong>1000 ELO</strong> in chess</p></div>
-        <div class="card"><p>→ Visited <strong>Nepal</strong></p></div>
-        <div class="card"><p>→ Built <strong>this website</strong></p></div>
-      </div>
     </div>
 
     <div class="links-row">
@@ -258,47 +356,43 @@ Where I can sleep once again.</p>
     </div>
 
     <p class="quote">"Above all, don't lie to yourself. The man who lies to himself and listens to his own lie comes to a point that he cannot distinguish the truth within him, or around him, and so loses all respect for himself and for others." — Dostoevsky</p>
+
   </div>
 </div>
 
-<!-- ===== BLUE WORLD ===== -->
+<!-- =========================== -->
+<!-- ===== CREATE · BLUE WORLD ===== -->
+<!-- =========================== -->
 <div class="expanded-world blue-expand" id="blue-expand">
-  <canvas class="exp-canvas" id="blue-bg"></canvas>
+  <canvas class="canvas-bg" id="blue-bg"></canvas>
   <button class="close-btn" onclick="closeWorld()">&times;</button>
-  <div class="expanded-content">
+  <div class="blue-content">
     <div class="world-header"><div class="ch">第二章 · Chapter Two</div><h2 style="color:#93c5fd">CREATE · 創造</h2></div>
 
-    <div class="section"><div class="section-title">Live Projects</div>
-      <div class="card-grid">
+    <div class="bsection"><div class="bsection-title">Live Projects</div>
+      <div class="bcard-grid">
         <a href="https://gritier.attridevv.com" target="_blank" style="text-decoration:none;color:inherit;display:block">
-          <div class="card" style="cursor:pointer;background:rgba(37,99,235,.04);border-color:rgba(37,99,235,.1)">
+          <div class="bcard" style="cursor:pointer;background:rgba(37,99,235,.04);border-color:rgba(37,99,235,.1)">
             <h4 style="display:flex;align-items:center;gap:.35rem"><span class="live-badge"><span class="live-dot"></span>LIVE</span> Gritier &rarr;</h4>
-            <p>Hybrid Athlete Command Center. Adaptive performance OS for tracking readiness, runs, strength, recovery & injuries. Built for athletes who track everything.</p>
+            <p>Hybrid Athlete Command Center. Track readiness, runs, strength, recovery & injuries.</p>
           </div>
         </a>
-        <div class="card">
-          <h4>Calorified</h4>
-          <p>Calorie tracker app. Nutrition logging, macro tracking, food database. Built for precision nutrition.</p>
-        </div>
-        <div class="card">
-          <h4>Max Workspace</h4>
-          <p>Clean workspace concept. Browser layouts, useful surfaces, shipping browser experiences.</p>
-        </div>
+        <div class="bcard"><h4>Calorified</h4><p>Calorie tracker app. Nutrition logging, macro tracking, food database.</p></div>
+        <div class="bcard"><h4>Max Workspace</h4><p>Clean workspace concept. Browser layouts, useful surfaces.</p></div>
       </div>
     </div>
 
-    <div class="section"><div class="section-title">Stack</div>
-      <div class="card"><p><strong>TypeScript</strong> · Next.js · Prisma · Python · APIs · Git · Databases · Tailwind · React. Deep in <strong>full-stack architecture.</strong></p></div>
+    <div class="bsection"><div class="bsection-title">Stack</div>
+      <div class="bcard"><p><strong>TypeScript</strong> · Next.js · Prisma · Python · APIs · Git · Databases · Tailwind · React</p></div>
     </div>
 
-    <div class="links-row">
-      <a href="https://github.com/attridevv" target="_blank" class="link-pill">GitHub</a>
-      <a href="https://x.com/attridevv" target="_blank" class="link-pill">X</a>
-      <a href="https://youtube.com/@attridevv" target="_blank" class="link-pill">YouTube</a>
-      <a href="https://anilist.co/user/Attridevv/" target="_blank" class="link-pill">AniList</a>
+    <div class="blinks-row">
+      <a href="https://github.com/attridevv" target="_blank" class="blink-pill">GitHub</a>
+      <a href="https://x.com/attridevv" target="_blank" class="blink-pill">X</a>
+      <a href="https://youtube.com/@attridevv" target="_blank" class="blink-pill">YouTube</a>
+      <a href="https://anilist.co/user/Attridevv/" target="_blank" class="blink-pill">AniList</a>
     </div>
-
-    <p class="quote">"Above all, don't lie to yourself. The man who lies to himself and listens to his own lie comes to a point that he cannot distinguish the truth within him, or around him, and so loses all respect for himself and for others." — Dostoevsky</p>
+    <p class="bquote">"Above all, don't lie to yourself..." — Dostoevsky</p>
   </div>
 </div>
 
@@ -307,41 +401,37 @@ Where I can sleep once again.</p>
 function R(){w=c.width=c.parentElement.offsetWidth;h=c.height=c.parentElement.offsetHeight}R();window.addEventListener('resize',R);
 var p=[];for(var i=0;i<ct;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.3,vy:dir*(.3+Math.random()*.8),r:Math.random()*1.5+.4,o:Math.random()*.35+.15,l:Math.random()*200});
 (function D(t){if(w!==c.parentElement.offsetWidth||h!==c.parentElement.offsetHeight)R();ctx.clearRect(0,0,w,h);
-p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.y>h+10||pp.l<=0){pp.x=Math.random()*w;pp.y=dir>0?h+10:-10;pp.l=200+Math.random()*100}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/200))+')';ctx.fill()});requestAnimationFrame(D)})();
-})('rc','239,68,68',40,-1);
+p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.y>h+10||pp.l<=0){pp.x=Math.random()*w;pp.y=dir>0?h+10:-10;pp.l=200+Math.random()*100}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/200))+')';ctx.fill()});requestAnimationFrame(D)})();})('rc','239,68,68',40,-1);
 (function(id,col,ct,dir){var c=document.getElementById(id),ctx=c.getContext('2d'),w,h;
 function R(){w=c.width=c.parentElement.offsetWidth;h=c.height=c.parentElement.offsetHeight}R();window.addEventListener('resize',R);
 var p=[];for(var i=0;i<ct;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.3,vy:dir*(.3+Math.random()*.8),r:Math.random()*1.5+.4,o:Math.random()*.35+.15,l:Math.random()*200});
 (function D(t){if(w!==c.parentElement.offsetWidth||h!==c.parentElement.offsetHeight)R();ctx.clearRect(0,0,w,h);
-p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.y>h+10||pp.l<=0){pp.x=Math.random()*w;pp.y=dir>0?h+10:-10;pp.l=200+Math.random()*100}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/200))+')';ctx.fill()});requestAnimationFrame(D)})();
-})('bc','59,130,246',40,-1);
+p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.y>h+10||pp.l<=0){pp.x=Math.random()*w;pp.y=dir>0?h+10:-10;pp.l=200+Math.random()*100}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/200))+')';ctx.fill()});requestAnimationFrame(D)})();})('bc','59,130,246',40,-1);
 
 (function(id,col,ct){var c=document.getElementById(id),ctx=c.getContext('2d'),w,h;
 function R(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}R();window.addEventListener('resize',R);
 var p=[];for(var i=0;i<ct;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.15,vy:-.2-Math.random()*.4,r:Math.random()*1.2+.3,o:Math.random()*.2+.08,l:Math.random()*300});
 (function D(t){if(w!==c.width||h!==c.height)R();ctx.clearRect(0,0,w,h);
-p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.l<=0){pp.x=Math.random()*w;pp.y=h+10;pp.l=300+Math.random()*200}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/300))+')';ctx.fill()});requestAnimationFrame(D)})();
-})('red-bg','239,68,68',55);
+p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.l<=0){pp.x=Math.random()*w;pp.y=h+10;pp.l=300+Math.random()*200}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/300))+')';ctx.fill()});requestAnimationFrame(D)})();})('red-bg','239,68,68',45);
 (function(id,col,ct){var c=document.getElementById(id),ctx=c.getContext('2d'),w,h;
 function R(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}R();window.addEventListener('resize',R);
 var p=[];for(var i=0;i<ct;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.15,vy:-.2-Math.random()*.4,r:Math.random()*1.2+.3,o:Math.random()*.2+.08,l:Math.random()*300});
 (function D(t){if(w!==c.width||h!==c.height)R();ctx.clearRect(0,0,w,h);
-p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.l<=0){pp.x=Math.random()*w;pp.y=h+10;pp.l=300+Math.random()*200}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/300))+')';ctx.fill()});requestAnimationFrame(D)})();
-})('blue-bg','59,130,246',55);
+p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.l<=0){pp.x=Math.random()*w;pp.y=h+10;pp.l=300+Math.random()*200}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/300))+')';ctx.fill()});requestAnimationFrame(D)})();})('blue-bg','59,130,246',45);
 
-(function(){var s=document.querySelectorAll('.section');function ck(){s.forEach(function(sec){var r=sec.getBoundingClientRect();if(r.top<window.innerHeight*.85)sec.classList.add('visible')})}ck();document.querySelectorAll('.expanded-world').forEach(function(w){w.addEventListener('scroll',ck)})})();
+(function(){var s=document.querySelectorAll('.bsection');function ck(){s.forEach(function(sec){var r=sec.getBoundingClientRect();if(r.top<window.innerHeight*.85)sec.classList.add('visible')})}ck();document.querySelectorAll('.expanded-world').forEach(function(w){w.addEventListener('scroll',ck)})})();
 
 function enterWorld(w){
   document.getElementById('horizon').classList.add('fading');document.getElementById('dline').style.opacity='0';
   var v=document.getElementById('vortex');v.innerHTML='';
   for(var i=0;i<6;i++){var r=document.createElement('div');r.className='vr';var s=50+i*80;r.style.cssText='width:'+s+'px;height:'+s+'px;left:'+(w==='red'?'25%':'75%')+';top:50%;transform:translate(-50%,-50%);border-color:'+(w==='red'?'rgba(239,68,68,'+(.15-i*.02)+')':'rgba(59,130,246,'+(.15-i*.02)+')')+';animation-duration:'+(.8+i*.2)+'s;animation-direction:'+(i%2?'reverse':'normal');v.appendChild(r)}
   v.classList.add('active');
-  setTimeout(function(){v.classList.remove('active');document.getElementById(w==='red'?'red-expand':'blue-expand').classList.add('active');document.body.style.overflow='auto';setTimeout(function(){document.querySelectorAll('.section').forEach(function(s){s.classList.add('visible')})},200)},900);
+  setTimeout(function(){v.classList.remove('active');document.getElementById(w==='red'?'red-expand':'blue-expand').classList.add('active');document.body.style.overflow='auto';setTimeout(function(){document.querySelectorAll('.bsection').forEach(function(s){s.classList.add('visible')})},200)},900);
 }
 function closeWorld(){
   document.getElementById('red-expand').classList.remove('active');document.getElementById('blue-expand').classList.remove('active');
   document.getElementById('horizon').classList.remove('fading');document.getElementById('dline').style.opacity='';
-  document.body.style.overflow='hidden';document.querySelectorAll('.section').forEach(function(s){s.classList.remove('visible')});
+  document.body.style.overflow='hidden';document.querySelectorAll('.bsection').forEach(function(s){s.classList.remove('visible')});
 }
 </script>
 </body>
