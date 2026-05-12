@@ -6,17 +6,17 @@
 <title>Dev Attri</title>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--red:#dc2626;--red-glow:rgba(220,38,38,.4);--red-deep:#1a0202;--blue:#2563eb;--blue-glow:rgba(37,99,235,.4);--blue-deep:#020a1a;--cyan:#06b6d4;--cyan-glow:rgba(6,182,212,.3);--white:#e2e8f0;--dim:rgba(226,232,240,.4);--field:rgba(6,182,212,.03)}
+:root{--red:#dc2626;--cyan:#06b6d4;--white:#e2e8f0;--dim:rgba(226,232,240,.4);--field:rgba(6,182,212,.04);--card-bg:rgba(6,182,212,.03);--card-border:rgba(6,182,212,.08);--card-hover-bg:rgba(6,182,212,.06);--gold:#facc15;--gk-color:rgba(139,92,246,.3);--def-color:rgba(6,182,212,.3);--mid-color:rgba(168,85,247,.3);--att-color:rgba(250,204,21,.3);--str-color:rgba(239,68,68,.3)}
 
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;width:100vw;height:100vh;overflow:hidden;background:#000;color:var(--white)}
 
-/* ===== HORIZON ===== */
+/* HORIZON */
 .horizon{position:fixed;inset:0;z-index:1;display:flex;transition:opacity .8s,filter .8s}
 .horizon.fading{opacity:0;filter:blur(20px)}
 .world-half{flex:1;position:relative;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .8s}
-.red-half{background:linear-gradient(180deg,#1a0202 0%,#2d0505 30%,#1a0202 60%,#0d0101 100%);border-right:1px solid rgba(220,38,38,.15)}
+.red-half{background:linear-gradient(180deg,#1a0202,#2d0505 30%,#1a0202 60%,#0d0101);border-right:1px solid rgba(220,38,38,.15)}
 .red-half::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 30%,rgba(239,68,68,.12),transparent 50%)}
-.blue-half{background:linear-gradient(180deg,#020a1a 0%,#051530 30%,#020a1a 60%,#010510 100%)}
+.blue-half{background:linear-gradient(180deg,#020a1a,#051530 30%,#020a1a 60%,#010510)}
 .blue-half::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 30%,rgba(59,130,246,.12),transparent 50%)}
 .world-label{position:relative;z-index:5;text-align:center;transition:transform .6s}
 .world-half:hover .world-label{transform:translateY(-8px)}
@@ -30,95 +30,75 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 @keyframes divPulse{0%,100%{opacity:.5}50%{opacity:1}}
 canvas.p-canvas{position:absolute;inset:0;pointer-events:none;z-index:2}
 
-/* VORTEX */
 .vortex{position:fixed;inset:0;z-index:50;pointer-events:none;opacity:0;transition:opacity .3s}
 .vortex.active{opacity:1}
 .vr{position:absolute;border-radius:50%;border:1px solid transparent;animation:vrSpin 1s linear infinite}
 @keyframes vrSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-/* EXPANDED */
 .expanded-world{position:fixed;inset:0;z-index:40;display:none;overflow-y:auto;opacity:0;transform:scale(1.05);transition:opacity .6s,transform .6s}
 .expanded-world.active{display:block;animation:worldEnter .6s cubic-bezier(.16,1,.3,1) forwards}
 @keyframes worldEnter{to{opacity:1;transform:scale(1)}}
-.red-expand{background:linear-gradient(180deg,#0a0a14,#0d0d1a,#0a0a14)}
-.blue-expand{background:linear-gradient(180deg,#020810,#041020,#020810)}
+.red-expand{background:linear-gradient(180deg,#070710,#0a0a18,#070710)}
+.blue-expand{background:radial-gradient(ellipse at 50% 30%,rgba(37,99,235,.04),transparent 60%),linear-gradient(180deg,#020810,#041020,#020810)}
 canvas.exp-canvas{position:fixed;inset:0;z-index:39;pointer-events:none}
 .close-btn{position:fixed;top:1rem;right:1rem;z-index:60;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.35);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;backdrop-filter:blur(4px)}
 .close-btn:hover{background:rgba(0,0,0,.6);border-color:rgba(255,255,255,.15);color:#fff}
 
-/* ===== PITCH / FORMATION ===== */
-.pitch{max-width:900px;margin:0 auto;padding:2rem 1.5rem 3rem;position:relative;z-index:41;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+/* ===== PITCH ===== */
+.pitch{max-width:1000px;margin:0 auto;padding:1.5rem 1rem 3rem;position:relative;z-index:41;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.pitch-header{text-align:center;margin-bottom:2rem}
+.pitch-header .club{font-size:.4rem;letter-spacing:.25em;text-transform:uppercase;opacity:.2;margin-bottom:.3rem}
+.pitch-header h2{font-size:1.3rem;font-weight:900;letter-spacing:.08em;color:var(--cyan)}
+.pitch-header .formation-tag{font-size:.38rem;letter-spacing:.2em;opacity:.15;margin-top:.25rem;text-transform:uppercase}
 
-.pitch-header{text-align:center;margin-bottom:3rem}
-.pitch-header .league{font-size:.4rem;letter-spacing:.25em;text-transform:uppercase;opacity:.25;margin-bottom:.4rem}
-.pitch-header h2{font-size:1.5rem;font-weight:900;letter-spacing:.08em;color:var(--cyan)}
-.pitch-header .sub{font-size:.4rem;letter-spacing:.2em;opacity:.2;margin-top:.3rem;text-transform:uppercase}
+/* Center line */
+.pitch::before{content:'';position:absolute;left:50%;top:5%;bottom:5%;width:1px;background:var(--field);pointer-events:none}
+.pitch::after{content:'';position:absolute;left:10%;right:10%;top:50%;height:1px;background:var(--field);pointer-events:none}
 
-/* Formation lines */
-.formation{display:flex;flex-direction:column;gap:1.5rem;position:relative}
-.formation::before{content:'';position:absolute;left:10%;right:10%;top:0;bottom:0;border-top:1px solid var(--field);border-bottom:1px solid var(--field);pointer-events:none}
-.formation::after{content:'';position:absolute;left:50%;top:2%;bottom:2%;width:1px;background:var(--field);pointer-events:none}
+/* ===== FORMATION LINES ===== */
+.formation{display:flex;flex-direction:column;gap:.6rem;position:relative}
 
-.line-label{text-align:center;font-size:.4rem;letter-spacing:.2em;text-transform:uppercase;opacity:.2;margin-bottom:.4rem}
-
-/* Player cards row */
-.lineup-row{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap}
+.line-row{display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap}
 
 /* ===== PLAYER CARD ===== */
 .player-card{
-  width:130px;height:170px;position:relative;cursor:pointer;
-  background:rgba(6,182,212,.03);border:1px solid rgba(6,182,212,.08);
-  border-radius:8px;overflow:hidden;transition:all .45s cubic-bezier(.16,1,.3,1);
+  width:120px;height:150px;position:relative;cursor:pointer;
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:6px;overflow:hidden;transition:all .45s cubic-bezier(.16,1,.3,1);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
 }
-.player-card:hover{width:240px;height:280px;z-index:30;background:rgba(6,182,212,.06);border-color:rgba(6,182,212,.25);box-shadow:0 0 40px rgba(6,182,212,.08),0 0 80px rgba(6,182,212,.03);transform:translateY(-6px)}
+.player-card:hover{width:250px;height:300px;z-index:30;background:var(--card-hover-bg);border-color:rgba(6,182,212,.2);box-shadow:0 0 40px rgba(6,182,212,.06);transform:translateY(-6px)}
 
-/* Card number */
-.player-card .number{
-  font-size:2rem;font-weight:900;color:rgba(6,182,212,.15);transition:all .4s;
-  position:absolute;top:.5rem;right:.6rem;line-height:1;
-}
-.player-card:hover .number{color:rgba(6,182,212,.3);font-size:2.5rem}
+.player-card .number{font-size:1.8rem;font-weight:900;opacity:.1;transition:all .4s;position:absolute;top:.3rem;right:.5rem;line-height:1}
+.player-card:hover .number{opacity:.2;font-size:2.2rem}
 
-/* Card header (always visible) */
-.player-card .card-header{text-align:center;transition:all .4s;padding:0 .5rem}
-.player-card .position-tag{
-  font-size:.35rem;letter-spacing:.15em;text-transform:uppercase;
-  color:rgba(6,182,212,.3);margin-bottom:.3rem;
-}
-.player-card .card-title{font-size:.6rem;font-weight:800;letter-spacing:.04em;color:var(--white);transition:all .4s}
-.player-card:hover .card-title{font-size:.7rem;color:var(--cyan)}
+.player-card .card-head{transition:all .4s;padding:0 .4rem}
+.player-card .pos{font-size:.32rem;letter-spacing:.15em;text-transform:uppercase;opacity:.3;margin-bottom:.2rem}
+.player-card .title{font-size:.55rem;font-weight:800;letter-spacing:.03em;color:var(--white);transition:all .4s}
+.player-card:hover .title{font-size:.65rem;color:var(--cyan)}
 
-/* Card body (reveals on hover) */
-.player-card .card-body{
-  opacity:0;max-height:0;overflow-y:auto;
-  transition:opacity .35s .15s,max-height .5s;
-  width:100%;padding:0 .75rem;text-align:center;
-}
-.player-card:hover .card-body{opacity:1;max-height:200px;margin-top:.6rem}
+.player-card .card-body{opacity:0;max-height:0;overflow-y:auto;transition:opacity .35s .15s,max-height .5s;width:100%;padding:0 .6rem}
+.player-card:hover .card-body{opacity:1;max-height:220px;margin-top:.5rem}
+.player-card .card-body p{font-size:.4rem;line-height:1.55;opacity:.5;margin-bottom:.2rem;text-align:left}
+.player-card .card-body .name-line{font-size:.45rem;font-weight:700;opacity:.6;color:var(--cyan);margin-bottom:.1rem}
+.player-card .card-body .quote-text{font-style:italic;font-size:.38rem;line-height:1.6;opacity:.45}
+.player-card .card-body .poem-txt{font-style:italic;font-size:.37rem;line-height:1.6;opacity:.45;white-space:pre-line}
+.player-card .card-body strong{color:var(--cyan);opacity:.75}
 
-.player-card .card-body p{font-size:.42rem;line-height:1.6;opacity:.5;margin-bottom:.25rem}
-.player-card .card-body .poem-text{font-style:italic;font-size:.4rem;line-height:1.7;opacity:.5;margin-bottom:.2rem;white-space:pre-line}
-.player-card .card-body strong{color:var(--cyan);opacity:.8}
-.player-card .card-body a{color:var(--cyan);text-decoration:none;opacity:.6;font-size:.4rem}
+/* Position colors */
+.player-card.gk{border-left:2px solid rgba(139,92,246,.3)}.player-card.gk:hover{border-left-color:#a78bfa}.player-card.gk:hover .title{color:#a78bfa}.player-card.gk .pos{color:var(--gk-color)}
+.player-card.df{border-left:2px solid rgba(6,182,212,.25)}.player-card.df:hover{border-left-color:var(--cyan)}.player-card.mf{border-left:2px solid rgba(168,85,247,.25)}.player-card.mf:hover{border-left-color:#a855f7}.player-card.mf:hover .title{color:#a855f7}.player-card.mf .pos{color:var(--mid-color)}
+.player-card.at{border-left:2px solid rgba(250,204,21,.25)}.player-card.at:hover{border-left-color:#facc15}.player-card.at:hover .title{color:#facc15}.player-card.at .pos{color:var(--att-color)}
+.player-card.st{border-left:2px solid rgba(239,68,68,.25)}.player-card.st:hover{border-left-color:#ef4444}.player-card.st:hover .title{color:#ef4444}.player-card.st .pos{color:var(--str-color)}
 
-/* Position-specific accents */
-.player-card.df{border-left:2px solid rgba(6,182,212,.2)}
-.player-card.df:hover{border-left-color:var(--cyan)}
-.player-card.mf{border-left:2px solid rgba(168,85,247,.2)}
-.player-card.mf:hover{border-left-color:#a855f7}
-.player-card.fw{border-left:2px solid rgba(250,204,21,.2)}
-.player-card.fw:hover{border-left-color:#facc15}
-.player-card.fw .position-tag{color:rgba(250,204,21,.3)}
-.player-card.fw:hover .position-tag{color:rgba(250,204,21,.6)}
-.player-card.fw:hover .card-title{color:#facc15}
-.player-card.fw .card-body strong{color:#facc15}
+/* Captain band */
+.player-card.st.cap::after{content:'C';position:absolute;top:.4rem;left:.5rem;font-size:.55rem;font-weight:900;color:#ef4444;opacity:.3;line-height:1}
 
-/* Captain armband */
-.player-card.captain::after{content:'C';position:absolute;top:.6rem;left:.6rem;font-size:.6rem;font-weight:900;color:var(--cyan);opacity:.25;line-height:1}
-
-.player-card.mf.captain::after{color:#a855f7}
-.player-card.fw.captain::after{color:#facc15}
+/* Achievement tick */
+.tick{color:#10b981;font-weight:700}
+.loading{color:rgba(250,204,21,.4);animation:ld 1.5s ease-in-out infinite}
+@keyframes ld{0%,100%{opacity:.3}50%{opacity:.7}}
 
 /* ===== BLUE WORLD ===== */
 .blue-content{max-width:680px;margin:0 auto;padding:4rem 1.5rem 3rem;position:relative;z-index:41}
@@ -127,7 +107,7 @@ canvas.exp-canvas{position:fixed;inset:0;z-index:39;pointer-events:none}
 .world-header h2{font-size:1.8rem;font-weight:900;letter-spacing:.04em}
 .bsection{opacity:0;transform:translateY(20px);transition:all .7s;margin-bottom:2.2rem}
 .bsection.visible{opacity:1;transform:translateY(0)}
-.bsection-title{font-size:.48rem;letter-spacing:.22em;text-transform:uppercase;margin-bottom:.7rem;opacity:.3;font-weight:700}
+.bsection-title{font-size:.48rem;letter-spacing:.22em;text-transform:uppercase;margin-bottom:.7rem;opacity:.25;font-weight:700}
 .bcard-grid{display:grid;gap:.45rem}
 .bcard{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);padding:.7rem .9rem;border-radius:8px;transition:all .35s}
 .bcard:hover{background:rgba(255,255,255,.035);transform:translateY(-1px)}
@@ -144,9 +124,8 @@ canvas.exp-canvas{position:fixed;inset:0;z-index:39;pointer-events:none}
 
 @media(max-width:700px){
   .horizon{flex-direction:column}.world-half{height:50vh}.divider-line{top:50%;left:0;right:0;bottom:auto;width:auto;height:1px}.wl-char{font-size:2rem}
-  .lineup-row{flex-direction:column;align-items:center}
-  .player-card{width:100%;max-width:280px}
-  .player-card:hover{width:100%;max-width:300px}
+  .player-card{width:100%;max-width:260px}
+  .player-card:hover{width:100%;max-width:280px}
 }
 </style>
 </head>
@@ -163,34 +142,53 @@ canvas.exp-canvas{position:fixed;inset:0;z-index:39;pointer-events:none}
 <div class="divider-line" id="dline"></div>
 <div class="vortex" id="vortex"></div>
 
-<!-- ===== AZUMA · FORMATION ===== -->
+<!-- ===== AZUMA · FORMATION 1-4-3-2-1 ===== -->
 <div class="expanded-world red-expand" id="red-expand">
   <canvas class="exp-canvas" id="red-bg"></canvas>
   <button class="close-btn" onclick="closeWorld()">&times;</button>
 
   <div class="pitch">
-
     <div class="pitch-header">
-      <div class="league">Azuma FC · Formation 4-3-3</div>
+      <div class="club">Azuma FC · Starting XI</div>
       <h2>THE LINEUP</h2>
-      <div class="sub">Starting XI · 第1話</div>
+      <div class="formation-tag">Formation 1-4-3-2-1</div>
     </div>
 
     <div class="formation">
 
-      <!-- ===== FORWARD LINE (Creativity) ===== -->
-      <div class="line-label">▸ FORWARDS — Creativity & Expression</div>
-      <div class="lineup-row">
-
-        <!-- Poem: Blue Eyes (LW) -->
-        <div class="player-card fw captain">
-          <div class="number">11</div>
-          <div class="card-header">
-            <div class="position-tag">LW · Left Wing</div>
-            <div class="card-title">Blue Eyes</div>
-          </div>
+      <!-- ===== STRIKER (1) — Dev Attri ===== -->
+      <div class="line-row">
+        <div class="player-card st cap">
+          <div class="number">9</div>
+          <div class="card-head"><div class="pos">ST · Striker</div><div class="title">Dev Attri</div></div>
           <div class="card-body">
-            <p class="poem-text">What beautiful colour of your eyes,
+            <p>Hello — I am <strong>DEV ATTRI</strong>. "Attri." I am a 20 year old Indian who has a lot of hope for the world and ambition for myself.</p>
+            <p>I believe in not compromising with dreams. I have deep interest in many fields beyond what's listed here — <strong>Football, F1, Astronomy, FPS games, and Reading Anonymous Readers.</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ATTACKING (2) — Fyodor + Poetry ===== -->
+      <div class="line-row">
+        <!-- Fyodor -->
+        <div class="player-card at">
+          <div class="number">10</div>
+          <div class="card-head"><div class="pos">CAM · Playmaker</div><div class="title">Fyodor</div></div>
+          <div class="card-body">
+            <p><strong>Fyodor Dostoevsky</strong> — Russian novelist, philosopher. Explored human psychology, morality, free will, and the darkest corners of the human soul.</p>
+            <p>Notable works: <strong>Crime and Punishment, The Brothers Karamazov, Notes from Underground, The Idiot.</strong></p>
+            <p class="quote-text" style="margin-top:.4rem;border-top:1px solid rgba(255,255,255,.04);padding-top:.4rem">"Above all, don't lie to yourself. The man who lies to himself and listens to his own lie comes to a point that he cannot distinguish the truth within him, or around him, and so loses all respect for himself and for others."</p>
+          </div>
+        </div>
+
+        <!-- Poetry -->
+        <div class="player-card at">
+          <div class="number">7</div>
+          <div class="card-head"><div class="pos">CAM · Second Striker</div><div class="title">Poetry</div></div>
+          <div class="card-body">
+            <p style="font-size:.36rem;opacity:.3;margin-bottom:.3rem">Click each poem to expand ▼</p>
+            <details style="margin-bottom:.3rem"><summary style="font-size:.42rem;opacity:.5;cursor:pointer">Blue Eyes</summary>
+              <p class="poem-txt" style="margin-top:.3rem">What beautiful colour of your eyes,
 that a boy loses his perception of time
 
 i have seen the endless seas but i see depth in your eyes farseen
@@ -234,32 +232,9 @@ home is not a house- house is just a building full of bricks
 home is where the heart is,
 and eyes are where your eyes is
 
-~Dev</p>
-          </div>
-        </div>
-
-        <!-- Dostoevsky Quote (ST) -->
-        <div class="player-card fw captain">
-          <div class="number">9</div>
-          <div class="card-header">
-            <div class="position-tag">ST · Striker</div>
-            <div class="card-title">Fyodor</div>
-          </div>
-          <div class="card-body">
-            <p style="font-style:italic;font-size:.45rem;line-height:1.7">"Above all, don't lie to yourself. The man who lies to himself and listens to his own lie comes to a point that he cannot distinguish the truth within him, or around him, and so loses all respect for himself and for others."</p>
-            <p style="font-size:.35rem;opacity:.3;margin-top:.3rem">— Dostoevsky</p>
-          </div>
-        </div>
-
-        <!-- Poem: In the Gray (RW) -->
-        <div class="player-card fw">
-          <div class="number">7</div>
-          <div class="card-header">
-            <div class="position-tag">RW · Right Wing</div>
-            <div class="card-title">Gray Dreams</div>
-          </div>
-          <div class="card-body">
-            <p class="poem-text">Oh shades of light, show me the way,
+~Dev</p></details>
+            <details style="margin-bottom:.3rem"><summary style="font-size:.42rem;opacity:.5;cursor:pointer">In the Gray Between Dreams</summary>
+              <p class="poem-txt" style="margin-top:.3rem">Oh shades of light, show me the way,
 Through darkness that swallows and night that turns gray.
 When I can't seem to breathe, let me dance in the dawn,
 And find in the shadows the strength to go on.
@@ -277,42 +252,9 @@ In the maze of the night, in the folds of my mind.
 White is not always warm, and black not always stark,
 There's a darkness that's white, there's a whiteness in dark.
 In the contrast we find all the shades in between,
-In the gray of our dreams, all our truths can be seen.</p>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- ===== MIDFIELD (Uniqueness / Flair) ===== -->
-      <div class="line-label">▸ MIDFIELD — Uniqueness & Flair</div>
-      <div class="lineup-row">
-
-        <!-- Questions -->
-        <div class="player-card mf">
-          <div class="number">8</div>
-          <div class="card-header">
-            <div class="position-tag">CM · Center Mid</div>
-            <div class="card-title">Questions</div>
-          </div>
-          <div class="card-body">
-            <p><strong>Why does being drunk make us happy?</strong></p>
-            <p style="opacity:.35;font-style:italic">— Answer coming soon.</p>
-            <p style="margin-top:.4rem"><strong>When did we stop asking questions?</strong></p>
-            <p style="opacity:.35;font-style:italic">— Answer coming soon.</p>
-            <p style="margin-top:.4rem"><strong>What is the meaning of life?</strong></p>
-            <p style="opacity:.35;font-style:italic">— Answer coming soon.</p>
-          </div>
-        </div>
-
-        <!-- Poem: Life Happened -->
-        <div class="player-card mf">
-          <div class="number">10</div>
-          <div class="card-header">
-            <div class="position-tag">CAM · Playmaker</div>
-            <div class="card-title">Life Happened</div>
-          </div>
-          <div class="card-body">
-            <p class="poem-text">Life happened, me waiting.
+In the gray of our dreams, all our truths can be seen.</p></details>
+            <details><summary style="font-size:.42rem;opacity:.5;cursor:pointer">Life Happened</summary>
+              <p class="poem-txt" style="margin-top:.3rem">Life happened, me waiting.
 Believing it would stop, it would wait.
 Life happening and happening,
 Consistent like spring water.
@@ -332,77 +274,74 @@ Either way, the reflection doesn't lie.
 Oh water, let's start again.
 Guide me, let's start again.
 Take me away to the far sea,
-Where I can sleep once again.</p>
+Where I can sleep once again.</p></details>
           </div>
         </div>
-
       </div>
 
-      <!-- ===== DEFENSE LINE (Core Ideas) ===== -->
-      <div class="line-label">▸ DEFENSE — Core Ideas & Foundation</div>
-      <div class="lineup-row">
-
-        <!-- Identity -->
-        <div class="player-card df">
-          <div class="number">4</div>
-          <div class="card-header">
-            <div class="position-tag">CB · Center Back</div>
-            <div class="card-title">Dev Attri</div>
-          </div>
+      <!-- ===== MIDFIELD (3) — Achievements, Curiosity, Ambitions ===== -->
+      <div class="line-row">
+        <!-- Achievements (Holding Mid) -->
+        <div class="player-card mf">
+          <div class="number">6</div>
+          <div class="card-head"><div class="pos">CDM · Holding Mid</div><div class="title">Achievements</div></div>
           <div class="card-body">
-            <p>Learning in public. One build. One rep. One kilometer. <strong>Always becoming.</strong></p>
-            <p style="margin-top:.4rem">Based in India. The work is the proof.</p>
+            <p><span class="tick">✓</span> HM — Half Marathon</p>
+            <p><span class="tick">✓</span> 1000 ELO — Chess.com</p>
+            <p><span class="tick">✓</span> Bench 225</p>
+            <p><span class="loading">…</span> SUB 2 HM</p>
           </div>
         </div>
 
-        <!-- Favorites -->
-        <div class="player-card df">
-          <div class="number">3</div>
-          <div class="card-header">
-            <div class="position-tag">CB · Center Back</div>
-            <div class="card-title">Favorites</div>
-          </div>
-          <div class="card-body">
-            <p><strong>Books</strong> — The Old Man of the Moon</p>
-            <p><strong>Anime</strong> — One Piece, Your Lie in April</p>
-            <p><strong>Music</strong> — Radiohead · OK Computer</p>
-            <p><strong>Place</strong> — Tolka, Nepal</p>
-          </div>
+        <!-- Curiosity -->
+        <div class="player-card mf">
+          <div class="number">8</div>
+          <div class="card-head"><div class="pos">CM · Box to Box</div><div class="title">Curiosity</div></div>
+          <div class="card-body"><p>To see my journey unfold.</p></div>
         </div>
 
-        <!-- Small Wins -->
-        <div class="player-card df">
-          <div class="number">2</div>
-          <div class="card-header">
-            <div class="position-tag">CB · Center Back</div>
-            <div class="card-title">Small Wins</div>
-          </div>
+        <!-- Ambitions -->
+        <div class="player-card mf">
+          <div class="number">11</div>
+          <div class="card-head"><div class="pos">CM · Box to Box</div><div class="title">Ambitions</div></div>
           <div class="card-body">
-            <p>→ Ran a <strong>half marathon</strong></p>
-            <p>→ Hit <strong>1000 ELO</strong> chess</p>
-            <p>→ Visited <strong>Nepal</strong></p>
-            <p>→ Built <strong>this website</strong></p>
+            <p><strong>Travel:</strong> Japan · Australia · Northern Europe · UK</p>
+            <p><strong>Race:</strong> ABC Circuit · MOAB 240 · Badwater 135 · 11 Ultras</p>
+            <p><strong>Tri:</strong> Ironman 70.3 · Ironman 140.6</p>
           </div>
         </div>
+      </div>
 
-        <!-- Social -->
-        <div class="player-card df">
+      <!-- ===== DEFENSE (4) — Hobbies, Attrism, Art, Fear ===== -->
+      <div class="line-row">
+        <div class="player-card df"><div class="number">2</div><div class="card-head"><div class="pos">RB · Right Back</div><div class="title">Hobbies</div></div>
+          <div class="card-body"><p>Chess · Creative writing · RPG games · Watching anime · Reading manga · <strong>Running.</strong></p></div></div>
+
+        <div class="player-card df"><div class="number">4</div><div class="card-head"><div class="pos">CB · Center Back</div><div class="title">Attrism</div></div>
+          <div class="card-body"><p>The way of living and doing what makes you <strong>happy</strong> — while being considerate enough to show the basic virtues to other humans. To show emotions. Because to have emotion is to be human. And to be human is to have emotions.</p></div></div>
+
+        <div class="player-card df"><div class="number">5</div><div class="card-head"><div class="pos">CB · Center Back</div><div class="title">Art</div></div>
+          <div class="card-body"><p class="quote-text">"We don't read and write poetry because it's cute. We read and write poetry because we are members of the human race. And the human race is filled with passion."</p><p style="font-size:.35rem;opacity:.25;margin-top:.3rem">— John Keating</p></div></div>
+
+        <div class="player-card df"><div class="number">3</div><div class="card-head"><div class="pos">LB · Left Back</div><div class="title">Fear</div></div>
+          <div class="card-body"><p>I fear that I may never find someone like me — who shares my interest in those billions.</p></div></div>
+      </div>
+
+      <!-- ===== GK (1) — Appreciation ===== -->
+      <div class="line-row">
+        <div class="player-card gk">
           <div class="number">1</div>
-          <div class="card-header">
-            <div class="position-tag">GK · Goalkeeper</div>
-            <div class="card-title">Signal</div>
-          </div>
+          <div class="card-head"><div class="pos">GK · Goalkeeper</div><div class="title">Appreciation</div></div>
           <div class="card-body">
-            <p><a href="https://github.com/attridevv" target="_blank">GitHub</a></p>
-            <p><a href="https://x.com/attridevv" target="_blank">X</a></p>
-            <p><a href="https://instagram.com/attridevv" target="_blank">Instagram</a></p>
+            <p><span class="name-line">Shubham Attri</span> My elder brother — for setting the standard.</p>
+            <p><span class="name-line">Hans Troyer</span> A humble ultra runner who inspired me to run.</p>
+            <p><span class="name-line">David Goggins</span> For getting me into fitness.</p>
+            <p><span class="name-line">Aditya Vats</span> The most selfless friend I ever had.</p>
           </div>
         </div>
-
       </div>
 
     </div>
-
   </div>
 </div>
 
@@ -415,23 +354,19 @@ Where I can sleep once again.</p>
     <div class="bsection"><div class="bsection-title">Live Projects</div>
       <div class="bcard-grid">
         <a href="https://gritier.attridevv.com" target="_blank" style="text-decoration:none;color:inherit;display:block">
-          <div class="bcard" style="cursor:pointer;background:rgba(37,99,235,.04);border-color:rgba(37,99,235,.1)">
+          <div class="bcard" style="background:rgba(37,99,235,.04);border-color:rgba(37,99,235,.1)">
             <h4 style="display:flex;align-items:center;gap:.35rem"><span class="live-badge"><span class="live-dot"></span>LIVE</span> Gritier &rarr;</h4>
             <p>Hybrid Athlete Command Center. Track readiness, runs, strength, recovery & injuries.</p>
           </div>
         </a>
-        <div class="bcard"><h4>Calorified</h4><p>Calorie tracker app. Nutrition logging, macro tracking.</p></div>
-        <div class="bcard"><h4>Max Workspace</h4><p>Clean workspace concept. Browser layouts, useful surfaces.</p></div>
+        <div class="bcard"><h4>Calorified</h4><p>Calorie tracker. Nutrition logging, macro tracking.</p></div>
+        <div class="bcard"><h4>Max Workspace</h4><p>Clean workspace concept. Browser layouts.</p></div>
       </div>
     </div>
-    <div class="bsection"><div class="bsection-title">Stack</div>
-      <div class="bcard"><p><strong>TypeScript</strong> · Next.js · Prisma · Python · APIs · Git · Databases</p></div>
-    </div>
+    <div class="bsection"><div class="bsection-title">Stack</div><div class="bcard"><p><strong>TypeScript</strong> · Next.js · Prisma · Python · APIs · Git · Databases</p></div></div>
     <div class="blinks-row">
-      <a href="https://github.com/attridevv" target="_blank" class="blink-pill">GitHub</a>
-      <a href="https://x.com/attridevv" target="_blank" class="blink-pill">X</a>
-      <a href="https://youtube.com/@attridevv" target="_blank" class="blink-pill">YouTube</a>
-      <a href="https://anilist.co/user/Attridevv/" target="_blank" class="blink-pill">AniList</a>
+      <a href="https://github.com/attridevv" target="_blank" class="blink-pill">GitHub</a><a href="https://x.com/attridevv" target="_blank" class="blink-pill">X</a>
+      <a href="https://youtube.com/@attridevv" target="_blank" class="blink-pill">YouTube</a><a href="https://anilist.co/user/Attridevv/" target="_blank" class="blink-pill">AniList</a>
     </div>
     <p class="bquote">"Above all, don't lie to yourself..." — Dostoevsky</p>
   </div>
@@ -442,22 +377,22 @@ Where I can sleep once again.</p>
 function R(){w=c.width=c.parentElement.offsetWidth;h=c.height=c.parentElement.offsetHeight}R();window.addEventListener('resize',R);
 var p=[];for(var i=0;i<ct;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.3,vy:dir*(.3+Math.random()*.8),r:Math.random()*1.5+.4,o:Math.random()*.35+.15,l:Math.random()*200});
 (function D(t){if(w!==c.parentElement.offsetWidth||h!==c.parentElement.offsetHeight)R();ctx.clearRect(0,0,w,h);
-p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.y>h+10||pp.l<=0){pp.x=Math.random()*w;pp.y=dir>0?h+10:-10;pp.l=200+Math.random()*100}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/200))+')';ctx.fill()});requestAnimationFrame(D)})();})('rc','239,68,68',40,-1);
+p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.y>h+10||pp.l<=0){pp.x=Math.random()*w;pp.y=dir>0?h+10:-10;pp.l=200+Math.random()*100}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/200))+')';ctx.fill()});requestAnimationFrame(D)})();})('rc','239,68,68',35,-1);
 (function(id,col,ct,dir){var c=document.getElementById(id),ctx=c.getContext('2d'),w,h;
 function R(){w=c.width=c.parentElement.offsetWidth;h=c.height=c.parentElement.offsetHeight}R();window.addEventListener('resize',R);
 var p=[];for(var i=0;i<ct;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.3,vy:dir*(.3+Math.random()*.8),r:Math.random()*1.5+.4,o:Math.random()*.35+.15,l:Math.random()*200});
 (function D(t){if(w!==c.parentElement.offsetWidth||h!==c.parentElement.offsetHeight)R();ctx.clearRect(0,0,w,h);
-p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.y>h+10||pp.l<=0){pp.x=Math.random()*w;pp.y=dir>0?h+10:-10;pp.l=200+Math.random()*100}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/200))+')';ctx.fill()});requestAnimationFrame(D)})();})('bc','59,130,246',40,-1);
+p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.y>h+10||pp.l<=0){pp.x=Math.random()*w;pp.y=dir>0?h+10:-10;pp.l=200+Math.random()*100}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/200))+')';ctx.fill()});requestAnimationFrame(D)})();})('bc','59,130,246',35,-1);
 (function(id,col,ct){var c=document.getElementById(id),ctx=c.getContext('2d'),w,h;
 function R(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}R();window.addEventListener('resize',R);
 var p=[];for(var i=0;i<ct;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.15,vy:-.2-Math.random()*.4,r:Math.random()*1.2+.3,o:Math.random()*.2+.08,l:Math.random()*300});
 (function D(t){if(w!==c.width||h!==c.height)R();ctx.clearRect(0,0,w,h);
-p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.l<=0){pp.x=Math.random()*w;pp.y=h+10;pp.l=300+Math.random()*200}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/300))+')';ctx.fill()});requestAnimationFrame(D)})();})('red-bg','6,182,212',30);
+p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.l<=0){pp.x=Math.random()*w;pp.y=h+10;pp.l=300+Math.random()*200}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/300))+')';ctx.fill()});requestAnimationFrame(D)})();})('red-bg','6,182,212',25);
 (function(id,col,ct){var c=document.getElementById(id),ctx=c.getContext('2d'),w,h;
 function R(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}R();window.addEventListener('resize',R);
-var p=[];for(var i=0;i<ct;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.15,vy:-.2-Math.random()*.4,r:Math.random()*1.2+.3,o:Math.random()*.2+.08,l:Math.random()*300});
+var p=[];for(var i=0;i<ct;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.2,vy:-.2-Math.random()*.5,r:Math.random()*1.2+.3,o:Math.random()*.2+.08,l:Math.random()*300});
 (function D(t){if(w!==c.width||h!==c.height)R();ctx.clearRect(0,0,w,h);
-p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.l<=0){pp.x=Math.random()*w;pp.y=h+10;pp.l=300+Math.random()*200}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/300))+')';ctx.fill()});requestAnimationFrame(D)})();})('blue-bg','59,130,246',40);
+p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.l<=0){pp.x=Math.random()*w;pp.y=h+10;pp.l=300+Math.random()*200}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/300))+')';ctx.fill()});requestAnimationFrame(D)})();})('blue-bg','59,130,246',35);
 (function(){var s=document.querySelectorAll('.bsection');function ck(){s.forEach(function(sec){var r=sec.getBoundingClientRect();if(r.top<window.innerHeight*.85)sec.classList.add('visible')})}ck();document.querySelectorAll('.expanded-world').forEach(function(w){w.addEventListener('scroll',ck)})})();
 function enterWorld(w){
   document.getElementById('horizon').classList.add('fading');document.getElementById('dline').style.opacity='0';
