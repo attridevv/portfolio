@@ -95,6 +95,22 @@ canvas.exp-canvas{position:fixed;inset:0;z-index:39;pointer-events:none}
 /* Captain band */
 .player-card.st.cap::after{content:'C';position:absolute;top:.4rem;left:.5rem;font-size:.55rem;font-weight:900;color:#ef4444;opacity:.3;line-height:1}
 
+/* Mega expand on double-click */
+.player-card.mega{width:320px !important;height:380px !important;z-index:50 !important;background:rgba(6,182,212,.08) !important;border-color:rgba(6,182,212,.3) !important;box-shadow:0 0 60px rgba(6,182,212,.1),0 0 120px rgba(6,182,212,.04) !important}
+.player-card.mega .card-body{opacity:1;max-height:300px;margin-top:.6rem}
+.player-card.mega .number{opacity:.2;font-size:2.4rem}
+.player-card.mega .title{font-size:.7rem;color:var(--cyan)}
+.player-card.at.mega .card-body{max-height:340px}
+.player-card.at.mega{width:340px !important;height:420px !important}
+.player-card .mega-hint{display:none;font-size:.3rem;opacity:.2;margin-top:.3rem}
+.player-card:hover .mega-hint{display:block}
+.player-card.mega .mega-hint{display:none !important}
+/* Cherry blossom petals */
+.petals-overlay{position:fixed;inset:0;pointer-events:none;z-index:45}
+.petals-overlay .bp{position:absolute;width:5px;height:8px;border-radius:50% 0 50% 0;opacity:0;animation:bpFall var(--dur) ease-in-out infinite;animation-delay:var(--del);left:var(--x)}
+.petals-overlay .bp.pk{background:linear-gradient(135deg,#f9a8d4,rgba(236,72,153,.3))}
+.petals-overlay .bp.wh{background:linear-gradient(135deg,#fff,rgba(249,168,212,.15));width:3px;height:6px}
+@keyframes bpFall{0%{opacity:.5;transform:translate(0,0)rotate(0)}25%{transform:translate(var(--drift),25vh)rotate(90deg)}50%{opacity:.3;transform:translate(calc(var(--drift)*-.2),50vh)rotate(180deg)}75%{transform:translate(calc(var(--drift)*.3),75vh)rotate(270deg)}100%{opacity:0;transform:translate(var(--drift),100vh)rotate(360deg)}}
 /* Achievement tick */
 .tick{color:#10b981;font-weight:700}
 .loading{color:rgba(250,204,21,.4);animation:ld 1.5s ease-in-out infinite}
@@ -145,6 +161,7 @@ canvas.exp-canvas{position:fixed;inset:0;z-index:39;pointer-events:none}
 <!-- ===== AZUMA · FORMATION 1-4-3-2-1 ===== -->
 <div class="expanded-world red-expand" id="red-expand">
   <canvas class="exp-canvas" id="red-bg"></canvas>
+  <div class="petals-overlay" id="petals-overlay"></div>
   <button class="close-btn" onclick="closeWorld()">&times;</button>
 
   <div class="pitch">
@@ -312,19 +329,19 @@ Where I can sleep once again.</p></details>
         </div>
       </div>
 
-      <!-- ===== DEFENSE (4) — Hobbies, Attrism, Art, Fear ===== -->
+      <!-- ===== DEFENSE (4) — Fear, Art, Attrism, Hobbies ===== -->
       <div class="line-row">
-        <div class="player-card df"><div class="number">2</div><div class="card-head"><div class="pos">RB · Right Back</div><div class="title">Hobbies</div></div>
-          <div class="card-body"><p>Chess · Creative writing · RPG games · Watching anime · Reading manga · <strong>Running.</strong></p></div></div>
-
-        <div class="player-card df"><div class="number">4</div><div class="card-head"><div class="pos">CB · Center Back</div><div class="title">Attrism</div></div>
-          <div class="card-body"><p>The way of living and doing what makes you <strong>happy</strong> — while being considerate enough to show the basic virtues to other humans. To show emotions. Because to have emotion is to be human. And to be human is to have emotions.</p></div></div>
+        <div class="player-card df"><div class="number">3</div><div class="card-head"><div class="pos">LB · Left Back</div><div class="title">Fear</div></div>
+          <div class="card-body"><p>I fear that I may never find someone like me — who shares my interest in those billions.</p></div></div>
 
         <div class="player-card df"><div class="number">5</div><div class="card-head"><div class="pos">CB · Center Back</div><div class="title">Art</div></div>
           <div class="card-body"><p class="quote-text">"We don't read and write poetry because it's cute. We read and write poetry because we are members of the human race. And the human race is filled with passion."</p><p style="font-size:.35rem;opacity:.25;margin-top:.3rem">— John Keating</p></div></div>
 
-        <div class="player-card df"><div class="number">3</div><div class="card-head"><div class="pos">LB · Left Back</div><div class="title">Fear</div></div>
-          <div class="card-body"><p>I fear that I may never find someone like me — who shares my interest in those billions.</p></div></div>
+        <div class="player-card df"><div class="number">4</div><div class="card-head"><div class="pos">CB · Center Back</div><div class="title">Attrism</div></div>
+          <div class="card-body"><p>The way of living and doing what makes you <strong>happy</strong> — while being considerate enough to show the basic virtues to other humans. To show emotions. Because to have emotion is to be human. And to be human is to have emotions.</p></div></div>
+
+        <div class="player-card df"><div class="number">2</div><div class="card-head"><div class="pos">RB · Right Back</div><div class="title">Hobbies</div></div>
+          <div class="card-body"><p>Chess · Creative writing · RPG games · Watching anime · Reading manga · <strong>Running.</strong></p></div></div>
       </div>
 
       <!-- ===== GK (1) — Appreciation ===== -->
@@ -406,6 +423,10 @@ function closeWorld(){
   document.getElementById('horizon').classList.remove('fading');document.getElementById('dline').style.opacity='';
   document.body.style.overflow='hidden';document.querySelectorAll('.bsection').forEach(function(s){s.classList.remove('visible')});
 }
+// Double-click to mega-expand any player card
+document.querySelectorAll('.player-card').forEach(function(card){card.addEventListener('dblclick',function(e){e.stopPropagation();this.classList.toggle('mega')})});
+// Cherry blossom petals overlay
+(function(){var p=document.getElementById('petals-overlay');if(!p)return;var h='';for(var i=0;i<30;i++){var x=Math.random()*90,dur=8+Math.random()*12,del=Math.random()*14,drift=(Math.random()-.5)*150;h+='<div class="bp '+(Math.random()>.3?'pk':'wh')+'" style="--x:'+x+'%;--dur:'+dur+'s;--del:'+del+'s;--drift:'+drift+'px"></div>'}p.innerHTML=h})();
 </script>
 </body>
 </html>
