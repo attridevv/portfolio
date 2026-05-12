@@ -6,10 +6,11 @@
 <title>Dev Attri</title>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--red:#dc2626;--cyan:#06b6d4;--white:#e2e8f0}
+:root{--red:#dc2626;--cyan:#06b6d4;--white:#e2e8f0;--dim:rgba(226,232,240,.4);--field:rgba(6,182,212,.04);--card-bg:rgba(6,182,212,.03);--card-border:rgba(6,182,212,.08);--card-hover-bg:rgba(6,182,212,.06);--gold:#facc15;--gk-color:rgba(139,92,246,.3);--def-color:rgba(6,182,212,.3);--mid-color:rgba(168,85,247,.3);--att-color:rgba(250,204,21,.3);--str-color:rgba(239,68,68,.3)}
+
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;width:100vw;height:100vh;overflow:hidden;background:#000;color:var(--white)}
 
-/* ===== HORIZON (unchanged) ===== */
+/* HORIZON */
 .horizon{position:fixed;inset:0;z-index:1;display:flex;transition:opacity .8s,filter .8s}
 .horizon.fading{opacity:0;filter:blur(20px)}
 .world-half{flex:1;position:relative;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .8s}
@@ -29,82 +30,91 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 @keyframes divPulse{0%,100%{opacity:.5}50%{opacity:1}}
 canvas.p-canvas{position:absolute;inset:0;pointer-events:none;z-index:2}
 
-.vortex{position:fixed;inset:0;z-index:50;pointer-events:none;opacity:0;transition:opacity .3s}.vortex.active{opacity:1}
+.vortex{position:fixed;inset:0;z-index:50;pointer-events:none;opacity:0;transition:opacity .3s}
+.vortex.active{opacity:1}
 .vr{position:absolute;border-radius:50%;border:1px solid transparent;animation:vrSpin 1s linear infinite}
 @keyframes vrSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-.expanded-world{position:fixed;inset:0;z-index:40;display:none;overflow:hidden;opacity:0;transform:scale(1.05);transition:opacity .6s,transform .6s}
+.expanded-world{position:fixed;inset:0;z-index:40;display:none;overflow-y:auto;opacity:0;transform:scale(1.05);transition:opacity .6s,transform .6s}
 .expanded-world.active{display:block;animation:worldEnter .6s cubic-bezier(.16,1,.3,1) forwards}
 @keyframes worldEnter{to{opacity:1;transform:scale(1)}}
+.red-expand{background:linear-gradient(180deg,#070710,#0a0a18,#070710)}
 .blue-expand{background:radial-gradient(ellipse at 50% 30%,rgba(37,99,235,.04),transparent 60%),linear-gradient(180deg,#020810,#041020,#020810)}
 canvas.exp-canvas{position:fixed;inset:0;z-index:39;pointer-events:none}
 .close-btn{position:fixed;top:1rem;right:1rem;z-index:60;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.35);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;backdrop-filter:blur(4px)}
 .close-btn:hover{background:rgba(0,0,0,.6);border-color:rgba(255,255,255,.15);color:#fff}
 
-/* ===== DIAGONAL GRID ===== */
-.red-expand{background:#050510;overflow:hidden}
-.element-grid{
-  display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr 1fr;
-  width:100%;height:100%;position:relative;z-index:41;
+/* ===== PITCH ===== */
+.pitch{max-width:1000px;margin:0 auto;padding:1.5rem 1rem 3rem;position:relative;z-index:41;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.pitch-header{text-align:center;margin-bottom:2rem}
+.pitch-header .club{font-size:.4rem;letter-spacing:.25em;text-transform:uppercase;opacity:.2;margin-bottom:.3rem}
+.pitch-header h2{font-size:1.3rem;font-weight:900;letter-spacing:.08em;color:var(--cyan)}
+.pitch-header .formation-tag{font-size:.38rem;letter-spacing:.2em;opacity:.15;margin-top:.25rem;text-transform:uppercase}
+
+/* Center line */
+.pitch::before{content:'';position:absolute;left:50%;top:5%;bottom:5%;width:1px;background:var(--field);pointer-events:none}
+.pitch::after{content:'';position:absolute;left:10%;right:10%;top:50%;height:1px;background:var(--field);pointer-events:none}
+
+/* ===== FORMATION LINES ===== */
+.formation{display:flex;flex-direction:column;gap:.6rem;position:relative}
+
+.line-row{display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap}
+
+/* ===== PLAYER CARD ===== */
+.player-card{
+  width:120px;height:150px;position:relative;cursor:pointer;
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:6px;overflow:hidden;transition:all .45s cubic-bezier(.16,1,.3,1);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
 }
+.player-card:hover{width:250px;height:300px;z-index:30;background:var(--card-hover-bg);border-color:rgba(6,182,212,.2);box-shadow:0 0 40px rgba(6,182,212,.06);transform:translateY(-6px)}
 
-.element-zone{
-  position:relative;overflow:hidden;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .5s;border:1px solid rgba(255,255,255,.03);
-}
-.element-zone:hover{z-index:20;transform:scale(1.04);box-shadow:0 0 60px rgba(0,0,0,.5)}
-.element-zone::after{content:'';position:absolute;inset:0;pointer-events:none;transition:opacity .5s}
+.player-card .number{font-size:1.8rem;font-weight:900;opacity:.1;transition:all .4s;position:absolute;top:.3rem;right:.5rem;line-height:1}
+.player-card:hover .number{opacity:.2;font-size:2.2rem}
 
-/* Fire — center (row 2, col 2) */
-.fire-zone{grid-row:2;grid-column:2;
-  background:radial-gradient(ellipse at 50% 50%,#fbbf24 0%,transparent 30%),radial-gradient(ellipse at 50% 60%,#f97316 0%,transparent 40%),#1a0202;
-  animation:firePulse 3s ease-in-out infinite alternate;}
-@keyframes firePulse{0%{filter:brightness(1)}100%{filter:brightness(1.15)}}
+.player-card .card-head{transition:all .4s;padding:0 .4rem}
+.player-card .pos{font-size:.32rem;letter-spacing:.15em;text-transform:uppercase;opacity:.3;margin-bottom:.2rem}
+.player-card .title{font-size:.55rem;font-weight:800;letter-spacing:.03em;color:var(--white);transition:all .4s}
+.player-card:hover .title{font-size:.65rem;color:var(--cyan)}
 
-/* Water — right */
-.water-zone{grid-row:2;grid-column:3;
-  background:radial-gradient(ellipse at 40% 50%,#38bdf8 0%,transparent 32%),radial-gradient(ellipse at 50% 70%,#0ea5e9 0%,transparent 40%),#020a1a;
-  animation:waterFlow 5s ease-in-out infinite;}
-@keyframes waterFlow{0%,100%{background-position:0 0,0 0}50%{background-position:2% 1%,-1% 1%}}
+.player-card .card-body{opacity:0;max-height:0;overflow-y:auto;transition:opacity .35s .15s,max-height .5s;width:100%;padding:0 .6rem}
+.player-card:hover .card-body{opacity:1;max-height:220px;margin-top:.5rem}
+.player-card .card-body p{font-size:.4rem;line-height:1.55;opacity:.5;margin-bottom:.2rem;text-align:left}
+.player-card .card-body .name-line{font-size:.45rem;font-weight:700;opacity:.6;color:var(--cyan);margin-bottom:.1rem}
+.player-card .card-body .quote-text{font-style:italic;font-size:.38rem;line-height:1.6;opacity:.45}
+.player-card .card-body .poem-txt{font-style:italic;font-size:.37rem;line-height:1.6;opacity:.45;white-space:pre-line}
+.player-card .card-body strong{color:var(--cyan);opacity:.75}
 
-/* Ice — top center */
-.ice-zone{grid-row:1;grid-column:2;
-  background:radial-gradient(ellipse at 50% 50%,#e0f2fe 0%,transparent 30%),radial-gradient(ellipse at 50% 70%,#7dd3fc 0%,transparent 40%),#0f172a;
-  animation:iceShimmer 4s ease-in-out infinite alternate;}
-@keyframes iceShimmer{0%{filter:brightness(1) saturate(.6)}100%{filter:brightness(1.1) saturate(.9)}}
+/* Position colors */
+.player-card.gk{border-left:2px solid rgba(139,92,246,.3)}.player-card.gk:hover{border-left-color:#a78bfa}.player-card.gk:hover .title{color:#a78bfa}.player-card.gk .pos{color:var(--gk-color)}
+.player-card.df{border-left:2px solid rgba(6,182,212,.25)}.player-card.df:hover{border-left-color:var(--cyan)}.player-card.mf{border-left:2px solid rgba(168,85,247,.25)}.player-card.mf:hover{border-left-color:#a855f7}.player-card.mf:hover .title{color:#a855f7}.player-card.mf .pos{color:var(--mid-color)}
+.player-card.at{border-left:2px solid rgba(250,204,21,.25)}.player-card.at:hover{border-left-color:#facc15}.player-card.at:hover .title{color:#facc15}.player-card.at .pos{color:var(--att-color)}
+.player-card.st{border-left:2px solid rgba(239,68,68,.25)}.player-card.st:hover{border-left-color:#ef4444}.player-card.st:hover .title{color:#ef4444}.player-card.st .pos{color:var(--str-color)}
 
-/* Thunder — top left */
-.thunder-zone{grid-row:1;grid-column:1;
-  background:radial-gradient(ellipse at 50% 50%,#fef08a 0%,transparent 28%),radial-gradient(ellipse at 50% 70%,#facc15 0%,transparent 38%),#0a0800;
-  animation:thunderStrike 3.5s ease-in-out infinite;}
-@keyframes thunderStrike{0%,88%,100%{filter:brightness(1)}45%{filter:brightness(1.3)}48%{filter:brightness(.6)}50%{filter:brightness(1.5)}52%{filter:brightness(.8)}}
+/* Captain band */
+.player-card.st.cap::after{content:'C';position:absolute;top:.4rem;left:.5rem;font-size:.55rem;font-weight:900;color:#ef4444;opacity:.3;line-height:1}
 
-/* Wind — bottom left */
-.wind-zone{grid-row:3;grid-column:1;
-  background:radial-gradient(ellipse at 50% 40%,#a5f3fc 0%,transparent 30%),radial-gradient(ellipse at 50% 60%,#67e8f9 0%,transparent 38%),#042f2e;
-  animation:windGust 6s ease-in-out infinite;}
-@keyframes windGust{0%,100%{background-position:0 0,0 0}33%{background-position:3% 1%,-2% 1%}66%{background-position:-2% -1%,1% 2%}}
-
-/* Void corners */
-.void-corner{grid-row:1;grid-column:3;background:radial-gradient(ellipse at 50% 50%,rgba(139,92,246,.1),transparent 60%),#050510}
-.void-corner2{grid-row:3;grid-column:2;background:radial-gradient(ellipse at 50% 50%,rgba(139,92,246,.08),transparent 60%),#050510}
-.void-corner3{grid-row:3;grid-column:3;background:radial-gradient(ellipse at 50% 50%,rgba(139,92,246,.06),transparent 60%),#050510}
-
-/* Element particles */
-.element-zone canvas{position:absolute;inset:0;pointer-events:none}
-
-/* Zone content */
-.zone-content{position:relative;z-index:5;text-align:center;pointer-events:none;transition:transform .4s}
-.element-zone:hover .zone-content{transform:translateY(-4px)}
-.zone-icon{display:block;font-size:1.8rem;margin-bottom:.3rem;filter:drop-shadow(0 0 15px currentColor)}
-.zone-name{display:block;font-size:.7rem;font-weight:900;letter-spacing:.08em}
-.zone-sub{display:block;font-size:.38rem;opacity:.3;letter-spacing:.1em;margin-top:.15rem}
-.fire-zone .zone-name{color:#fbbf24}.fire-zone .zone-icon{color:#f97316}
-.water-zone .zone-name{color:#38bdf8}.water-zone .zone-icon{color:#0ea5e9}
-.ice-zone .zone-name{color:#e0f2fe}.ice-zone .zone-icon{color:#bae6fd}
-.thunder-zone .zone-name{color:#facc15}.thunder-zone .zone-icon{color:#fef08a}
-.wind-zone .zone-name{color:#67e8f9}.wind-zone .zone-icon{color:#a5f3fc}
+/* Mega expand on double-click */
+.player-card.mega{width:320px !important;height:380px !important;z-index:50 !important;background:rgba(6,182,212,.08) !important;border-color:rgba(6,182,212,.3) !important;box-shadow:0 0 60px rgba(6,182,212,.1),0 0 120px rgba(6,182,212,.04) !important}
+.player-card.mega .card-body{opacity:1;max-height:300px;margin-top:.6rem}
+.player-card.mega .number{opacity:.2;font-size:2.4rem}
+.player-card.mega .title{font-size:.7rem;color:var(--cyan)}
+.player-card.at.mega .card-body{max-height:340px}
+.player-card.at.mega{width:340px !important;height:420px !important}
+.player-card .mega-hint{display:none;font-size:.3rem;opacity:.2;margin-top:.3rem}
+.player-card:hover .mega-hint{display:block}
+.player-card.mega .mega-hint{display:none !important}
+/* Cherry blossom petals */
+.petals-overlay{position:fixed;inset:0;pointer-events:none;z-index:45}
+.petals-overlay .bp{position:absolute;width:5px;height:8px;border-radius:50% 0 50% 0;opacity:0;animation:bpFall var(--dur) ease-in-out infinite;animation-delay:var(--del);left:var(--x)}
+.petals-overlay .bp.pk{background:linear-gradient(135deg,#f9a8d4,rgba(236,72,153,.3))}
+.petals-overlay .bp.wh{background:linear-gradient(135deg,#fff,rgba(249,168,212,.15));width:3px;height:6px}
+@keyframes bpFall{0%{opacity:.5;transform:translate(0,0)rotate(0)}25%{transform:translate(var(--drift),25vh)rotate(90deg)}50%{opacity:.3;transform:translate(calc(var(--drift)*-.2),50vh)rotate(180deg)}75%{transform:translate(calc(var(--drift)*.3),75vh)rotate(270deg)}100%{opacity:0;transform:translate(var(--drift),100vh)rotate(360deg)}}
+/* Achievement tick */
+.tick{color:#10b981;font-weight:700}
+.loading{color:rgba(250,204,21,.4);animation:ld 1.5s ease-in-out infinite}
+@keyframes ld{0%,100%{opacity:.3}50%{opacity:.7}}
 
 /* ===== BLUE WORLD ===== */
 .blue-content{max-width:680px;margin:0 auto;padding:4rem 1.5rem 3rem;position:relative;z-index:41}
@@ -118,7 +128,8 @@ canvas.exp-canvas{position:fixed;inset:0;z-index:39;pointer-events:none}
 .bcard{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);padding:.7rem .9rem;border-radius:8px;transition:all .35s}
 .bcard:hover{background:rgba(255,255,255,.035);transform:translateY(-1px)}
 .bcard h4{font-size:.62rem;font-weight:700;margin-bottom:.15rem;color:#93c5fd}
-.bcard p{font-size:.47rem;line-height:1.65;opacity:.55}.bcard strong{opacity:.9;color:#93c5fd}
+.bcard p{font-size:.47rem;line-height:1.65;opacity:.55}
+.bcard strong{opacity:.9;color:#93c5fd}
 .live-badge{display:inline-flex;align-items:center;gap:.25rem;font-size:.38rem;font-weight:700;letter-spacing:.06em;padding:.12rem .4rem;border-radius:3px;background:rgba(37,99,235,.12);color:#93c5fd;border:1px solid rgba(37,99,235,.15)}
 .live-dot{width:5px;height:5px;border-radius:50%;background:#93c5fd;animation:dotBlink 2s infinite}
 @keyframes dotBlink{0%,100%{opacity:1}50%{opacity:.2}}
@@ -127,84 +138,227 @@ canvas.exp-canvas{position:fixed;inset:0;z-index:39;pointer-events:none}
 .blink-pill:hover{color:#93c5fd;border-color:rgba(147,197,253,.25)}
 .bquote{font-style:italic;border-left:2px solid rgba(255,255,255,.05);padding-left:1rem;font-size:.42rem;opacity:.25;margin-top:2rem;line-height:1.7}
 
-@media(max-width:700px){.horizon{flex-direction:column}.world-half{height:50vh}.divider-line{top:50%;left:0;right:0;bottom:auto;width:auto;height:1px}.wl-char{font-size:2rem}.element-grid{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr 1fr}.zone-icon{font-size:1.3rem}.zone-name{font-size:.55rem}}
+@media(max-width:700px){
+  .horizon{flex-direction:column}.world-half{height:50vh}.divider-line{top:50%;left:0;right:0;bottom:auto;width:auto;height:1px}.wl-char{font-size:2rem}
+  .player-card{width:100%;max-width:260px}
+  .player-card:hover{width:100%;max-width:280px}
+}
 </style>
 </head>
 <body>
 
 <div class="horizon" id="horizon">
   <div class="world-half red-half" onclick="enterWorld('red')"><canvas class="p-canvas" id="rc"></canvas>
-    <div class="world-label"><span class="wl-char">火</span><span class="wl-name">AZUMA</span><span class="wl-sub">The Self · Personal</span></div></div>
+    <div class="world-label"><span class="wl-char">火</span><span class="wl-name">AZUMA</span><span class="wl-sub">The Self · Personal</span></div>
+  </div>
   <div class="world-half blue-half" onclick="enterWorld('blue')"><canvas class="p-canvas" id="bc"></canvas>
-    <div class="world-label"><span class="wl-char">水</span><span class="wl-name">CREATE</span><span class="wl-sub">The Work · Tools</span></div></div>
+    <div class="world-label"><span class="wl-char">水</span><span class="wl-name">CREATE</span><span class="wl-sub">The Work · Tools</span></div>
+  </div>
 </div>
 <div class="divider-line" id="dline"></div>
 <div class="vortex" id="vortex"></div>
 
-<!-- ===== AZUMA — DIAGONAL 5 ELEMENTS ===== -->
-<div class="expanded-world" id="red-expand">
+<!-- ===== AZUMA · FORMATION 1-4-3-2-1 ===== -->
+<div class="expanded-world red-expand" id="red-expand">
+  <canvas class="exp-canvas" id="red-bg"></canvas>
+  <div class="petals-overlay" id="petals-overlay"></div>
   <button class="close-btn" onclick="closeWorld()">&times;</button>
-  <div class="element-grid">
 
-    <!-- THUNDER — top left -->
-    <div class="element-zone thunder-zone">
-      <canvas data-particles="thunder"></canvas>
-      <div class="zone-content">
-        <span class="zone-icon">⚡</span>
-        <span class="zone-name">Thunder</span>
-        <span class="zone-sub">Ambitions · Goals</span>
-      </div>
+  <div class="pitch">
+    <div class="pitch-header">
+      <div class="club">Azuma FC · Starting XI</div>
+      <h2>THE LINEUP</h2>
+      <div class="formation-tag">Formation 1-4-3-2-1</div>
     </div>
 
-    <!-- ICE — top center -->
-    <div class="element-zone ice-zone">
-      <canvas data-particles="ice"></canvas>
-      <div class="zone-content">
-        <span class="zone-icon">❄️</span>
-        <span class="zone-name">Ice</span>
-        <span class="zone-sub">Clarity · Focus</span>
+    <div class="formation">
+
+      <!-- ===== STRIKER (1) — Dev Attri ===== -->
+      <div class="line-row">
+        <div class="player-card st cap">
+          <div class="number">9</div>
+          <div class="card-head"><div class="pos">ST · Striker</div><div class="title">Dev Attri</div></div>
+          <div class="card-body">
+            <p>Hello — I am <strong>DEV ATTRI</strong>. "Attri." I am a 20 year old Indian who has a lot of hope for the world and ambition for myself.</p>
+            <p>I believe in not compromising with dreams. I have deep interest in many fields beyond what's listed here — <strong>Football, F1, Astronomy, FPS games, and Reading Anonymous Readers.</strong></p>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- VOID CORNER — top right -->
-    <div class="element-zone void-corner"></div>
+      <!-- ===== ATTACKING (2) — Fyodor + Poetry ===== -->
+      <div class="line-row">
+        <!-- Fyodor -->
+        <div class="player-card at">
+          <div class="number">10</div>
+          <div class="card-head"><div class="pos">CAM · Playmaker</div><div class="title">Fyodor</div></div>
+          <div class="card-body">
+            <p><strong>Fyodor Dostoevsky</strong> — Russian novelist, philosopher. Explored human psychology, morality, free will, and the darkest corners of the human soul.</p>
+            <p>Notable works: <strong>Crime and Punishment, The Brothers Karamazov, Notes from Underground, The Idiot.</strong></p>
+            <p class="quote-text" style="margin-top:.4rem;border-top:1px solid rgba(255,255,255,.04);padding-top:.4rem">"Above all, don't lie to yourself. The man who lies to himself and listens to his own lie comes to a point that he cannot distinguish the truth within him, or around him, and so loses all respect for himself and for others."</p>
+          </div>
+        </div>
 
-    <!-- WIND — bottom left -->
-    <div class="element-zone wind-zone">
-      <canvas data-particles="wind"></canvas>
-      <div class="zone-content">
-        <span class="zone-icon">🌬️</span>
-        <span class="zone-name">Wind</span>
-        <span class="zone-sub">Freedom · Movement</span>
+        <!-- Poetry -->
+        <div class="player-card at">
+          <div class="number">7</div>
+          <div class="card-head"><div class="pos">CAM · Second Striker</div><div class="title">Poetry</div></div>
+          <div class="card-body">
+            <p style="font-size:.36rem;opacity:.3;margin-bottom:.3rem">Click each poem to expand ▼</p>
+            <details style="margin-bottom:.3rem"><summary style="font-size:.42rem;opacity:.5;cursor:pointer">Blue Eyes</summary>
+              <p class="poem-txt" style="margin-top:.3rem">What beautiful colour of your eyes,
+that a boy loses his perception of time
+
+i have seen the endless seas but i see depth in your eyes farseen
+blessed were my eyes to have met yours
+i have seen moon on a cloudless night,
+but the flight through your eyes was so much bright
+Lucky is that guy who can see through your eyes,
+
+Flower meant a thing to me, now it means things to me
+is it Rose that you like, or cherry blossom alike
+what is that your eyes like to see
+violet yellow or green,
+
+I used to think Sober was drunk,
+no it was just that i was drunk,
+I didnt knew a thing, but i acted like i did
+your secrets were just too damn hard to drink,
+
+I didn't like descent not because it was easy, but too damn fast,
+apple cider was not that what i liked, it was what you seemed to like
+Animals are what seemed to fascinate you, Goat is what fascinates me
+i like dogs because they seem to get what i feel
+and you would have been the only one to whom i would kneel
+
+my heart and eyes are at war, but it seems to be a losing war
+Delhi to Darwin seems to be my next flight
+and your eyes seems to be my only sight,
+God was real for the first time when it rained,
+that jacket was never mine after that rain.
+
+There's freedom within and There's freedom without
+its represent that we fight two battles,
+a battle to be in your arms, and a war to be in your centre of heart
+Battle is not to be won or lost, it was to get what was your's-
+i usually take what is mine,
+you like to fly, i love to swim, but i am just a penguin
+
+In the day sky, i try to find the moon, again i am just a fool
+but it seems, i try to get what is mine but there's no moon in daylight
+home is not a house- house is just a building full of bricks
+home is where the heart is,
+and eyes are where your eyes is
+
+~Dev</p></details>
+            <details style="margin-bottom:.3rem"><summary style="font-size:.42rem;opacity:.5;cursor:pointer">In the Gray Between Dreams</summary>
+              <p class="poem-txt" style="margin-top:.3rem">Oh shades of light, show me the way,
+Through darkness that swallows and night that turns gray.
+When I can't seem to breathe, let me dance in the dawn,
+And find in the shadows the strength to go on.
+
+In a pocket of dreams and the depths of my wants,
+I still find myself crawling back through the sands.
+Yet in each grain of hope, a new light I can flaunt,
+As I rise with the dawn, where my courage still stands.
+
+What I seek is not freedom, as seeking confines,
+And what I like is not love, but a flicker that shines.
+For I like what is light, just a glimmer to find,
+In the maze of the night, in the folds of my mind.
+
+White is not always warm, and black not always stark,
+There's a darkness that's white, there's a whiteness in dark.
+In the contrast we find all the shades in between,
+In the gray of our dreams, all our truths can be seen.</p></details>
+            <details><summary style="font-size:.42rem;opacity:.5;cursor:pointer">Life Happened</summary>
+              <p class="poem-txt" style="margin-top:.3rem">Life happened, me waiting.
+Believing it would stop, it would wait.
+Life happening and happening,
+Consistent like spring water.
+
+Oh water, don't reflect what I see.
+Once five, now twenty—what changed?
+What changed?
+The vessel grew wings, then they were cut,
+And strings were pulled.
+
+Cut these strings before they strangle me,
+Drag me to somewhere the mirror guides.
+What happened to the wings that used to carry the train?
+Was the wind too strong, or were the strings too tight?
+Either way, the reflection doesn't lie.
+
+Oh water, let's start again.
+Guide me, let's start again.
+Take me away to the far sea,
+Where I can sleep once again.</p></details>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- FIRE — center (the core) -->
-    <div class="element-zone fire-zone">
-      <canvas data-particles="fire"></canvas>
-      <div class="zone-content">
-        <span class="zone-icon">🔥</span>
-        <span class="zone-name">Fire</span>
-        <span class="zone-sub">The Core · Dev Attri</span>
+      <!-- ===== MIDFIELD (3) — Achievements, Curiosity, Ambitions ===== -->
+      <div class="line-row">
+        <!-- Achievements (Holding Mid) -->
+        <div class="player-card mf">
+          <div class="number">6</div>
+          <div class="card-head"><div class="pos">CDM · Holding Mid</div><div class="title">Achievements</div></div>
+          <div class="card-body">
+            <p><span class="tick">✓</span> HM — Half Marathon</p>
+            <p><span class="tick">✓</span> 1000 ELO — Chess.com</p>
+            <p><span class="tick">✓</span> Bench 225</p>
+            <p><span class="loading">…</span> SUB 2 HM</p>
+          </div>
+        </div>
+
+        <!-- Curiosity -->
+        <div class="player-card mf">
+          <div class="number">8</div>
+          <div class="card-head"><div class="pos">CM · Box to Box</div><div class="title">Curiosity</div></div>
+          <div class="card-body"><p>To see my journey unfold.</p></div>
+        </div>
+
+        <!-- Ambitions -->
+        <div class="player-card mf">
+          <div class="number">11</div>
+          <div class="card-head"><div class="pos">CM · Box to Box</div><div class="title">Ambitions</div></div>
+          <div class="card-body">
+            <p><strong>Travel:</strong> Japan · Australia · Northern Europe · UK</p>
+            <p><strong>Race:</strong> ABC Circuit · MOAB 240 · Badwater 135 · 11 Ultras</p>
+            <p><strong>Tri:</strong> Ironman 70.3 · Ironman 140.6</p>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- VOID CORNER — bottom center -->
-    <div class="element-zone void-corner2"></div>
+      <!-- ===== DEFENSE (4) — Fear, Art, Attrism, Hobbies ===== -->
+      <div class="line-row">
+        <div class="player-card df"><div class="number">3</div><div class="card-head"><div class="pos">LB · Left Back</div><div class="title">Fear</div></div>
+          <div class="card-body"><p>I fear that I may never find someone like me — who shares my interest in those billions.</p></div></div>
 
-    <!-- WATER — right -->
-    <div class="element-zone water-zone">
-      <canvas data-particles="water"></canvas>
-      <div class="zone-content">
-        <span class="zone-icon">💧</span>
-        <span class="zone-name">Water</span>
-        <span class="zone-sub">Adapt · Flow</span>
+        <div class="player-card df"><div class="number">5</div><div class="card-head"><div class="pos">CB · Center Back</div><div class="title">Art</div></div>
+          <div class="card-body"><p class="quote-text">"We don't read and write poetry because it's cute. We read and write poetry because we are members of the human race. And the human race is filled with passion."</p><p style="font-size:.35rem;opacity:.25;margin-top:.3rem">— John Keating</p></div></div>
+
+        <div class="player-card df"><div class="number">4</div><div class="card-head"><div class="pos">CB · Center Back</div><div class="title">Attrism</div></div>
+          <div class="card-body"><p>The way of living and doing what makes you <strong>happy</strong> — while being considerate enough to show the basic virtues to other humans. To show emotions. Because to have emotion is to be human. And to be human is to have emotions.</p></div></div>
+
+        <div class="player-card df"><div class="number">2</div><div class="card-head"><div class="pos">RB · Right Back</div><div class="title">Hobbies</div></div>
+          <div class="card-body"><p>Chess · Creative writing · RPG games · Watching anime · Reading manga · <strong>Running.</strong></p></div></div>
       </div>
+
+      <!-- ===== GK (1) — Appreciation ===== -->
+      <div class="line-row">
+        <div class="player-card gk">
+          <div class="number">1</div>
+          <div class="card-head"><div class="pos">GK · Goalkeeper</div><div class="title">Appreciation</div></div>
+          <div class="card-body">
+            <p><span class="name-line">Shubham Attri</span> My elder brother — for setting the standard.</p>
+            <p><span class="name-line">Hans Troyer</span> A humble ultra runner who inspired me to run.</p>
+            <p><span class="name-line">David Goggins</span> For getting me into fitness.</p>
+            <p><span class="name-line">Aditya Vats</span> The most selfless friend I ever had.</p>
+          </div>
+        </div>
+      </div>
+
     </div>
-
-    <!-- VOID CORNER — bottom right -->
-    <div class="element-zone void-corner3"></div>
-
   </div>
 </div>
 
@@ -217,15 +371,21 @@ canvas.exp-canvas{position:fixed;inset:0;z-index:39;pointer-events:none}
     <div class="bsection"><div class="bsection-title">Live Projects</div>
       <div class="bcard-grid">
         <a href="https://gritier.attridevv.com" target="_blank" style="text-decoration:none;color:inherit;display:block">
-          <div class="bcard" style="background:rgba(37,99,235,.04);border-color:rgba(37,99,235,.1)"><h4 style="display:flex;align-items:center;gap:.35rem"><span class="live-badge"><span class="live-dot"></span>LIVE</span> Gritier &rarr;</h4><p>Hybrid Athlete Command Center.</p></div></a>
-        <div class="bcard"><h4>Calorified</h4><p>Calorie tracker.</p></div>
-        <div class="bcard"><h4>Max Workspace</h4><p>Clean workspace concept.</p></div>
+          <div class="bcard" style="background:rgba(37,99,235,.04);border-color:rgba(37,99,235,.1)">
+            <h4 style="display:flex;align-items:center;gap:.35rem"><span class="live-badge"><span class="live-dot"></span>LIVE</span> Gritier &rarr;</h4>
+            <p>Hybrid Athlete Command Center. Track readiness, runs, strength, recovery & injuries.</p>
+          </div>
+        </a>
+        <div class="bcard"><h4>Calorified</h4><p>Calorie tracker. Nutrition logging, macro tracking.</p></div>
+        <div class="bcard"><h4>Max Workspace</h4><p>Clean workspace concept. Browser layouts.</p></div>
       </div>
     </div>
+    <div class="bsection"><div class="bsection-title">Stack</div><div class="bcard"><p><strong>TypeScript</strong> · Next.js · Prisma · Python · APIs · Git · Databases</p></div></div>
     <div class="blinks-row">
       <a href="https://github.com/attridevv" target="_blank" class="blink-pill">GitHub</a><a href="https://x.com/attridevv" target="_blank" class="blink-pill">X</a>
       <a href="https://youtube.com/@attridevv" target="_blank" class="blink-pill">YouTube</a><a href="https://anilist.co/user/Attridevv/" target="_blank" class="blink-pill">AniList</a>
     </div>
+    <p class="bquote">"Above all, don't lie to yourself..." — Dostoevsky</p>
   </div>
 </div>
 
@@ -242,27 +402,14 @@ var p=[];for(var i=0;i<ct;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Ma
 p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.y>h+10||pp.l<=0){pp.x=Math.random()*w;pp.y=dir>0?h+10:-10;pp.l=200+Math.random()*100}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/200))+')';ctx.fill()});requestAnimationFrame(D)})();})('bc','59,130,246',35,-1);
 (function(id,col,ct){var c=document.getElementById(id),ctx=c.getContext('2d'),w,h;
 function R(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}R();window.addEventListener('resize',R);
+var p=[];for(var i=0;i<ct;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.15,vy:-.2-Math.random()*.4,r:Math.random()*1.2+.3,o:Math.random()*.2+.08,l:Math.random()*300});
+(function D(t){if(w!==c.width||h!==c.height)R();ctx.clearRect(0,0,w,h);
+p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.l<=0){pp.x=Math.random()*w;pp.y=h+10;pp.l=300+Math.random()*200}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/300))+')';ctx.fill()});requestAnimationFrame(D)})();})('red-bg','6,182,212',25);
+(function(id,col,ct){var c=document.getElementById(id),ctx=c.getContext('2d'),w,h;
+function R(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}R();window.addEventListener('resize',R);
 var p=[];for(var i=0;i<ct;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.2,vy:-.2-Math.random()*.5,r:Math.random()*1.2+.3,o:Math.random()*.2+.08,l:Math.random()*300});
 (function D(t){if(w!==c.width||h!==c.height)R();ctx.clearRect(0,0,w,h);
 p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.l<=0){pp.x=Math.random()*w;pp.y=h+10;pp.l=300+Math.random()*200}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/300))+')';ctx.fill()});requestAnimationFrame(D)})();})('blue-bg','59,130,246',35);
-
-// Element particle systems
-var pconfigs={
-  fire:{col:'251,191,36',ct:30,vy:-.8},
-  water:{col:'56,189,248',ct:25,vy:-.4},
-  ice:{col:'224,242,254',ct:25,vy:-.3},
-  thunder:{col:'254,240,138',ct:20,vy:-.5},
-  wind:{col:'165,243,252',ct:22,vy:-.6}
-};
-document.querySelectorAll('[data-particles]').forEach(function(el){
-  var cfg=pconfigs[el.dataset.particles];if(!cfg)return;
-  var ctx=el.getContext('2d'),w,h;
-  function R(){w=el.width=el.parentElement.offsetWidth;h=el.height=el.parentElement.offsetHeight}R();window.addEventListener('resize',R);
-  var pts=[];for(var i=0;i<cfg.ct;i++)pts.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.2,vy:cfg.vy*(.5+Math.random()),r:Math.random()*1.2+.3,o:Math.random()*.3+.15,l:Math.random()*200});
-  (function D(t){if(w!==el.parentElement.offsetWidth||h!==el.parentElement.offsetHeight)R();ctx.clearRect(0,0,w,h);
-  pts.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.l<=0){pp.x=Math.random()*w;pp.y=h+10;pp.l=200+Math.random()*100}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+cfg.col+','+(pp.o*(pp.l/200))+')';ctx.fill()});requestAnimationFrame(D)})();
-});
-
 (function(){var s=document.querySelectorAll('.bsection');function ck(){s.forEach(function(sec){var r=sec.getBoundingClientRect();if(r.top<window.innerHeight*.85)sec.classList.add('visible')})}ck();document.querySelectorAll('.expanded-world').forEach(function(w){w.addEventListener('scroll',ck)})})();
 function enterWorld(w){
   document.getElementById('horizon').classList.add('fading');document.getElementById('dline').style.opacity='0';
@@ -276,6 +423,10 @@ function closeWorld(){
   document.getElementById('horizon').classList.remove('fading');document.getElementById('dline').style.opacity='';
   document.body.style.overflow='hidden';document.querySelectorAll('.bsection').forEach(function(s){s.classList.remove('visible')});
 }
+// Double-click to mega-expand any player card
+document.querySelectorAll('.player-card').forEach(function(card){card.addEventListener('dblclick',function(e){e.stopPropagation();this.classList.toggle('mega')})});
+// Cherry blossom petals overlay
+(function(){var p=document.getElementById('petals-overlay');if(!p)return;var h='';for(var i=0;i<30;i++){var x=Math.random()*90,dur=8+Math.random()*12,del=Math.random()*14,drift=(Math.random()-.5)*150;h+='<div class="bp '+(Math.random()>.3?'pk':'wh')+'" style="--x:'+x+'%;--dur:'+dur+'s;--del:'+del+'s;--drift:'+drift+'px"></div>'}p.innerHTML=h})();
 </script>
 </body>
 </html>
