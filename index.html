@@ -6,18 +6,18 @@
 <title>Dev Attri</title>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--red:#dc2626;--red-glow:rgba(220,38,38,.4);--red-deep:#1a0202;--blue:#2563eb;--blue-glow:rgba(37,99,235,.4);--blue-deep:#020a1a}
+:root{--red:#dc2626;--red-glow:rgba(220,38,38,.4);--red-deep:#1a0202;--blue:#2563eb;--blue-glow:rgba(37,99,235,.4);--blue-deep:#020a1a;--cyan:#06b6d4;--cyan-glow:rgba(6,182,212,.3);--white:#e2e8f0;--dim:rgba(226,232,240,.4);--field:rgba(6,182,212,.03)}
 
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;width:100vw;height:100vh;overflow:hidden;background:#000;color:#e2e8f0}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;width:100vw;height:100vh;overflow:hidden;background:#000;color:var(--white)}
 
 /* ===== HORIZON ===== */
 .horizon{position:fixed;inset:0;z-index:1;display:flex;transition:opacity .8s,filter .8s}
 .horizon.fading{opacity:0;filter:blur(20px)}
-.world-half{flex:1;position:relative;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .8s cubic-bezier(.16,1,.3,1)}
+.world-half{flex:1;position:relative;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .8s}
 .red-half{background:linear-gradient(180deg,#1a0202 0%,#2d0505 30%,#1a0202 60%,#0d0101 100%);border-right:1px solid rgba(220,38,38,.15)}
-.red-half::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 30%,rgba(239,68,68,.12),transparent 50%),radial-gradient(ellipse at 30% 70%,rgba(220,38,38,.06),transparent 40%)}
+.red-half::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 30%,rgba(239,68,68,.12),transparent 50%)}
 .blue-half{background:linear-gradient(180deg,#020a1a 0%,#051530 30%,#020a1a 60%,#010510 100%)}
-.blue-half::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 30%,rgba(59,130,246,.12),transparent 50%),radial-gradient(ellipse at 70% 70%,rgba(37,99,235,.06),transparent 40%)}
+.blue-half::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 30%,rgba(59,130,246,.12),transparent 50%)}
 .world-label{position:relative;z-index:5;text-align:center;transition:transform .6s}
 .world-half:hover .world-label{transform:translateY(-8px)}
 .wl-char{display:block;font-size:3rem;margin-bottom:.5rem;transition:all .5s}
@@ -30,96 +30,102 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 @keyframes divPulse{0%,100%{opacity:.5}50%{opacity:1}}
 canvas.p-canvas{position:absolute;inset:0;pointer-events:none;z-index:2}
 
-/* ===== VORTEX ===== */
+/* VORTEX */
 .vortex{position:fixed;inset:0;z-index:50;pointer-events:none;opacity:0;transition:opacity .3s}
 .vortex.active{opacity:1}
 .vr{position:absolute;border-radius:50%;border:1px solid transparent;animation:vrSpin 1s linear infinite}
 @keyframes vrSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-/* ===== EXPANDED ===== */
+/* EXPANDED */
 .expanded-world{position:fixed;inset:0;z-index:40;display:none;overflow-y:auto;opacity:0;transform:scale(1.05);transition:opacity .6s,transform .6s}
 .expanded-world.active{display:block;animation:worldEnter .6s cubic-bezier(.16,1,.3,1) forwards}
 @keyframes worldEnter{to{opacity:1;transform:scale(1)}}
-.red-expand{background:linear-gradient(180deg,#0d0202,#1a0404,#0d0202)}
+.red-expand{background:linear-gradient(180deg,#0a0a14,#0d0d1a,#0a0a14)}
 .blue-expand{background:linear-gradient(180deg,#020810,#041020,#020810)}
-.canvas-bg{position:fixed;inset:0;z-index:39;pointer-events:none}
+canvas.exp-canvas{position:fixed;inset:0;z-index:39;pointer-events:none}
 .close-btn{position:fixed;top:1rem;right:1rem;z-index:60;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.35);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;backdrop-filter:blur(4px)}
 .close-btn:hover{background:rgba(0,0,0,.6);border-color:rgba(255,255,255,.15);color:#fff}
 
-/* ================================================ */
-/* ===== AZUMA — MANGA PAGE ===== */
-/* ================================================ */
-.manga-page{max-width:750px;margin:0 auto;padding:2rem 1.5rem 3rem;position:relative;z-index:41}
-.manga-page .page-header{text-align:center;margin-bottom:2rem}
-.manga-page .page-header .mag{font-size:.4rem;letter-spacing:.25em;text-transform:uppercase;opacity:.3;margin-bottom:.3rem;font-family:'Inter',sans-serif}
-.manga-page .page-header h2{font-size:1.6rem;font-weight:900;letter-spacing:.06em;color:#fca5a5}
-.manga-page .page-header .ch{font-size:.42rem;letter-spacing:.2em;opacity:.25;margin-top:.2rem}
+/* ===== PITCH / FORMATION ===== */
+.pitch{max-width:900px;margin:0 auto;padding:2rem 1.5rem 3rem;position:relative;z-index:41;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
 
-/* Panel grid */
-.panels{display:grid;gap:.5rem}
-.p-full{grid-column:1/-1}
-.p-row2{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
-.p-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem}
-.p-row21{display:grid;grid-template-columns:2fr 1fr;gap:.5rem}
+.pitch-header{text-align:center;margin-bottom:3rem}
+.pitch-header .league{font-size:.4rem;letter-spacing:.25em;text-transform:uppercase;opacity:.25;margin-bottom:.4rem}
+.pitch-header h2{font-size:1.5rem;font-weight:900;letter-spacing:.08em;color:var(--cyan)}
+.pitch-header .sub{font-size:.4rem;letter-spacing:.2em;opacity:.2;margin-top:.3rem;text-transform:uppercase}
 
-/* Manga Panel */
-.mpanel{border:1.8px solid #332020;padding:.6rem .75rem;position:relative;overflow:hidden;background:rgba(0,0,0,.2);transition:all .35s;cursor:default}
-.mpanel:hover{transform:translateY(-2px);border-color:rgba(239,68,68,.3);box-shadow:3px 4px 0 rgba(239,68,68,.06)}
-.mpanel .plabel{font-size:.35rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(252,165,165,.3);margin-bottom:.25rem;font-family:'Inter',sans-serif;font-weight:700}
-.mpanel h3{font-size:.65rem;font-weight:900;letter-spacing:.02em;color:#fca5a5;margin-bottom:.15rem}
-.mpanel h4{font-size:.48rem;font-weight:700;color:#fca5a5;margin-bottom:.1rem}
-.mpanel p{font-size:.44rem;line-height:1.6;opacity:.55}
-.mpanel strong{opacity:.8;color:#fca5a5}
+/* Formation lines */
+.formation{display:flex;flex-direction:column;gap:1.5rem;position:relative}
+.formation::before{content:'';position:absolute;left:10%;right:10%;top:0;bottom:0;border-top:1px solid var(--field);border-bottom:1px solid var(--field);pointer-events:none}
+.formation::after{content:'';position:absolute;left:50%;top:2%;bottom:2%;width:1px;background:var(--field);pointer-events:none}
 
-/* SFX */
-.mpanel .sfx{position:absolute;font-weight:900;pointer-events:none;opacity:.04;letter-spacing:.06em}
-.sfx-lg{font-size:1.4rem}.sfx-md{font-size:.8rem}.sfx-sm{font-size:.5rem}
-.sfx-tr{top:.1rem;right:.2rem}.sfx-tl{top:.1rem;left:.2rem}.sfx-br{bottom:.1rem;right:.2rem}.sfx-bl{bottom:.1rem;left:.2rem}
-.mpanel .sfx-red{color:#ef4444}
+.line-label{text-align:center;font-size:.4rem;letter-spacing:.2em;text-transform:uppercase;opacity:.2;margin-bottom:.4rem}
 
-/* Screentone */
-.mpanel .screentone{position:absolute;inset:0;pointer-events:none;opacity:.03;background-image:radial-gradient(circle,#fca5a5 1px,transparent 1px);background-size:5px 5px}
-.mpanel .speedlines{position:absolute;inset:0;pointer-events:none;opacity:.03;background:repeating-linear-gradient(70deg,transparent,transparent 2px,#fca5a5 2px,#fca5a5 3px)}
+/* Player cards row */
+.lineup-row{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap}
 
-/* ===== EXPANDABLE POEM CARD ===== */
-.poem-card{cursor:pointer;transition:all .4s;position:relative;overflow:hidden}
-.poem-card .preview{transition:all .3s}
-.poem-card .expanded{max-height:0;overflow:hidden;transition:max-height .6s cubic-bezier(.16,1,.3,1),opacity .4s;opacity:0}
-.poem-card.open .expanded{max-height:2000px;opacity:1}
-.poem-card.open .preview-hint{opacity:0}
-.poem-card .preview-hint{font-size:.35rem;opacity:.25;transition:opacity .3s;margin-top:.3rem;font-style:italic}
-.poem-card::after{content:'+';position:absolute;bottom:.4rem;right:.6rem;font-size:.6rem;opacity:.2;transition:all .3s}
-.poem-card.open::after{content:'−';opacity:.4}
-.poem-card:hover::after{opacity:.5}
+/* ===== PLAYER CARD ===== */
+.player-card{
+  width:130px;height:170px;position:relative;cursor:pointer;
+  background:rgba(6,182,212,.03);border:1px solid rgba(6,182,212,.08);
+  border-radius:8px;overflow:hidden;transition:all .45s cubic-bezier(.16,1,.3,1);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.player-card:hover{width:240px;height:280px;z-index:30;background:rgba(6,182,212,.06);border-color:rgba(6,182,212,.25);box-shadow:0 0 40px rgba(6,182,212,.08),0 0 80px rgba(6,182,212,.03);transform:translateY(-6px)}
 
-.poem-preview{font-style:italic;font-size:.48rem;line-height:1.8;opacity:.55}
-.poem-full{font-style:italic;font-size:.46rem;line-height:1.9;opacity:.65;white-space:pre-line;margin-top:.5rem;padding-top:.5rem;border-top:1px dashed rgba(252,165,165,.08)}
+/* Card number */
+.player-card .number{
+  font-size:2rem;font-weight:900;color:rgba(6,182,212,.15);transition:all .4s;
+  position:absolute;top:.5rem;right:.6rem;line-height:1;
+}
+.player-card:hover .number{color:rgba(6,182,212,.3);font-size:2.5rem}
 
-/* ===== QUESTION PANEL ===== */
-.qpanel .q{font-weight:700;font-size:.5rem;color:#fca5a5;margin-bottom:.3rem}
-.qpanel .a{font-size:.44rem;line-height:1.6;opacity:.5;font-style:italic}
-.qpanel .a.placeholder{opacity:.25}
+/* Card header (always visible) */
+.player-card .card-header{text-align:center;transition:all .4s;padding:0 .5rem}
+.player-card .position-tag{
+  font-size:.35rem;letter-spacing:.15em;text-transform:uppercase;
+  color:rgba(6,182,212,.3);margin-bottom:.3rem;
+}
+.player-card .card-title{font-size:.6rem;font-weight:800;letter-spacing:.04em;color:var(--white);transition:all .4s}
+.player-card:hover .card-title{font-size:.7rem;color:var(--cyan)}
 
-/* ===== LINKS ===== */
-.links-row{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin-top:1rem}
-.link-pill{padding:.25rem .6rem;border-radius:20px;font-size:.4rem;letter-spacing:.06em;text-decoration:none;transition:all .25s;color:rgba(252,165,165,.4);border:1px solid rgba(252,165,165,.08)}
-.link-pill:hover{color:#fca5a5;border-color:rgba(252,165,165,.25)}
+/* Card body (reveals on hover) */
+.player-card .card-body{
+  opacity:0;max-height:0;overflow-y:auto;
+  transition:opacity .35s .15s,max-height .5s;
+  width:100%;padding:0 .75rem;text-align:center;
+}
+.player-card:hover .card-body{opacity:1;max-height:200px;margin-top:.6rem}
 
-/* ===== QUOTE ===== */
-.quote{font-style:italic;border-left:2px solid rgba(255,255,255,.05);padding-left:1rem;font-size:.42rem;opacity:.25;margin-top:2rem;line-height:1.7}
+.player-card .card-body p{font-size:.42rem;line-height:1.6;opacity:.5;margin-bottom:.25rem}
+.player-card .card-body .poem-text{font-style:italic;font-size:.4rem;line-height:1.7;opacity:.5;margin-bottom:.2rem;white-space:pre-line}
+.player-card .card-body strong{color:var(--cyan);opacity:.8}
+.player-card .card-body a{color:var(--cyan);text-decoration:none;opacity:.6;font-size:.4rem}
 
-/* ===== FAVORITES MINI CARDS ===== */
-.fav-mini{display:grid;grid-template-columns:1fr 1fr;gap:.3rem}
-.fav-mini .fm{background:rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.03);padding:.35rem .5rem;border-radius:4px}
-.fav-mini .fm .fml{font-size:.32rem;letter-spacing:.1em;text-transform:uppercase;opacity:.2;margin-bottom:.1rem}
-.fav-mini .fm .fmv{font-size:.4rem;opacity:.5;line-height:1.5}
+/* Position-specific accents */
+.player-card.df{border-left:2px solid rgba(6,182,212,.2)}
+.player-card.df:hover{border-left-color:var(--cyan)}
+.player-card.mf{border-left:2px solid rgba(168,85,247,.2)}
+.player-card.mf:hover{border-left-color:#a855f7}
+.player-card.fw{border-left:2px solid rgba(250,204,21,.2)}
+.player-card.fw:hover{border-left-color:#facc15}
+.player-card.fw .position-tag{color:rgba(250,204,21,.3)}
+.player-card.fw:hover .position-tag{color:rgba(250,204,21,.6)}
+.player-card.fw:hover .card-title{color:#facc15}
+.player-card.fw .card-body strong{color:#facc15}
 
-/* ===== BLUE WORLD STYLES ===== */
+/* Captain armband */
+.player-card.captain::after{content:'C';position:absolute;top:.6rem;left:.6rem;font-size:.6rem;font-weight:900;color:var(--cyan);opacity:.25;line-height:1}
+
+.player-card.mf.captain::after{color:#a855f7}
+.player-card.fw.captain::after{color:#facc15}
+
+/* ===== BLUE WORLD ===== */
 .blue-content{max-width:680px;margin:0 auto;padding:4rem 1.5rem 3rem;position:relative;z-index:41}
 .world-header{text-align:center;margin-bottom:2.5rem}
 .world-header .ch{font-size:.45rem;letter-spacing:.25em;text-transform:uppercase;margin-bottom:.3rem;opacity:.35}
 .world-header h2{font-size:1.8rem;font-weight:900;letter-spacing:.04em}
-.bsection{opacity:0;transform:translateY(20px);transition:all .7s cubic-bezier(.16,1,.3,1);margin-bottom:2.2rem}
+.bsection{opacity:0;transform:translateY(20px);transition:all .7s;margin-bottom:2.2rem}
 .bsection.visible{opacity:1;transform:translateY(0)}
 .bsection-title{font-size:.48rem;letter-spacing:.22em;text-transform:uppercase;margin-bottom:.7rem;opacity:.3;font-weight:700}
 .bcard-grid{display:grid;gap:.45rem}
@@ -128,7 +134,6 @@ canvas.p-canvas{position:absolute;inset:0;pointer-events:none;z-index:2}
 .bcard h4{font-size:.62rem;font-weight:700;margin-bottom:.15rem;color:#93c5fd}
 .bcard p{font-size:.47rem;line-height:1.65;opacity:.55}
 .bcard strong{opacity:.9;color:#93c5fd}
-.bcard-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
 .live-badge{display:inline-flex;align-items:center;gap:.25rem;font-size:.38rem;font-weight:700;letter-spacing:.06em;padding:.12rem .4rem;border-radius:3px;background:rgba(37,99,235,.12);color:#93c5fd;border:1px solid rgba(37,99,235,.15)}
 .live-dot{width:5px;height:5px;border-radius:50%;background:#93c5fd;animation:dotBlink 2s infinite}
 @keyframes dotBlink{0%,100%{opacity:1}50%{opacity:.2}}
@@ -138,9 +143,10 @@ canvas.p-canvas{position:absolute;inset:0;pointer-events:none;z-index:2}
 .bquote{font-style:italic;border-left:2px solid rgba(255,255,255,.05);padding-left:1rem;font-size:.42rem;opacity:.25;margin-top:2rem;line-height:1.7}
 
 @media(max-width:700px){
-  .horizon{flex-direction:column}.world-half{height:50vh}.divider-line{top:50%;left:0;right:0;bottom:auto;width:auto;height:1px}
-  .p-row2,.p-row3,.p-row21{grid-template-columns:1fr}.fav-mini{grid-template-columns:1fr}
-  .wl-char{font-size:2rem}.manga-page .page-header h2{font-size:1.2rem}.bcard-grid-2{grid-template-columns:1fr}
+  .horizon{flex-direction:column}.world-half{height:50vh}.divider-line{top:50%;left:0;right:0;bottom:auto;width:auto;height:1px}.wl-char{font-size:2rem}
+  .lineup-row{flex-direction:column;align-items:center}
+  .player-card{width:100%;max-width:280px}
+  .player-card:hover{width:100%;max-width:300px}
 }
 </style>
 </head>
@@ -148,64 +154,43 @@ canvas.p-canvas{position:absolute;inset:0;pointer-events:none;z-index:2}
 
 <div class="horizon" id="horizon">
   <div class="world-half red-half" onclick="enterWorld('red')"><canvas class="p-canvas" id="rc"></canvas>
-    <div class="world-label"><span class="wl-char">火</span><span class="wl-name">AZUMA</span><span class="wl-sub">The Self · Personal</span></div></div>
+    <div class="world-label"><span class="wl-char">火</span><span class="wl-name">AZUMA</span><span class="wl-sub">The Self · Personal</span></div>
+  </div>
   <div class="world-half blue-half" onclick="enterWorld('blue')"><canvas class="p-canvas" id="bc"></canvas>
-    <div class="world-label"><span class="wl-char">水</span><span class="wl-name">CREATE</span><span class="wl-sub">The Work · Tools</span></div></div>
+    <div class="world-label"><span class="wl-char">水</span><span class="wl-name">CREATE</span><span class="wl-sub">The Work · Tools</span></div>
+  </div>
 </div>
 <div class="divider-line" id="dline"></div>
 <div class="vortex" id="vortex"></div>
 
-<!-- =========================== -->
-<!-- ===== AZUMA · MANGA PAGE ===== -->
-<!-- =========================== -->
+<!-- ===== AZUMA · FORMATION ===== -->
 <div class="expanded-world red-expand" id="red-expand">
-  <canvas class="canvas-bg" id="red-bg"></canvas>
+  <canvas class="exp-canvas" id="red-bg"></canvas>
   <button class="close-btn" onclick="closeWorld()">&times;</button>
 
-  <div class="manga-page">
+  <div class="pitch">
 
-    <div class="page-header">
-      <div class="mag">週刊アトリ · Weekly Attri</div>
-      <h2>AZUMA · 東</h2>
-      <div class="ch">第1話 — The Self</div>
+    <div class="pitch-header">
+      <div class="league">Azuma FC · Formation 4-3-3</div>
+      <h2>THE LINEUP</h2>
+      <div class="sub">Starting XI · 第1話</div>
     </div>
 
-    <div class="panels">
+    <div class="formation">
 
-      <!-- ROW: INTRO + FAVORITES -->
-      <div class="p-row21">
-        <div class="mpanel">
-          <div class="speedlines"></div>
-          <span class="sfx sfx-lg sfx-tr sfx-red">火</span>
-          <div class="plabel">IDENTITY · 自己</div>
-          <h3>Dev Attri</h3>
-          <p>Learning in public. One build. One rep. One kilometer. <strong>Always becoming.</strong> Based in India. The work is the proof.</p>
-        </div>
-        <div class="mpanel">
-          <div class="screentone"></div>
-          <div class="plabel">FAVORITES · 好み</div>
-          <div class="fav-mini">
-            <div class="fm"><span class="fml">Books</span><span class="fmv">The Old Man of the Moon</span></div>
-            <div class="fm"><span class="fml">Anime</span><span class="fmv">One Piece, Your Lie in April</span></div>
-            <div class="fm"><span class="fml">Music</span><span class="fmv">Radiohead · OK Computer</span></div>
-            <div class="fm"><span class="fml">Place</span><span class="fmv">Tolka, Nepal</span></div>
-          </div>
-        </div>
-      </div>
+      <!-- ===== FORWARD LINE (Creativity) ===== -->
+      <div class="line-label">▸ FORWARDS — Creativity & Expression</div>
+      <div class="lineup-row">
 
-      <!-- ROW: 3 POEMS — EXPANDABLE CARDS -->
-      <div class="p-row3">
-        <!-- Poem 1 -->
-        <div class="mpanel poem-card" onclick="this.classList.toggle('open')">
-          <span class="sfx sfx-sm sfx-tr">poem</span>
-          <div class="plabel">POETRY · 詩 I</div>
-          <h4>Blue Eyes</h4>
-          <div class="preview">
-            <p class="poem-preview">What beautiful colour of your eyes,<br>that a boy loses his perception of time...</p>
-            <p class="preview-hint">— click to read full poem —</p>
+        <!-- Poem: Blue Eyes (LW) -->
+        <div class="player-card fw captain">
+          <div class="number">11</div>
+          <div class="card-header">
+            <div class="position-tag">LW · Left Wing</div>
+            <div class="card-title">Blue Eyes</div>
           </div>
-          <div class="expanded">
-            <p class="poem-full">What beautiful colour of your eyes,
+          <div class="card-body">
+            <p class="poem-text">What beautiful colour of your eyes,
 that a boy loses his perception of time
 
 i have seen the endless seas but i see depth in your eyes farseen
@@ -253,16 +238,28 @@ and eyes are where your eyes is
           </div>
         </div>
 
-        <!-- Poem 2 -->
-        <div class="mpanel poem-card" onclick="this.classList.toggle('open')">
-          <div class="plabel">POETRY · 詩 II</div>
-          <h4>In the Gray Between Dreams</h4>
-          <div class="preview">
-            <p class="poem-preview">Oh shades of light, show me the way,<br>Through darkness that swallows...</p>
-            <p class="preview-hint">— click to read full poem —</p>
+        <!-- Dostoevsky Quote (ST) -->
+        <div class="player-card fw captain">
+          <div class="number">9</div>
+          <div class="card-header">
+            <div class="position-tag">ST · Striker</div>
+            <div class="card-title">Fyodor</div>
           </div>
-          <div class="expanded">
-            <p class="poem-full">Oh shades of light, show me the way,
+          <div class="card-body">
+            <p style="font-style:italic;font-size:.45rem;line-height:1.7">"Above all, don't lie to yourself. The man who lies to himself and listens to his own lie comes to a point that he cannot distinguish the truth within him, or around him, and so loses all respect for himself and for others."</p>
+            <p style="font-size:.35rem;opacity:.3;margin-top:.3rem">— Dostoevsky</p>
+          </div>
+        </div>
+
+        <!-- Poem: In the Gray (RW) -->
+        <div class="player-card fw">
+          <div class="number">7</div>
+          <div class="card-header">
+            <div class="position-tag">RW · Right Wing</div>
+            <div class="card-title">Gray Dreams</div>
+          </div>
+          <div class="card-body">
+            <p class="poem-text">Oh shades of light, show me the way,
 Through darkness that swallows and night that turns gray.
 When I can't seem to breathe, let me dance in the dawn,
 And find in the shadows the strength to go on.
@@ -284,16 +281,38 @@ In the gray of our dreams, all our truths can be seen.</p>
           </div>
         </div>
 
-        <!-- Poem 3 -->
-        <div class="mpanel poem-card" onclick="this.classList.toggle('open')">
-          <div class="plabel">POETRY · 詩 III</div>
-          <h4>Life Happened</h4>
-          <div class="preview">
-            <p class="poem-preview">Life happened, me waiting.<br>Believing it would stop...</p>
-            <p class="preview-hint">— click to read full poem —</p>
+      </div>
+
+      <!-- ===== MIDFIELD (Uniqueness / Flair) ===== -->
+      <div class="line-label">▸ MIDFIELD — Uniqueness & Flair</div>
+      <div class="lineup-row">
+
+        <!-- Questions -->
+        <div class="player-card mf">
+          <div class="number">8</div>
+          <div class="card-header">
+            <div class="position-tag">CM · Center Mid</div>
+            <div class="card-title">Questions</div>
           </div>
-          <div class="expanded">
-            <p class="poem-full">Life happened, me waiting.
+          <div class="card-body">
+            <p><strong>Why does being drunk make us happy?</strong></p>
+            <p style="opacity:.35;font-style:italic">— Answer coming soon.</p>
+            <p style="margin-top:.4rem"><strong>When did we stop asking questions?</strong></p>
+            <p style="opacity:.35;font-style:italic">— Answer coming soon.</p>
+            <p style="margin-top:.4rem"><strong>What is the meaning of life?</strong></p>
+            <p style="opacity:.35;font-style:italic">— Answer coming soon.</p>
+          </div>
+        </div>
+
+        <!-- Poem: Life Happened -->
+        <div class="player-card mf">
+          <div class="number">10</div>
+          <div class="card-header">
+            <div class="position-tag">CAM · Playmaker</div>
+            <div class="card-title">Life Happened</div>
+          </div>
+          <div class="card-body">
+            <p class="poem-text">Life happened, me waiting.
 Believing it would stop, it would wait.
 Life happening and happening,
 Consistent like spring water.
@@ -316,59 +335,83 @@ Take me away to the far sea,
 Where I can sleep once again.</p>
           </div>
         </div>
+
       </div>
 
-      <!-- ROW: QUESTIONS + SMALL WINS -->
-      <div class="p-row2">
-        <div class="mpanel qpanel">
-          <span class="sfx sfx-md sfx-tr">?</span>
-          <div class="plabel">QUESTIONS I SIT WITH · 問い</div>
-          <div style="margin-bottom:.6rem">
-            <div class="q">Why does being drunk make us happy?</div>
-            <div class="a placeholder">— Answer coming soon.</div>
+      <!-- ===== DEFENSE LINE (Core Ideas) ===== -->
+      <div class="line-label">▸ DEFENSE — Core Ideas & Foundation</div>
+      <div class="lineup-row">
+
+        <!-- Identity -->
+        <div class="player-card df">
+          <div class="number">4</div>
+          <div class="card-header">
+            <div class="position-tag">CB · Center Back</div>
+            <div class="card-title">Dev Attri</div>
           </div>
-          <div style="margin-bottom:.6rem">
-            <div class="q">When did we stop asking questions?</div>
-            <div class="a placeholder">— Answer coming soon.</div>
-          </div>
-          <div>
-            <div class="q">What is the meaning of life?</div>
-            <div class="a placeholder">— Answer coming soon.</div>
+          <div class="card-body">
+            <p>Learning in public. One build. One rep. One kilometer. <strong>Always becoming.</strong></p>
+            <p style="margin-top:.4rem">Based in India. The work is the proof.</p>
           </div>
         </div>
-        <div class="mpanel">
-          <div class="screentone"></div>
-          <span class="sfx sfx-sm sfx-bl">WIN</span>
-          <div class="plabel">SMALL WINS · 成果</div>
-          <p>→ Ran a <strong>half marathon</strong></p>
-          <p>→ Hit <strong>1000 ELO</strong> in chess</p>
-          <p>→ Visited <strong>Nepal</strong></p>
-          <p>→ Built <strong>this website</strong></p>
+
+        <!-- Favorites -->
+        <div class="player-card df">
+          <div class="number">3</div>
+          <div class="card-header">
+            <div class="position-tag">CB · Center Back</div>
+            <div class="card-title">Favorites</div>
+          </div>
+          <div class="card-body">
+            <p><strong>Books</strong> — The Old Man of the Moon</p>
+            <p><strong>Anime</strong> — One Piece, Your Lie in April</p>
+            <p><strong>Music</strong> — Radiohead · OK Computer</p>
+            <p><strong>Place</strong> — Tolka, Nepal</p>
+          </div>
         </div>
+
+        <!-- Small Wins -->
+        <div class="player-card df">
+          <div class="number">2</div>
+          <div class="card-header">
+            <div class="position-tag">CB · Center Back</div>
+            <div class="card-title">Small Wins</div>
+          </div>
+          <div class="card-body">
+            <p>→ Ran a <strong>half marathon</strong></p>
+            <p>→ Hit <strong>1000 ELO</strong> chess</p>
+            <p>→ Visited <strong>Nepal</strong></p>
+            <p>→ Built <strong>this website</strong></p>
+          </div>
+        </div>
+
+        <!-- Social -->
+        <div class="player-card df">
+          <div class="number">1</div>
+          <div class="card-header">
+            <div class="position-tag">GK · Goalkeeper</div>
+            <div class="card-title">Signal</div>
+          </div>
+          <div class="card-body">
+            <p><a href="https://github.com/attridevv" target="_blank">GitHub</a></p>
+            <p><a href="https://x.com/attridevv" target="_blank">X</a></p>
+            <p><a href="https://instagram.com/attridevv" target="_blank">Instagram</a></p>
+          </div>
+        </div>
+
       </div>
 
     </div>
-
-    <div class="links-row">
-      <a href="https://github.com/attridevv" target="_blank" class="link-pill">GitHub</a>
-      <a href="https://x.com/attridevv" target="_blank" class="link-pill">X</a>
-      <a href="https://instagram.com/attridevv" target="_blank" class="link-pill">Instagram</a>
-    </div>
-
-    <p class="quote">"Above all, don't lie to yourself. The man who lies to himself and listens to his own lie comes to a point that he cannot distinguish the truth within him, or around him, and so loses all respect for himself and for others." — Dostoevsky</p>
 
   </div>
 </div>
 
-<!-- =========================== -->
-<!-- ===== CREATE · BLUE WORLD ===== -->
-<!-- =========================== -->
+<!-- ===== BLUE WORLD ===== -->
 <div class="expanded-world blue-expand" id="blue-expand">
-  <canvas class="canvas-bg" id="blue-bg"></canvas>
+  <canvas class="exp-canvas" id="blue-bg"></canvas>
   <button class="close-btn" onclick="closeWorld()">&times;</button>
   <div class="blue-content">
     <div class="world-header"><div class="ch">第二章 · Chapter Two</div><h2 style="color:#93c5fd">CREATE · 創造</h2></div>
-
     <div class="bsection"><div class="bsection-title">Live Projects</div>
       <div class="bcard-grid">
         <a href="https://gritier.attridevv.com" target="_blank" style="text-decoration:none;color:inherit;display:block">
@@ -377,15 +420,13 @@ Where I can sleep once again.</p>
             <p>Hybrid Athlete Command Center. Track readiness, runs, strength, recovery & injuries.</p>
           </div>
         </a>
-        <div class="bcard"><h4>Calorified</h4><p>Calorie tracker app. Nutrition logging, macro tracking, food database.</p></div>
+        <div class="bcard"><h4>Calorified</h4><p>Calorie tracker app. Nutrition logging, macro tracking.</p></div>
         <div class="bcard"><h4>Max Workspace</h4><p>Clean workspace concept. Browser layouts, useful surfaces.</p></div>
       </div>
     </div>
-
     <div class="bsection"><div class="bsection-title">Stack</div>
-      <div class="bcard"><p><strong>TypeScript</strong> · Next.js · Prisma · Python · APIs · Git · Databases · Tailwind · React</p></div>
+      <div class="bcard"><p><strong>TypeScript</strong> · Next.js · Prisma · Python · APIs · Git · Databases</p></div>
     </div>
-
     <div class="blinks-row">
       <a href="https://github.com/attridevv" target="_blank" class="blink-pill">GitHub</a>
       <a href="https://x.com/attridevv" target="_blank" class="blink-pill">X</a>
@@ -407,24 +448,21 @@ function R(){w=c.width=c.parentElement.offsetWidth;h=c.height=c.parentElement.of
 var p=[];for(var i=0;i<ct;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.3,vy:dir*(.3+Math.random()*.8),r:Math.random()*1.5+.4,o:Math.random()*.35+.15,l:Math.random()*200});
 (function D(t){if(w!==c.parentElement.offsetWidth||h!==c.parentElement.offsetHeight)R();ctx.clearRect(0,0,w,h);
 p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.y>h+10||pp.l<=0){pp.x=Math.random()*w;pp.y=dir>0?h+10:-10;pp.l=200+Math.random()*100}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/200))+')';ctx.fill()});requestAnimationFrame(D)})();})('bc','59,130,246',40,-1);
-
 (function(id,col,ct){var c=document.getElementById(id),ctx=c.getContext('2d'),w,h;
 function R(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}R();window.addEventListener('resize',R);
 var p=[];for(var i=0;i<ct;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.15,vy:-.2-Math.random()*.4,r:Math.random()*1.2+.3,o:Math.random()*.2+.08,l:Math.random()*300});
 (function D(t){if(w!==c.width||h!==c.height)R();ctx.clearRect(0,0,w,h);
-p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.l<=0){pp.x=Math.random()*w;pp.y=h+10;pp.l=300+Math.random()*200}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/300))+')';ctx.fill()});requestAnimationFrame(D)})();})('red-bg','239,68,68',45);
+p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.l<=0){pp.x=Math.random()*w;pp.y=h+10;pp.l=300+Math.random()*200}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/300))+')';ctx.fill()});requestAnimationFrame(D)})();})('red-bg','6,182,212',30);
 (function(id,col,ct){var c=document.getElementById(id),ctx=c.getContext('2d'),w,h;
 function R(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}R();window.addEventListener('resize',R);
 var p=[];for(var i=0;i<ct;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.15,vy:-.2-Math.random()*.4,r:Math.random()*1.2+.3,o:Math.random()*.2+.08,l:Math.random()*300});
 (function D(t){if(w!==c.width||h!==c.height)R();ctx.clearRect(0,0,w,h);
-p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.l<=0){pp.x=Math.random()*w;pp.y=h+10;pp.l=300+Math.random()*200}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/300))+')';ctx.fill()});requestAnimationFrame(D)})();})('blue-bg','59,130,246',45);
-
+p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.l<=0){pp.x=Math.random()*w;pp.y=h+10;pp.l=300+Math.random()*200}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+(pp.o*(pp.l/300))+')';ctx.fill()});requestAnimationFrame(D)})();})('blue-bg','59,130,246',40);
 (function(){var s=document.querySelectorAll('.bsection');function ck(){s.forEach(function(sec){var r=sec.getBoundingClientRect();if(r.top<window.innerHeight*.85)sec.classList.add('visible')})}ck();document.querySelectorAll('.expanded-world').forEach(function(w){w.addEventListener('scroll',ck)})})();
-
 function enterWorld(w){
   document.getElementById('horizon').classList.add('fading');document.getElementById('dline').style.opacity='0';
   var v=document.getElementById('vortex');v.innerHTML='';
-  for(var i=0;i<6;i++){var r=document.createElement('div');r.className='vr';var s=50+i*80;r.style.cssText='width:'+s+'px;height:'+s+'px;left:'+(w==='red'?'25%':'75%')+';top:50%;transform:translate(-50%,-50%);border-color:'+(w==='red'?'rgba(239,68,68,'+(.15-i*.02)+')':'rgba(59,130,246,'+(.15-i*.02)+')')+';animation-duration:'+(.8+i*.2)+'s;animation-direction:'+(i%2?'reverse':'normal');v.appendChild(r)}
+  for(var i=0;i<6;i++){var r=document.createElement('div');r.className='vr';var s=50+i*80;r.style.cssText='width:'+s+'px;height:'+s+'px;left:'+(w==='red'?'25%':'75%')+';top:50%;transform:translate(-50%,-50%);border-color:'+(w==='red'?'rgba(6,182,212,'+(.15-i*.02)+')':'rgba(59,130,246,'+(.15-i*.02)+')')+';animation-duration:'+(.8+i*.2)+'s;animation-direction:'+(i%2?'reverse':'normal');v.appendChild(r)}
   v.classList.add('active');
   setTimeout(function(){v.classList.remove('active');document.getElementById(w==='red'?'red-expand':'blue-expand').classList.add('active');document.body.style.overflow='auto';setTimeout(function(){document.querySelectorAll('.bsection').forEach(function(s){s.classList.add('visible')})},200)},900);
 }
