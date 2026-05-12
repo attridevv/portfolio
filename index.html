@@ -376,30 +376,100 @@ Where I can sleep once again.</p></details>
   </div>
 </div>
 
-<!-- ===== BLUE WORLD ===== -->
+<!-- ===== NISHI · F1 PIT GARAGE ===== -->
 <div class="expanded-world blue-expand" id="blue-expand">
   <canvas class="exp-canvas" id="blue-bg"></canvas>
   <button class="close-btn" onclick="closeWorld()">&times;</button>
-  <div class="blue-content">
-    <div class="world-header"><div class="ch">第二章 · Chapter Two</div><h2 style="color:#93c5fd">CREATE · 創造</h2></div>
-    <div class="bsection"><div class="bsection-title">Live Projects</div>
-      <div class="bcard-grid">
-        <a href="https://gritier.attridevv.com" target="_blank" style="text-decoration:none;color:inherit;display:block">
-          <div class="bcard" style="background:rgba(37,99,235,.04);border-color:rgba(37,99,235,.1)">
-            <h4 style="display:flex;align-items:center;gap:.35rem"><span class="live-badge"><span class="live-dot"></span>LIVE</span> Gritier &rarr;</h4>
-            <p>Hybrid Athlete Command Center. Track readiness, runs, strength, recovery & injuries.</p>
+  <div style="max-width:900px;margin:0 auto;padding:2rem 1.5rem 3rem;position:relative;z-index:41">
+
+    <!-- HEADER -->
+    <div style="text-align:center;margin-bottom:2rem">
+      <div style="font-size:.38rem;letter-spacing:.25em;text-transform:uppercase;opacity:.25;margin-bottom:.4rem;font-family:'Inter',sans-serif">Nishi Racing · Pit Garage</div>
+      <h2 style="font-size:1.5rem;font-weight:900;letter-spacing:.08em;color:#facc15;font-family:'Inter',sans-serif">GARAGE</h2>
+      <div style="font-size:.35rem;letter-spacing:.2em;opacity:.15;margin-top:.2rem;text-transform:uppercase;font-family:'Inter',sans-serif">Race Day · All Systems Go</div>
+    </div>
+
+    <!-- SAFETY STRIPE -->
+    <div style="display:flex;height:2px;margin-bottom:1.5rem;background:repeating-linear-gradient(90deg,#facc15 0,#facc15 12px,#111 12px,#111 24px);opacity:.3"></div>
+
+    <!-- CAR BAYS (Projects) -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:2rem">
+      <!-- Gritier -->
+      <a href="https://gritier.attridevv.com" target="_blank" style="text-decoration:none;color:inherit">
+        <div style="background:rgba(37,99,235,.05);border:1px solid rgba(37,99,235,.12);border-bottom:3px solid #facc15;padding:.8rem;border-radius:6px;transition:all .35s;height:100%">
+          <div style="display:flex;align-items:center;gap:.3rem;margin-bottom:.4rem">
+            <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#10b981;animation:dotBlink 2s infinite"></span>
+            <span style="font-size:.7rem;font-weight:900;letter-spacing:.03em;color:#e2e8f0">GRITIER</span>
+            <span style="font-size:.35rem;letter-spacing:.08em;background:rgba(16,185,129,.15);color:#10b981;padding:.1rem .4rem;border-radius:3px;margin-left:auto">P1</span>
           </div>
-        </a>
-        <div class="bcard"><h4>Calorified</h4><p>Calorie tracker. Nutrition logging, macro tracking.</p></div>
-        <div class="bcard"><h4>Max Workspace</h4><p>Clean workspace concept. Browser layouts.</p></div>
+          <p style="font-size:.42rem;line-height:1.6;opacity:.5">Hybrid Athlete Command Center. Full performance OS — readiness, runs, strength, recovery & injuries.</p>
+        </div>
+      </a>
+      <!-- Calorified -->
+      <a href="https://github.com/attridevv/calorified" target="_blank" style="text-decoration:none;color:inherit">
+        <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-bottom:3px solid rgba(250,204,21,.4);padding:.8rem;border-radius:6px;transition:all .35s;height:100%">
+          <div style="display:flex;align-items:center;gap:.3rem;margin-bottom:.4rem">
+            <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:rgba(147,197,253,.5)"></span>
+            <span style="font-size:.7rem;font-weight:900;letter-spacing:.03em;color:#e2e8f0">CALORIFIED</span>
+            <span style="font-size:.35rem;letter-spacing:.08em;background:rgba(147,197,253,.1);color:#93c5fd;padding:.1rem .4rem;border-radius:3px;margin-left:auto">P2</span>
+          </div>
+          <p style="font-size:.42rem;line-height:1.6;opacity:.5">Calorie tracker app. Nutrition logging, macro tracking, food database. Built for precision.</p>
+        </div>
+      </a>
+      <!-- Max Workspace -->
+      <a href="https://github.com/attridevv/max-workspace" target="_blank" style="text-decoration:none;color:inherit">
+        <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-bottom:3px solid rgba(250,204,21,.4);padding:.8rem;border-radius:6px;transition:all .35s;height:100%">
+          <div style="display:flex;align-items:center;gap:.3rem;margin-bottom:.4rem">
+            <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:rgba(147,197,253,.5)"></span>
+            <span style="font-size:.7rem;font-weight:900;letter-spacing:.03em;color:#e2e8f0">MAX WS</span>
+            <span style="font-size:.35rem;letter-spacing:.08em;background:rgba(147,197,253,.1);color:#93c5fd;padding:.1rem .4rem;border-radius:3px;margin-left:auto">P3</span>
+          </div>
+          <p style="font-size:.42rem;line-height:1.6;opacity:.5">Clean workspace concept. Browser layouts, useful surfaces, shipping experiences.</p>
+        </div>
+      </a>
+    </div>
+
+    <!-- SAFETY STRIPE -->
+    <div style="display:flex;height:2px;margin-bottom:1.5rem;background:repeating-linear-gradient(90deg,#facc15 0,#facc15 12px,#111 12px,#111 24px);opacity:.3"></div>
+
+    <!-- CREW BOARD + TELEMETRY -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+
+      <!-- CREW BOARD (Skills Achieved) -->
+      <div style="background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);padding:.8rem;border-radius:6px">
+        <div style="font-size:.38rem;letter-spacing:.2em;text-transform:uppercase;opacity:.3;margin-bottom:.6rem;font-family:'Inter',sans-serif">Crew Board · Qualified</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem">
+          <div style="display:flex;align-items:center;gap:.5rem"><span style="font-size:.4rem;color:#10b981">●</span><span style="font-size:.45rem;opacity:.6">Operations Management</span></div>
+          <div style="display:flex;align-items:center;gap:.5rem"><span style="font-size:.4rem;color:#10b981">●</span><span style="font-size:.45rem;opacity:.6">GTM Marketing</span></div>
+          <div style="display:flex;align-items:center;gap:.5rem"><span style="font-size:.4rem;color:#10b981">●</span><span style="font-size:.45rem;opacity:.6">Front-End Development</span></div>
+          <div style="display:flex;align-items:center;gap:.5rem"><span style="font-size:.4rem;color:#10b981">●</span><span style="font-size:.45rem;opacity:.6">UI/UX Development</span></div>
+        </div>
       </div>
+
+      <!-- TELEMETRY (Learning) -->
+      <div style="background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);padding:.8rem;border-radius:6px">
+        <div style="font-size:.38rem;letter-spacing:.2em;text-transform:uppercase;opacity:.3;margin-bottom:.6rem;font-family:'Inter',sans-serif">Telemetry · In Progress</div>
+        <div style="display:flex;flex-direction:column;gap:.35rem">
+          <div style="display:flex;align-items:center;gap:.5rem"><span style="font-size:.4rem;color:#facc15">◉</span><span style="font-size:.45rem;opacity:.6">Data Sets</span></div>
+          <div style="display:flex;align-items:center;gap:.5rem"><span style="font-size:.4rem;color:#facc15">◉</span><span style="font-size:.45rem;opacity:.6">Algorithms</span></div>
+          <div style="display:flex;align-items:center;gap:.5rem"><span style="font-size:.4rem;color:#facc15">◉</span><span style="font-size:.45rem;opacity:.6">Logic</span></div>
+          <div style="display:flex;align-items:center;gap:.5rem"><span style="font-size:.4rem;color:#facc15">◉</span><span style="font-size:.45rem;opacity:.6">Reinforcement Learning</span></div>
+        </div>
+      </div>
+
     </div>
-    <div class="bsection"><div class="bsection-title">Stack</div><div class="bcard"><p><strong>TypeScript</strong> · Next.js · Prisma · Python · APIs · Git · Databases</p></div></div>
-    <div class="blinks-row">
-      <a href="https://github.com/attridevv" target="_blank" class="blink-pill">GitHub</a><a href="https://x.com/attridevv" target="_blank" class="blink-pill">X</a>
-      <a href="https://youtube.com/@attridevv" target="_blank" class="blink-pill">YouTube</a><a href="https://anilist.co/user/Attridevv/" target="_blank" class="blink-pill">AniList</a>
+
+    <!-- SOCIALS -->
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-top:1.5rem">
+      <a href="https://github.com/attridevv" target="_blank" style="font-size:.38rem;letter-spacing:.08em;text-decoration:none;color:rgba(147,197,253,.4);border:1px solid rgba(147,197,253,.08);padding:.25rem .6rem;border-radius:20px;transition:all .25s">GITHUB</a>
+      <a href="https://x.com/attridevv" target="_blank" style="font-size:.38rem;letter-spacing:.08em;text-decoration:none;color:rgba(147,197,253,.4);border:1px solid rgba(147,197,253,.08);padding:.25rem .6rem;border-radius:20px;transition:all .25s">X</a>
+      <a href="https://youtube.com/@attridevv" target="_blank" style="font-size:.38rem;letter-spacing:.08em;text-decoration:none;color:rgba(147,197,253,.4);border:1px solid rgba(147,197,253,.08);padding:.25rem .6rem;border-radius:20px;transition:all .25s">YOUTUBE</a>
+      <a href="https://anilist.co/user/Attridevv/" target="_blank" style="font-size:.38rem;letter-spacing:.08em;text-decoration:none;color:rgba(147,197,253,.4);border:1px solid rgba(147,197,253,.08);padding:.25rem .6rem;border-radius:20px;transition:all .25s">ANILIST</a>
     </div>
-    <p class="bquote">"Above all, don't lie to yourself..." — Dostoevsky</p>
+
+    <!-- QUOTE -->
+    <p style="font-style:italic;border-left:2px solid rgba(255,255,255,.04);padding-left:1rem;font-size:.4rem;opacity:.2;margin-top:1.5rem;line-height:1.7;text-align:center;max-width:500px;margin-left:auto;margin-right:auto">"Above all, don't lie to yourself..." — Dostoevsky</p>
+
   </div>
 </div>
 
