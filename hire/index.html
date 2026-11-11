@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Freelance Web Development — Dev Attri</title>
+<meta name="description" content="Landing pages, web applications, and site + copywriting packages. Fixed quotes, documented handover. Email Dev Attri to start."><!-- // REVIEW -->
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--white:#e2e8f0;--dim:rgba(226,232,240,.4);--cyan:#06b6d4;--blue:#93c5fd;--deep:rgba(37,99,235,.12);--gold:#facc15;--green:#10b981;--card:rgba(255,255,255,.02);--card-hover:rgba(255,255,255,.035);--line:rgba(255,255,255,.04);--line2:rgba(255,255,255,.05);--pill:rgba(147,197,253,.08)}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:radial-gradient(ellipse at 50% 30%,rgba(37,99,235,.04),transparent 60%),linear-gradient(180deg,#020810,#041020,#020810);color:var(--white);min-height:100vh;line-height:1.65;-webkit-font-smoothing:antialiased}
+#hire-bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+.wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:2.75rem 1.1rem 3rem}
+
+/* kicker + headings — garage scale */
+.kicker{font-size:.38rem;letter-spacing:.25em;text-transform:uppercase;opacity:.25;margin-bottom:.4rem}
+.hero{text-align:center;padding:1.5rem 0 2.2rem}
+.hero h1{font-size:1.45rem;font-weight:900;letter-spacing:.04em;line-height:1.35;max-width:640px;margin:0 auto .9rem}
+@media(min-width:700px){.hero h1{font-size:1.8rem}}
+.hero .email{display:inline-block;font-size:.68rem;font-weight:800;letter-spacing:.03em;color:var(--blue);text-decoration:none;margin-bottom:1rem;word-break:break-all}
+.hero .email:hover{text-decoration:underline}
+.cta{display:inline-block;font-size:.5rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--blue);background:rgba(147,197,253,.1);border:1px solid rgba(147,197,253,.3);border-radius:6px;padding:.6rem 1.4rem;transition:all .3s}
+.cta:hover{background:rgba(147,197,253,.18);border-color:rgba(147,197,253,.5);transform:translateY(-1px)}
+
+/* section rhythm — .bsection */
+.sec{opacity:0;transform:translateY(20px);transition:all .7s;margin-bottom:2.2rem}
+.sec.visible{opacity:1;transform:translateY(0)}
+.sec-head{text-align:center;margin-bottom:1.4rem}
+.sec-head h2{font-size:1.3rem;font-weight:900;letter-spacing:.08em}
+@media(min-width:700px){.sec-head h2{font-size:1.5rem}}
+.stripe{display:flex;height:2px;margin-bottom:1.5rem;background:repeating-linear-gradient(90deg,#facc15 0,#facc15 12px,#111 12px,#111 24px);opacity:.3}
+
+/* cards — bcard + bay */
+.grid3{display:grid;gap:.75rem}
+@media(min-width:860px){.grid3{grid-template-columns:1fr 1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--line);padding:.8rem 1rem;border-radius:8px;transition:all .35s;display:flex;flex-direction:column}
+.card:hover{background:var(--card-hover);transform:translateY(-1px)}
+.card h3{font-size:.62rem;font-weight:700;margin-bottom:.15rem;color:var(--blue)}
+.card .meta{font-size:.4rem;letter-spacing:.15em;text-transform:uppercase;opacity:.3;margin-bottom:.5rem}
+.card ul{list-style:none;margin-bottom:.7rem;flex:1}
+.card li{font-size:.45rem;line-height:1.65;opacity:.55;padding-left:.9rem;position:relative;margin-bottom:.3rem}
+.card li::before{content:'▸';position:absolute;left:0;color:var(--blue);opacity:.7}
+.price{font-size:.55rem;font-weight:700;letter-spacing:.04em;color:var(--gold);border-top:1px solid var(--line);padding-top:.55rem}
+
+/* work bays */
+.bay{display:block;text-decoration:none;color:inherit;background:rgba(37,99,235,.05);border:1px solid rgba(37,99,235,.12);border-bottom:3px solid rgba(250,204,21,.4);padding:.8rem 1rem;border-radius:6px;transition:all .35s}
+.bay:hover{background:rgba(37,99,235,.09);border-color:rgba(37,99,235,.25);border-bottom-color:var(--gold);transform:translateY(-1px)}
+.bay-top{display:flex;align-items:center;gap:.3rem;margin-bottom:.35rem;flex-wrap:wrap}
+.bay-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);animation:dotBlink 2s infinite}
+.bay-dot.dim{background:rgba(147,197,253,.5);animation:none}
+.bay h3{font-size:.7rem;font-weight:900;letter-spacing:.03em;color:var(--white)}
+.bay .pos{font-size:.35rem;letter-spacing:.08em;background:var(--deep);color:var(--blue);padding:.1rem .4rem;border-radius:3px;margin-left:auto}
+.bay p{font-size:.45rem;line-height:1.65;opacity:.55;margin-bottom:.35rem}
+.bay .stack{font-size:.4rem;letter-spacing:.06em;color:var(--blue);opacity:.55}
+.live-badge{display:inline-flex;align-items:center;gap:.25rem;font-size:.38rem;font-weight:700;letter-spacing:.06em;padding:.12rem .4rem;border-radius:3px;background:rgba(37,99,235,.12);color:var(--blue);border:1px solid rgba(37,99,235,.15)}
+@keyframes dotBlink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* process — crew-board rows */
+.steps{list-style:none;counter-reset:step}
+.steps li{display:flex;gap:.8rem;align-items:baseline;padding:.65rem 0;border-bottom:1px solid var(--line2)}
+.steps li:last-child{border-bottom:none}
+.steps .num{font-size:.7rem;font-weight:900;letter-spacing:.06em;color:var(--gold);min-width:1.6rem}
+.steps .txt strong{display:block;font-size:.55rem;font-weight:700;color:var(--white);margin-bottom:.1rem}
+.steps .txt span{font-size:.45rem;line-height:1.65;opacity:.55}
+
+/* stack pills — blink-pill */
+.pills{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center}
+.pill{padding:.25rem .6rem;border-radius:20px;font-size:.4rem;letter-spacing:.06em;color:rgba(147,197,253,.4);border:1px solid var(--pill);transition:all .25s}
+.pill:hover{color:var(--blue);border-color:rgba(147,197,253,.25)}
+
+/* contact */
+.contact{text-align:center}
+.contact h2{font-size:1.3rem;font-weight:900;letter-spacing:.08em;margin-bottom:.8rem}
+.contact .email{display:inline-block;font-size:.68rem;font-weight:800;color:var(--blue);text-decoration:none;word-break:break-all;margin-bottom:.6rem}
+.contact .email:hover{text-decoration:underline}
+.contact p{font-size:.47rem;line-height:1.65;opacity:.55;max-width:460px;margin:0 auto .4rem}
+
+/* footer */
+.foot{text-align:center;padding-top:1rem}
+.foot a{font-size:.38rem;letter-spacing:.08em;text-decoration:none;color:rgba(147,197,253,.4);border:1px solid var(--pill);padding:.25rem .6rem;border-radius:20px;transition:all .25s}
+.foot a:hover{color:var(--blue);border-color:rgba(147,197,253,.25)}
+@media(prefers-reduced-motion:reduce){.sec{transition:none;opacity:1;transform:none}.bay-dot{animation:none}}
+</style>
+<noscript><style>.sec{opacity:1;transform:none}</style></noscript>
+</head>
+<body>
+<canvas id="hire-bg" aria-hidden="true"></canvas>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero sec">
+    <div class="kicker">Freelance · Web Development</div><!-- // REVIEW -->
+    <h1>I build websites and web apps for businesses and founders.</h1><!-- // REVIEW -->
+    <a class="email" href="mailto:attridevv@proton.me">attridevv@proton.me</a><!-- // REVIEW — confirm this is the public email -->
+    <div><a class="cta" href="mailto:attridevv@proton.me">Email me</a></div>
+  </header>
+
+  <div class="stripe" aria-hidden="true"></div>
+
+  <!-- SERVICES -->
+  <section class="sec" aria-labelledby="services-title">
+    <div class="sec-head">
+      <div class="kicker">Services</div>
+      <h2 id="services-title">WHAT I OFFER</h2>
+    </div>
+    <div class="grid3">
+      <article class="card">
+        <h3>Landing pages and marketing sites</h3>
+        <div class="meta">Static · Fast · Mobile-first</div><!-- // REVIEW -->
+        <ul>
+          <li>One to five pages, designed and built from scratch</li><!-- // REVIEW -->
+          <li>Mobile-first, fast, and set up with the SEO basics</li><!-- // REVIEW -->
+          <li>Forms, links, and analytics wired up for launch</li><!-- // REVIEW -->
+        </ul>
+        <div class="price">Starting at ₹PRICE_1</div>
+      </article>
+      <article class="card">
+        <h3>Web applications</h3>
+        <div class="meta">Auth · Databases · Dashboards</div>
+        <ul>
+          <li>Sign-in, data models, and dashboards built to your spec</li><!-- // REVIEW -->
+          <li>Admin tools and internal software</li><!-- // REVIEW -->
+          <li>Deployed with documentation and a walkthrough</li><!-- // REVIEW -->
+        </ul>
+        <div class="price">Starting at ₹PRICE_2</div>
+      </article>
+      <article class="card">
+        <h3>Site + copywriting package</h3>
+        <div class="meta">Site · Words · Search</div><!-- // REVIEW -->
+        <ul>
+          <li>The site from package one, plus the words on it</li><!-- // REVIEW -->
+          <li>Headlines, section copy, and page text</li><!-- // REVIEW -->
+          <li>Titles and meta descriptions for search</li><!-- // REVIEW -->
+        </ul>
+        <div class="price">Starting at ₹PRICE_3</div>
+      </article>
+    </div>
+  </section>
+
+  <div class="stripe" aria-hidden="true"></div>
+
+  <!-- SELECTED WORK -->
+  <section class="sec" aria-labelledby="work-title">
+    <div class="sec-head">
+      <div class="kicker">Selected Work</div>
+      <h2 id="work-title">CASE STUDIES</h2>
+    </div>
+    <div class="grid3">
+      <a class="bay" href="/hire/work/grit/">
+        <div class="bay-top">
+          <span class="bay-dot" aria-hidden="true"></span>
+          <h3>GRIT</h3>
+          <span class="pos">01</span>
+        </div>
+        <p>Full-stack training platform.</p>
+        <span class="stack">Next.js · Prisma · Supabase · Clerk</span>
+      </a>
+      <a class="bay" href="/hire/work/site/">
+        <div class="bay-top">
+          <span class="bay-dot dim" aria-hidden="true"></span>
+          <h3>attridevv.com</h3>
+          <span class="pos">02</span>
+        </div>
+        <p>Custom interaction design, dual-mode interface.</p>
+        <span class="stack">HTML · CSS · JavaScript</span>
+      </a>
+      <!-- PLACEHOLDER_PROJECT: replace title, blurb, slug, and stack before launch -->
+      <a class="bay" href="/hire/work/placeholder/">
+        <div class="bay-top">
+          <span class="bay-dot dim" aria-hidden="true"></span>
+          <h3>Project Three</h3><!-- // REVIEW -->
+          <span class="pos">03</span>
+        </div>
+        <p>Case study to be added.</p><!-- // REVIEW -->
+        <span class="stack">—</span>
+      </a>
+    </div>
+  </section>
+
+  <div class="stripe" aria-hidden="true"></div>
+
+  <!-- HOW IT WORKS -->
+  <section class="sec" aria-labelledby="how-title">
+    <div class="sec-head">
+      <div class="kicker">Process</div>
+      <h2 id="how-title">HOW IT WORKS</h2>
+    </div>
+    <ol class="steps">
+      <li>
+        <span class="num" aria-hidden="true">01</span>
+        <span class="txt"><strong>Brief call</strong><span>A short call to understand what you need and whether I'm the right fit.</span></span><!-- // REVIEW -->
+      </li>
+      <li>
+        <span class="num" aria-hidden="true">02</span>
+        <span class="txt"><strong>Scope and fixed quote</strong><span>You get a written scope and a fixed price before any work begins.</span></span><!-- // REVIEW -->
+      </li>
+      <li>
+        <span class="num" aria-hidden="true">03</span>
+        <span class="txt"><strong>Build with checkpoints</strong><span>I build in visible checkpoints so you can steer early.</span></span><!-- // REVIEW -->
+      </li>
+      <li>
+        <span class="num" aria-hidden="true">04</span>
+        <span class="txt"><strong>Handover with documentation</strong><span>You receive the code, the logins, and a short guide to how it works.</span></span><!-- // REVIEW -->
+      </li>
+    </ol>
+  </section>
+
+  <div class="stripe" aria-hidden="true"></div>
+
+  <!-- STACK -->
+  <section class="sec" aria-labelledby="stack-title">
+    <div class="sec-head">
+      <div class="kicker">Tools</div>
+      <h2 id="stack-title">STACK</h2>
+    </div>
+    <div class="pills">
+      <span class="pill">HTML</span>
+      <span class="pill">CSS</span>
+      <span class="pill">JavaScript</span>
+      <span class="pill">TypeScript</span>
+      <span class="pill">React</span>
+      <span class="pill">Next.js</span>
+      <span class="pill">Tailwind CSS</span>
+      <span class="pill">Node.js</span>
+      <span class="pill">PostgreSQL</span>
+      <span class="pill">Prisma</span>
+      <span class="pill">Supabase</span>
+      <span class="pill">Clerk</span>
+      <span class="pill">Git</span>
+      <span class="pill">Vercel</span>
+    </div>
+  </section>
+
+  <div class="stripe" aria-hidden="true"></div>
+
+  <!-- CONTACT -->
+  <section class="sec contact" aria-labelledby="contact-title">
+    <div class="kicker">Contact</div>
+    <h2 id="contact-title">START A PROJECT</h2><!-- // REVIEW -->
+    <a class="email" href="mailto:attridevv@proton.me">attridevv@proton.me</a><!-- // REVIEW -->
+    <p>I reply within one working day.</p><!-- // REVIEW -->
+    <p>Tell me what you're building, your timeline, and any links that help.</p><!-- // REVIEW -->
+  </section>
+
+  <footer class="foot">
+    <a href="/">ATTRIDEVV.COM</a>
+  </footer>
+
+</div>
+
+<script>
+// particles — same pattern as the Moon world
+(function(){var c=document.getElementById('hire-bg'),ctx=c.getContext('2d'),w,h;
+function R(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}R();window.addEventListener('resize',R);
+var p=[];for(var i=0;i<35;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.2,vy:-.2-Math.random()*.5,r:Math.random()*1.2+.3,o:Math.random()*.2+.08,l:Math.random()*300});
+(function D(){if(w!==c.width||h!==c.height)R();ctx.clearRect(0,0,w,h);
+p.forEach(function(pp){pp.x+=pp.vx;pp.y+=pp.vy;pp.l--;if(pp.y<-10||pp.l<=0){pp.x=Math.random()*w;pp.y=h+10;pp.l=300+Math.random()*200}ctx.beginPath();ctx.arc(pp.x,pp.y,pp.r,0,Math.PI*2);ctx.fillStyle='rgba(59,130,246,'+(pp.o*(pp.l/300))+')';ctx.fill()});requestAnimationFrame(D)})();})();
+// scroll reveal — same .bsection pattern
+(function(){var s=document.querySelectorAll('.sec');function ck(){s.forEach(function(sec){var r=sec.getBoundingClientRect();if(r.top<window.innerHeight*.85)sec.classList.add('visible')})}ck();window.addEventListener('scroll',ck,{passive:true})})();
+</script>
+</body>
+</html>

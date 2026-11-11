@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+*.log
+
+# personal portal plaintext — only the encrypted aka/vault.js is published
+private/
